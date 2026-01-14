@@ -1,0 +1,293 @@
+name: Translate Documentation to Chinese
+
+on:
+  # Manual trigger with input options
+  workflow_dispatch:
+    inputs:
+      target_path:
+        description: 'Path to translate (e.g., plugins/compound-engineering/agents)'
+        required: false
+        default: 'plugins/compound-engineering'
+      create_pr:
+        description: 'Create PR with translations'
+        required: false
+        default: 'true'
+        type: boolean
+
+  # Also trigger on push to main when docs change (optional)
+  push:
+    branches: [main]
+    paths:
+      - 'plugins/compound-engineering/agents/**/*.md'
+      - 'plugins/compound-engineering/commands/**/*.md'
+      - 'plugins/compound-engineering/skills/**/SKILL.md'
+      - 'plugins/compound-engineering/README.md'
+      - 'plugins/compound-engineering/CHANGELOG.md'
+      - 'docs/**/*.md'
+      - 'docs/**/*.html'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install openai
+
+      - name: Create translation script
+        run: |
+          cat > /tmp/translate.py << 'EOF'
+          #!/usr/bin/env python3
+          """
+          Translate markdown files to Chinese using OpenAI API.
+          Preserves code blocks, frontmatter, and technical terms.
+          
+          Requires Python 3.11 (uses modern type hints).
+          """
+          import os
+          import sys
+          import time
+          import traceback
+          from pathlib import Path
+          from openai import OpenAI, RateLimitError, APIError
+
+          # Retry configuration
+          MAX_RETRIES = 3
+          BASE_DELAY = 2  # seconds
+
+          def get_files_to_translate(base_path: str) -> list[Path]:
+              """Get all markdown files that need translation."""
+              base = Path(base_path)
+              
+              # Find all .md files
+              files = list(base.glob('**/*.md'))
+              
+              # Filter out already translated files
+              # Exclude: files in zh-CN directory OR files with .zh-CN suffix
+              filtered = []
+              for f in files:
+                  path_str = str(f)
+                  # Skip if file is inside a zh-CN directory
+                  if '/zh-CN/' in path_str or path_str.startswith('zh-CN/'):
+                      continue
+                  # Skip if file has zh-CN in the name (e.g., README.zh-CN.md)
+                  if '.zh-CN.' in f.name or f.name.startswith('zh-CN'):
+                      continue
+                  filtered.append(f)
+              
+              return sorted(filtered)
+
+          def translate_text_with_retry(client: OpenAI, text: str, filename: str) -> str:
+              """Translate text to Chinese using OpenAI with retry logic."""
+              system_prompt = """You are a professional translator specializing in technical documentation.
+          Translate the following content from English to Simplified Chinese (简体中文).
+
+          Rules:
+          1. Preserve all code blocks (```...```) exactly as-is, do not translate code
+          2. Preserve all inline code (`...`) exactly as-is
+          3. Preserve all URLs, links, and file paths exactly as-is
+          4. Preserve all YAML frontmatter keys (name, description, etc.) but translate the values
+          5. Keep technical terms like API names, library names, and command names in English
+          6. Maintain the original markdown formatting (headers, lists, tables, etc.)
+          7. For emoji, keep them as-is
+          8. Translate naturally, not word-by-word
+
+          Common technical terms to keep in English:
+          - Agent, Command, Skill, Plugin, MCP Server
+          - GitHub, Copilot, Claude, Claude Code
+          - API, CLI, SDK, JSON, YAML, Markdown
+          - PR (Pull Request), Issue, Commit
+          - Rails, React, TypeScript, Python, Ruby
+          - Turbo, Stimulus, Hotwire
+          - npm, pip, gem
+          """
+
+              for attempt in range(MAX_RETRIES):
+                  try:
+                      response = client.chat.completions.create(
+                          model="gpt-4o-mini",
+                          messages=[
+                              {"role": "system", "content": system_prompt},
+                              {"role": "user", "content": f"Translate this file ({filename}):\n\n{text}"}
+                          ],
+                          temperature=0.3
+                      )
+                      content = response.choices[0].message.content
+                      if content is None:
+                          raise ValueError(f"OpenAI returned empty content for file {filename}")
+                      return content
+                  
+                  except RateLimitError as e:
+                      delay = BASE_DELAY * (2 ** attempt)
+                      print(f"  Rate limited, waiting {delay}s before retry {attempt + 1}/{MAX_RETRIES}")
+                      time.sleep(delay)
+                      if attempt == MAX_RETRIES - 1:
+                          raise
+                  
+                  except APIError as e:
+                      delay = BASE_DELAY * (2 ** attempt)
+                      print(f"  API error: {e}, retrying in {delay}s ({attempt + 1}/{MAX_RETRIES})")
+                      time.sleep(delay)
+                      if attempt == MAX_RETRIES - 1:
+                          raise
+
+          def get_zh_path(original_path: Path, base_path: str) -> Path:
+              """Generate the Chinese version path."""
+              # Convert path like plugins/compound-engineering/agents/review/file.md
+              # to plugins/compound-engineering/zh-CN/agents/review/file.md
+              rel_path = original_path.relative_to(base_path)
+              
+              # Insert zh-CN after the base path
+              zh_path = Path(base_path) / 'zh-CN' / rel_path
+              
+              return zh_path
+
+          def main():
+              api_key = os.environ.get('OPENAI_API_KEY')
+              if not api_key:
+                  print("Error: OPENAI_API_KEY environment variable not set")
+                  sys.exit(1)
+              
+              base_path = sys.argv[1] if len(sys.argv) > 1 else 'plugins/compound-engineering'
+              
+              client = OpenAI(api_key=api_key)
+              files = get_files_to_translate(base_path)
+              
+              print(f"Found {len(files)} files to translate in {base_path}")
+              
+              translated_count = 0
+              failed_files = []
+              
+              for filepath in files:
+                  print(f"\nTranslating: {filepath}")
+                  
+                  try:
+                      content = filepath.read_text(encoding='utf-8')
+                      
+                      # Skip empty files
+                      if not content.strip():
+                          print(f"  Skipping empty file")
+                          continue
+                      
+                      # Translate with retry logic
+                      translated = translate_text_with_retry(client, content, filepath.name)
+                      
+                      # Generate output path
+                      zh_path = get_zh_path(filepath, base_path)
+                      zh_path.parent.mkdir(parents=True, exist_ok=True)
+                      
+                      # Write translated content
+                      zh_path.write_text(translated, encoding='utf-8')
+                      print(f"  Saved to: {zh_path}")
+                      translated_count += 1
+                      
+                  except RateLimitError as e:
+                      print(f"  Failed (rate limit): {type(e).__name__}: {e}")
+                      failed_files.append((filepath, str(e)))
+                      continue
+                  except APIError as e:
+                      print(f"  Failed (API error): {type(e).__name__}: {e}")
+                      failed_files.append((filepath, str(e)))
+                      continue
+                  except Exception as e:
+                      print(f"  Failed ({type(e).__name__}): {e}")
+                      print(f"  Traceback: {traceback.format_exc()}")
+                      failed_files.append((filepath, str(e)))
+                      continue
+              
+              print(f"\n✅ Translated {translated_count} files")
+              if failed_files:
+                  print(f"⚠️ Failed to translate {len(failed_files)} files:")
+                  for f, err in failed_files:
+                      print(f"   - {f}: {err}")
+              
+              # Output for GitHub Actions
+              if os.environ.get('GITHUB_OUTPUT'):
+                  with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                      f.write(f"translated_count={translated_count}\n")
+                      f.write(f"failed_count={len(failed_files)}\n")
+
+          if __name__ == '__main__':
+              main()
+          EOF
+
+      - name: Run translation
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          TARGET_PATH="${{ github.event.inputs.target_path || 'plugins/compound-engineering' }}"
+          python /tmp/translate.py "$TARGET_PATH"
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Should create PR
+        id: should_create_pr
+        run: |
+          # Create PR if there are changes AND (manual trigger with create_pr=true OR push event)
+          if [[ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]]; then
+            if [[ "${{ github.event_name }}" == "push" ]] || [[ "${{ github.event.inputs.create_pr }}" == "true" ]]; then
+              echo "create_pr=true" >> $GITHUB_OUTPUT
+            else
+              echo "create_pr=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "create_pr=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.should_create_pr.outputs.create_pr == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "docs: add Chinese translations (简体中文)"
+          title: "📚 Add Chinese translations (简体中文)"
+          body: |
+            ## 🌏 Chinese Translation Update
+
+            This PR adds/updates Simplified Chinese (简体中文) translations for the documentation.
+
+            ### What's translated:
+            - Agent definitions (`agents/`)
+            - Command definitions (`commands/`)
+            - Skill documentation (`skills/`)
+            - README and CHANGELOG
+
+            ### Translation approach:
+            - Uses OpenAI GPT-4o-mini for consistent, high-quality translations
+            - Preserves code blocks, technical terms, and formatting
+            - Output stored in `zh-CN/` subdirectory
+
+            ### Review checklist:
+            - [ ] Verify technical terms are accurate
+            - [ ] Check that code examples are preserved
+            - [ ] Ensure formatting is consistent
+
+            ---
+            🤖 Auto-generated by the translation workflow
+          branch: docs/chinese-translations
+          delete-branch: true
+          labels: |
+            documentation
+            translation
+            i18n
