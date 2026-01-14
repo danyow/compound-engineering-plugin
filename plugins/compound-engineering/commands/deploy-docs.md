@@ -1,27 +1,27 @@
 ---
 name: deploy-docs
-description: Validate and prepare documentation for GitHub Pages deployment
+description: 验证并准备文档以部署到 GitHub Pages
 ---
 
-# Deploy Documentation Command
+# 部署文档 Command
 
-Validate the documentation site and prepare it for GitHub Pages deployment.
+验证文档站点并准备其部署到 GitHub Pages。
 
-## Step 1: Validate Documentation
+## 步骤 1：验证文档
 
-Run these checks:
+运行这些检查：
 
 ```bash
-# Count components
+# 计数组件
 echo "Agents: $(ls plugins/compound-engineering/agents/*.md | wc -l)"
 echo "Commands: $(ls plugins/compound-engineering/commands/*.md | wc -l)"
 echo "Skills: $(ls -d plugins/compound-engineering/skills/*/ 2>/dev/null | wc -l)"
 
-# Validate JSON
+# 验证 JSON
 cat .claude-plugin/marketplace.json | jq . > /dev/null && echo "✓ marketplace.json valid"
 cat plugins/compound-engineering/.claude-plugin/plugin.json | jq . > /dev/null && echo "✓ plugin.json valid"
 
-# Check all HTML files exist
+# 检查所有 HTML 文件是否存在
 for page in index agents commands skills mcp-servers changelog getting-started; do
   if [ -f "plugins/compound-engineering/docs/pages/${page}.html" ] || [ -f "plugins/compound-engineering/docs/${page}.html" ]; then
     echo "✓ ${page}.html exists"
@@ -31,33 +31,33 @@ for page in index agents commands skills mcp-servers changelog getting-started; 
 done
 ```
 
-## Step 2: Check for Uncommitted Changes
+## 步骤 2：检查未提交的更改
 
 ```bash
 git status --porcelain plugins/compound-engineering/docs/
 ```
 
-If there are uncommitted changes, warn the user to commit first.
+如果有未提交的更改，警告用户先提交。
 
-## Step 3: Deployment Instructions
+## 步骤 3：部署说明
 
-Since GitHub Pages deployment requires a workflow file with special permissions, provide these instructions:
+由于 GitHub Pages 部署需要具有特殊权限的工作流文件，请提供以下说明：
 
-### First-time Setup
+### 首次设置
 
-1. Create `.github/workflows/deploy-docs.yml` with the GitHub Pages workflow
-2. Go to repository Settings > Pages
-3. Set Source to "GitHub Actions"
+1. 使用 GitHub Pages 工作流创建 `.github/workflows/deploy-docs.yml`
+2. 转到仓库 Settings > Pages
+3. 将 Source 设置为 "GitHub Actions"
 
-### Deploying
+### 部署
 
-After merging to `main`, the docs will auto-deploy. Or:
+合并到 `main` 后，文档将自动部署。或者：
 
-1. Go to Actions tab
-2. Select "Deploy Documentation to GitHub Pages"
-3. Click "Run workflow"
+1. 转到 Actions 标签
+2. 选择 "Deploy Documentation to GitHub Pages"
+3. 点击 "Run workflow"
 
-### Workflow File Content
+### 工作流文件内容
 
 ```yaml
 name: Deploy Documentation to GitHub Pages
@@ -93,20 +93,20 @@ jobs:
       - uses: actions/deploy-pages@v4
 ```
 
-## Step 4: Report Status
+## 步骤 4：报告状态
 
-Provide a summary:
+提供摘要：
 
 ```
-## Deployment Readiness
+## 部署准备情况
 
-✓ All HTML pages present
-✓ JSON files valid
-✓ Component counts match
+✓ 所有 HTML 页面都存在
+✓ JSON 文件有效
+✓ 组件计数匹配
 
-### Next Steps
-- [ ] Commit any pending changes
-- [ ] Push to main branch
-- [ ] Verify GitHub Pages workflow exists
-- [ ] Check deployment at https://everyinc.github.io/every-marketplace/
+### 后续步骤
+- [ ] 提交任何待处理的更改
+- [ ] 推送到 main 分支
+- [ ] 验证 GitHub Pages 工作流是否存在
+- [ ] 在 https://everyinc.github.io/every-marketplace/ 检查部署
 ```
