@@ -1,162 +1,162 @@
 ---
 name: generate_command
-description: Create a new custom slash command following conventions and best practices
-argument-hint: "[command purpose and requirements]"
+description: 遵循约定和最佳实践创建新的自定义 slash Command
+argument-hint: "[Command 目的和要求]"
 ---
 
-# Create a Custom Claude Code Command
+# 创建自定义 Claude Code Command
 
-Create a new slash command in `.claude/commands/` for the requested task.
+在 `.claude/commands/` 中为请求的任务创建新的 slash Command。
 
-## Goal
+## 目标
 
 #$ARGUMENTS
 
-## Key Capabilities to Leverage
+## 可利用的关键功能
 
-**File Operations:**
-- Read, Edit, Write - modify files precisely
-- Glob, Grep - search codebase
-- MultiEdit - atomic multi-part changes
+**文件操作：**
+- Read、Edit、Write - 精确修改文件
+- Glob、Grep - 搜索代码库
+- MultiEdit - 原子多部分更改
 
-**Development:**
-- Bash - run commands (git, tests, linters)
-- Task - launch specialized agents for complex tasks
-- TodoWrite - track progress with todo lists
+**开发：**
+- Bash - 运行命令（git、测试、linter）
+- Task - 为复杂任务启动专业 Agent
+- TodoWrite - 使用 todo 列表跟踪进度
 
-**Web & APIs:**
-- WebFetch, WebSearch - research documentation
-- GitHub (gh cli) - PRs, issues, reviews
-- Playwright - browser automation, screenshots
+**Web & API：**
+- WebFetch、WebSearch - 研究文档
+- GitHub (gh cli) - PR、Issue、审查
+- Playwright - 浏览器自动化、截图
 
-**Integrations:**
-- AppSignal - logs and monitoring
-- Context7 - framework docs
-- Stripe, Todoist, Featurebase (if relevant)
+**集成：**
+- AppSignal - 日志和监控
+- Context7 - 框架文档
+- Stripe、Todoist、Featurebase（如果相关）
 
-## Best Practices
+## 最佳实践
 
-1. **Be specific and clear** - detailed instructions yield better results
-2. **Break down complex tasks** - use step-by-step plans
-3. **Use examples** - reference existing code patterns
-4. **Include success criteria** - tests pass, linting clean, etc.
-5. **Think first** - use "think hard" or "plan" keywords for complex problems
-6. **Iterate** - guide the process step by step
+1. **具体明确** - 详细的说明产生更好的结果
+2. **分解复杂任务** - 使用分步计划
+3. **使用示例** - 引用现有代码模式
+4. **包含成功标准** - 测试通过、linting 清洁等
+5. **先思考** - 对复杂问题使用 "think hard" 或 "plan" 关键字
+6. **迭代** - 逐步指导流程
 
-## Required: YAML Frontmatter
+## 必需：YAML Frontmatter
 
-**EVERY command MUST start with YAML frontmatter:**
+**每个 Command 必须以 YAML frontmatter 开头：**
 
 ```yaml
 ---
 name: command-name
-description: Brief description of what this command does (max 100 chars)
-argument-hint: "[what arguments the command accepts]"
+description: 此 Command 功能的简要描述（最多 100 个字符）
+argument-hint: "[Command 接受的参数]"
 ---
 ```
 
-**Fields:**
-- `name`: Lowercase command identifier (used internally)
-- `description`: Clear, concise summary of command purpose
-- `argument-hint`: Shows user what arguments are expected (e.g., `[file path]`, `[PR number]`, `[optional: format]`)
+**字段：**
+- `name`：小写 Command 标识符（内部使用）
+- `description`：Command 目的的清晰、简洁摘要
+- `argument-hint`：向用户显示预期的参数（例如，`[file path]`、`[PR number]`、`[optional: format]`）
 
-## Structure Your Command
-
-```markdown
-# [Command Name]
-
-[Brief description of what this command does]
-
-## Steps
-
-1. [First step with specific details]
-   - Include file paths, patterns, or constraints
-   - Reference existing code if applicable
-
-2. [Second step]
-   - Use parallel tool calls when possible
-   - Check/verify results
-
-3. [Final steps]
-   - Run tests
-   - Lint code
-   - Commit changes (if appropriate)
-
-## Success Criteria
-
-- [ ] Tests pass
-- [ ] Code follows style guide
-- [ ] Documentation updated (if needed)
-```
-
-## Tips for Effective Commands
-
-- **Use $ARGUMENTS** placeholder for dynamic inputs
-- **Reference CLAUDE.md** patterns and conventions
-- **Include verification steps** - tests, linting, visual checks
-- **Be explicit about constraints** - don't modify X, use pattern Y
-- **Use XML tags** for structured prompts: `<task>`, `<requirements>`, `<constraints>`
-
-## Example Pattern
+## 构建您的 Command
 
 ```markdown
-Implement #$ARGUMENTS following these steps:
+# [Command 名称]
 
-1. Research existing patterns
-   - Search for similar code using Grep
-   - Read relevant files to understand approach
+[此 Command 功能的简要描述]
 
-2. Plan the implementation
-   - Think through edge cases and requirements
-   - Consider test cases needed
+## 步骤
 
-3. Implement
-   - Follow existing code patterns (reference specific files)
-   - Write tests first if doing TDD
-   - Ensure code follows CLAUDE.md conventions
+1. [第一步，包含具体细节]
+   - 包括文件路径、模式或约束
+   - 引用现有代码（如适用）
 
-4. Verify
-   - Run tests: `bin/rails test`
-   - Run linter: `bundle exec standardrb`
-   - Check changes with git diff
+2. [第二步]
+   - 尽可能使用并行工具调用
+   - 检查/验证结果
 
-5. Commit (optional)
-   - Stage changes
-   - Write clear commit message
+3. [最后步骤]
+   - 运行测试
+   - Lint 代码
+   - 提交更改（如适当）
+
+## 成功标准
+
+- [ ] 测试通过
+- [ ] 代码遵循风格指南
+- [ ] 文档已更新（如需要）
 ```
 
-## Creating the Command File
+## 有效 Command 的提示
 
-1. **Create the file** at `.claude/commands/[name].md` (subdirectories like `workflows/` supported)
-2. **Start with YAML frontmatter** (see section above)
-3. **Structure the command** using the template above
-4. **Test the command** by using it with appropriate arguments
+- **使用 $ARGUMENTS** 占位符获取动态输入
+- **引用 CLAUDE.md** 模式和约定
+- **包含验证步骤** - 测试、linting、视觉检查
+- **明确约束** - 不要修改 X，使用模式 Y
+- **使用 XML 标签** 进行结构化提示：`<task>`、`<requirements>`、`<constraints>`
 
-## Command File Template
+## 示例模式
+
+```markdown
+按照以下步骤实施 #$ARGUMENTS：
+
+1. 研究现有模式
+   - 使用 Grep 搜索类似代码
+   - 阅读相关文件以了解方法
+
+2. 规划实施
+   - 思考边缘情况和要求
+   - 考虑需要的测试用例
+
+3. 实施
+   - 遵循现有代码模式（引用特定文件）
+   - 如果进行 TDD，先编写测试
+   - 确保代码遵循 CLAUDE.md 约定
+
+4. 验证
+   - 运行测试：`bin/rails test`
+   - 运行 linter：`bundle exec standardrb`
+   - 使用 git diff 检查更改
+
+5. 提交（可选）
+   - 暂存更改
+   - 编写清晰的提交消息
+```
+
+## 创建 Command 文件
+
+1. **创建文件** 在 `.claude/commands/[name].md`（支持子目录如 `workflows/`）
+2. **以 YAML frontmatter 开头**（见上节）
+3. **使用模板构建 Command**
+4. **测试 Command** 通过使用适当的参数
+
+## Command 文件模板
 
 ```markdown
 ---
 name: command-name
-description: What this command does
-argument-hint: "[expected arguments]"
+description: 此 Command 的功能
+argument-hint: "[预期参数]"
 ---
 
-# Command Title
+# Command 标题
 
-Brief introduction of what the command does and when to use it.
+Command 功能和何时使用的简要介绍。
 
-## Workflow
+## 工作流
 
-### Step 1: [First Major Step]
+### 步骤 1：[第一个主要步骤]
 
-Details about what to do.
+要做什么的详细信息。
 
-### Step 2: [Second Major Step]
+### 步骤 2：[第二个主要步骤]
 
-Details about what to do.
+要做什么的详细信息。
 
-## Success Criteria
+## 成功标准
 
-- [ ] Expected outcome 1
-- [ ] Expected outcome 2
+- [ ] 预期结果 1
+- [ ] 预期结果 2
 ```

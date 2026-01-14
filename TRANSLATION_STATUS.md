@@ -1,6 +1,6 @@
 # 翻译状态 / Translation Status
 
-## 已完成 / Completed: 14/132 files (10.6%)
+## 已完成 / Completed: 18/132 files (13.6%)
 
 ### plans/ - 2 files ✅
 - grow-your-own-garden-plugin-architecture.md
@@ -13,7 +13,7 @@
 - commands/sync-tutorials.md
 - skills/coding-tutor/SKILL.md
 
-### plugins/compound-engineering/ - 7 files ✅
+### plugins/compound-engineering/ - 11 files ✅
 - README.md
 - commands/plan_review.md
 - commands/create-agent-skill.md
@@ -21,8 +21,12 @@
 - commands/resolve_todo_parallel.md
 - commands/resolve_pr_parallel.md
 - commands/reproduce-bug.md
+- commands/changelog.md
+- commands/report-bug.md
+- commands/deploy-docs.md
+- commands/heal-skill.md
 
-## 待翻译 / Remaining: 118 files
+## 待翻译 / Remaining: 114 files
 
 ### plugins/compound-engineering/
 
