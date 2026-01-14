@@ -1,34 +1,34 @@
 ---
 name: resolve_parallel
-description: Resolve all TODO comments using parallel processing
-argument-hint: "[optional: specific TODO pattern or file]"
+description: 使用并行处理解决所有 TODO 注释
+argument-hint: "[可选：特定 TODO 模式或文件]"
 ---
 
-Resolve all TODO comments using parallel processing.
+使用并行处理解决所有 TODO 注释。
 
-## Workflow
+## 工作流
 
-### 1. Analyze
+### 1. 分析
 
-Gather the things todo from above.
+从上面收集需要做的事情。
 
-### 2. Plan
+### 2. 计划
 
-Create a TodoWrite list of all unresolved items grouped by type.Make sure to look at dependencies that might occur and prioritize the ones needed by others. For example, if you need to change a name, you must wait to do the others. Output a mermaid flow diagram showing how we can do this. Can we do everything in parallel? Do we need to do one first that leads to others in parallel? I'll put the to-dos in the mermaid diagram flow‑wise so the agent knows how to proceed in order.
+创建所有未解决项目的 TodoWrite 列表，按类型分组。确保查看可能发生的依赖关系并优先处理其他人需要的内容。例如，如果您需要更改名称，则必须等待执行其他操作。输出一个 mermaid 流程图，显示我们如何做到这一点。我们可以并行完成所有操作吗？我们是否需要先做一个，然后并行执行其他操作？我将把待办事项按流程方式放在 mermaid 图中，以便 Agent 知道如何按顺序进行。
 
-### 3. Implement (PARALLEL)
+### 3. 实施（并行）
 
-Spawn a pr-comment-resolver agent for each unresolved item in parallel.
+为每个未解决的项目并行生成一个 pr-comment-resolver Agent。
 
-So if there are 3 comments, it will spawn 3 pr-comment-resolver agents in parallel. liek this
+因此，如果有 3 条评论，它将并行生成 3 个 pr-comment-resolver Agent，像这样
 
 1. Task pr-comment-resolver(comment1)
 2. Task pr-comment-resolver(comment2)
 3. Task pr-comment-resolver(comment3)
 
-Always run all in parallel subagents/Tasks for each Todo item.
+始终为每个 Todo 项目并行运行所有子 Agent/Task。
 
-### 4. Commit & Resolve
+### 4. 提交和解决
 
-- Commit changes
-- Push to remote
+- 提交更改
+- 推送到远程

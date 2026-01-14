@@ -1,25 +1,25 @@
-# Sync Coding Tutor Tutorials
+# 同步 Coding Tutor 教程
 
-Commit and push your tutorials to the GitHub repository for backup and mobile reading.
+将您的教程提交并推送到 GitHub 仓库以进行备份和移动阅读。
 
-## Instructions
+## 说明
 
-1. **Go to the tutorials repo**: `cd ~/coding-tutor-tutorials`
+1. **前往教程仓库**：`cd ~/coding-tutor-tutorials`
 
-2. **Check for changes**: Run `git status` to see what's new or modified
+2. **检查更改**：运行 `git status` 查看新增或修改的内容
 
-3. **If there are changes**:
-   - Stage all changes: `git add -A`
-   - Create a commit with a message summarizing what was added/updated (e.g., "Add tutorial on React hooks" or "Update quiz scores")
-   - Push to origin: `git push`
+3. **如果有更改**：
+   - 暂存所有更改：`git add -A`
+   - 创建一个总结添加/更新内容的提交消息（例如，"Add tutorial on React hooks" 或 "Update quiz scores"）
+   - 推送到远程：`git push`
 
-4. **If no GitHub remote exists**:
-   - Create the repo: `gh repo create coding-tutor-tutorials --private --source=. --push`
+4. **如果不存在 GitHub 远程仓库**：
+   - 创建仓库：`gh repo create coding-tutor-tutorials --private --source=. --push`
 
-5. **Report results**: Tell the user what was synced or that everything is already up to date
+5. **报告结果**：告诉用户同步了什么或一切都已是最新状态
 
-## Notes
+## 注意事项
 
-- The tutorials repo is at: `~/coding-tutor-tutorials/`
-- Always use `--private` when creating the GitHub repo
-- This is your personal learning journey - keep it backed up!
+- 教程仓库位于：`~/coding-tutor-tutorials/`
+- 创建 GitHub 仓库时始终使用 `--private`
+- 这是您个人的学习旅程 - 保持备份！
