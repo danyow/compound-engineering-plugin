@@ -55,12 +55,18 @@ jobs:
           """
           Translate markdown files to Chinese using OpenAI API.
           Preserves code blocks, frontmatter, and technical terms.
+          Requires Python 3.11+
           """
           import os
           import sys
-          import re
+          import time
+          import traceback
           from pathlib import Path
-          from openai import OpenAI
+          from openai import OpenAI, RateLimitError, APIError
+
+          # Retry configuration
+          MAX_RETRIES = 3
+          BASE_DELAY = 2  # seconds
 
           def get_files_to_translate(base_path: str) -> list[Path]:
               """Get all markdown files that need translation."""
@@ -71,21 +77,23 @@ jobs:
               for pattern in ['**/*.md']:
                   files.extend(base.glob(pattern))
               
-              # Filter out already translated files (zh-CN versions)
-              files = [f for f in files if '.zh-CN' not in f.name and '/zh-CN/' not in str(f)]
+              # Filter out already translated files
+              # Exclude: files in zh-CN directory OR files with .zh-CN suffix
+              filtered = []
+              for f in files:
+                  path_str = str(f)
+                  # Skip if file is inside a zh-CN directory
+                  if '/zh-CN/' in path_str or path_str.startswith('zh-CN/'):
+                      continue
+                  # Skip if file has zh-CN in the name (e.g., README.zh-CN.md)
+                  if '.zh-CN.' in f.name or f.name.startswith('zh-CN'):
+                      continue
+                  filtered.append(f)
               
-              return sorted(files)
+              return sorted(filtered)
 
-          def extract_frontmatter(content: str) -> tuple[str, str]:
-              """Extract YAML frontmatter from markdown content."""
-              if content.startswith('---'):
-                  parts = content.split('---', 2)
-                  if len(parts) >= 3:
-                      return parts[1], parts[2]
-              return '', content
-
-          def translate_text(client: OpenAI, text: str, filename: str) -> str:
-              """Translate text to Chinese using OpenAI."""
+          def translate_text_with_retry(client: OpenAI, text: str, filename: str) -> str:
+              """Translate text to Chinese using OpenAI with retry logic."""
               system_prompt = """You are a professional translator specializing in technical documentation.
           Translate the following content from English to Simplified Chinese (简体中文).
 
@@ -109,16 +117,31 @@ jobs:
           - npm, pip, gem
           """
 
-              response = client.chat.completions.create(
-                  model="gpt-4o-mini",
-                  messages=[
-                      {"role": "system", "content": system_prompt},
-                      {"role": "user", "content": f"Translate this file ({filename}):\n\n{text}"}
-                  ],
-                  temperature=0.3
-              )
-              
-              return response.choices[0].message.content
+              for attempt in range(MAX_RETRIES):
+                  try:
+                      response = client.chat.completions.create(
+                          model="gpt-4o-mini",
+                          messages=[
+                              {"role": "system", "content": system_prompt},
+                              {"role": "user", "content": f"Translate this file ({filename}):\n\n{text}"}
+                          ],
+                          temperature=0.3
+                      )
+                      return response.choices[0].message.content
+                  
+                  except RateLimitError as e:
+                      delay = BASE_DELAY * (2 ** attempt)
+                      print(f"  Rate limited, waiting {delay}s before retry {attempt + 1}/{MAX_RETRIES}")
+                      time.sleep(delay)
+                      if attempt == MAX_RETRIES - 1:
+                          raise
+                  
+                  except APIError as e:
+                      delay = BASE_DELAY * (2 ** attempt)
+                      print(f"  API error: {e}, retrying in {delay}s ({attempt + 1}/{MAX_RETRIES})")
+                      time.sleep(delay)
+                      if attempt == MAX_RETRIES - 1:
+                          raise
 
           def get_zh_path(original_path: Path, base_path: str) -> Path:
               """Generate the Chinese version path."""
@@ -145,6 +168,8 @@ jobs:
               print(f"Found {len(files)} files to translate in {base_path}")
               
               translated_count = 0
+              failed_files = []
+              
               for filepath in files:
                   print(f"\nTranslating: {filepath}")
                   
@@ -156,8 +181,8 @@ jobs:
                           print(f"  Skipping empty file")
                           continue
                       
-                      # Translate
-                      translated = translate_text(client, content, filepath.name)
+                      # Translate with retry logic
+                      translated = translate_text_with_retry(client, content, filepath.name)
                       
                       # Generate output path
                       zh_path = get_zh_path(filepath, base_path)
@@ -168,16 +193,31 @@ jobs:
                       print(f"  Saved to: {zh_path}")
                       translated_count += 1
                       
+                  except RateLimitError as e:
+                      print(f"  Failed (rate limit): {type(e).__name__}: {e}")
+                      failed_files.append((filepath, str(e)))
+                      continue
+                  except APIError as e:
+                      print(f"  Failed (API error): {type(e).__name__}: {e}")
+                      failed_files.append((filepath, str(e)))
+                      continue
                   except Exception as e:
-                      print(f"  Error: {e}")
+                      print(f"  Failed ({type(e).__name__}): {e}")
+                      print(f"  Traceback: {traceback.format_exc()}")
+                      failed_files.append((filepath, str(e)))
                       continue
               
               print(f"\n✅ Translated {translated_count} files")
+              if failed_files:
+                  print(f"⚠️ Failed to translate {len(failed_files)} files:")
+                  for f, err in failed_files:
+                      print(f"   - {f}: {err}")
               
               # Output for GitHub Actions
               if os.environ.get('GITHUB_OUTPUT'):
                   with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                       f.write(f"translated_count={translated_count}\n")
+                      f.write(f"failed_count={len(failed_files)}\n")
 
           if __name__ == '__main__':
               main()
@@ -199,8 +239,22 @@ jobs:
             echo "has_changes=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Should create PR
+        id: should_create_pr
+        run: |
+          # Create PR if there are changes AND (manual trigger with create_pr=true OR push event)
+          if [[ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]]; then
+            if [[ "${{ github.event_name }}" == "push" ]] || [[ "${{ github.event.inputs.create_pr }}" == "true" ]]; then
+              echo "create_pr=true" >> $GITHUB_OUTPUT
+            else
+              echo "create_pr=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "create_pr=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Create Pull Request
-        if: steps.check_changes.outputs.has_changes == 'true' && (github.event.inputs.create_pr == 'true' || github.event_name == 'push')
+        if: steps.should_create_pr.outputs.create_pr == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
