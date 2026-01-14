@@ -55,7 +55,9 @@ jobs:
           """
           Translate markdown files to Chinese using OpenAI API.
           Preserves code blocks, frontmatter, and technical terms.
-          Requires Python 3.11+
+          
+          Note: Uses Python 3.9+ type hints (list[Path] instead of List[Path]).
+          The workflow specifies Python 3.11 for consistency.
           """
           import os
           import sys
@@ -71,11 +73,9 @@ jobs:
           def get_files_to_translate(base_path: str) -> list[Path]:
               """Get all markdown files that need translation."""
               base = Path(base_path)
-              files = []
               
               # Find all .md files
-              for pattern in ['**/*.md']:
-                  files.extend(base.glob(pattern))
+              files = list(base.glob('**/*.md'))
               
               # Filter out already translated files
               # Exclude: files in zh-CN directory OR files with .zh-CN suffix
@@ -127,7 +127,10 @@ jobs:
                           ],
                           temperature=0.3
                       )
-                      return response.choices[0].message.content
+                      content = response.choices[0].message.content
+                      if content is None:
+                          raise ValueError("OpenAI returned empty content")
+                      return content
                   
                   except RateLimitError as e:
                       delay = BASE_DELAY * (2 ** attempt)
