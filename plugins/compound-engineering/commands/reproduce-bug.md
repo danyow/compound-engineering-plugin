@@ -1,99 +1,99 @@
 ---
 name: reproduce-bug
-description: Reproduce and investigate a bug using logs, console inspection, and browser screenshots
-argument-hint: "[GitHub issue number]"
+description: 使用日志、控制台检查和浏览器截图重现和调查 bug
+argument-hint: "[GitHub Issue 编号]"
 ---
 
-# Reproduce Bug Command
+# 重现 Bug Command
 
-Look at github issue #$ARGUMENTS and read the issue description and comments.
+查看 GitHub Issue #$ARGUMENTS 并阅读 Issue 描述和评论。
 
-## Phase 1: Log Investigation
+## 阶段 1：日志调查
 
-Run the following agents in parallel to investigate the bug:
+并行运行以下 Agent 来调查 bug：
 
 1. Task rails-console-explorer(issue_description)
 2. Task appsignal-log-investigator(issue_description)
 
-Think about the places it could go wrong looking at the codebase. Look for logging output we can look for.
+查看代码库，思考可能出错的地方。寻找可以查找的日志输出。
 
-Run the agents again to find any logs that could help us reproduce the bug.
+再次运行这些 Agent 以找到可以帮助我们重现 bug 的任何日志。
 
-Keep running these agents until you have a good idea of what is going on.
+继续运行这些 Agent 直到您对正在发生的事情有一个好的了解。
 
-## Phase 2: Visual Reproduction with Playwright
+## 阶段 2：使用 Playwright 进行可视化重现
 
-If the bug is UI-related or involves user flows, use Playwright to visually reproduce it:
+如果 bug 与 UI 相关或涉及用户流程，使用 Playwright 可视化重现它：
 
-### Step 1: Verify Server is Running
+### 步骤 1：验证服务器正在运行
 
 ```
 mcp__plugin_compound-engineering_pw__browser_navigate({ url: "http://localhost:3000" })
 mcp__plugin_compound-engineering_pw__browser_snapshot({})
 ```
 
-If server not running, inform user to start `bin/dev`.
+如果服务器未运行，通知用户启动 `bin/dev`。
 
-### Step 2: Navigate to Affected Area
+### 步骤 2：导航到受影响的区域
 
-Based on the issue description, navigate to the relevant page:
+根据 Issue 描述，导航到相关页面：
 
 ```
 mcp__plugin_compound-engineering_pw__browser_navigate({ url: "http://localhost:3000/[affected_route]" })
 mcp__plugin_compound-engineering_pw__browser_snapshot({})
 ```
 
-### Step 3: Capture Screenshots
+### 步骤 3：捕获截图
 
-Take screenshots at each step of reproducing the bug:
+在重现 bug 的每个步骤中截图：
 
 ```
 mcp__plugin_compound-engineering_pw__browser_take_screenshot({ filename: "bug-[issue]-step-1.png" })
 ```
 
-### Step 4: Follow User Flow
+### 步骤 4：跟随用户流程
 
-Reproduce the exact steps from the issue:
+重现 Issue 中的确切步骤：
 
-1. **Read the issue's reproduction steps**
-2. **Execute each step using Playwright:**
-   - `browser_click` for clicking elements
-   - `browser_type` for filling forms
-   - `browser_snapshot` to see the current state
-   - `browser_take_screenshot` to capture evidence
+1. **阅读 Issue 的重现步骤**
+2. **使用 Playwright 执行每个步骤：**
+   - `browser_click` 用于点击元素
+   - `browser_type` 用于填写表单
+   - `browser_snapshot` 查看当前状态
+   - `browser_take_screenshot` 捕获证据
 
-3. **Check for console errors:**
+3. **检查控制台错误：**
    ```
    mcp__plugin_compound-engineering_pw__browser_console_messages({ level: "error" })
    ```
 
-### Step 5: Capture Bug State
+### 步骤 5：捕获 Bug 状态
 
-When you reproduce the bug:
+当您重现 bug 时：
 
-1. Take a screenshot of the bug state
-2. Capture console errors
-3. Document the exact steps that triggered it
+1. 截取 bug 状态的截图
+2. 捕获控制台错误
+3. 记录触发它的确切步骤
 
 ```
 mcp__plugin_compound-engineering_pw__browser_take_screenshot({ filename: "bug-[issue]-reproduced.png" })
 ```
 
-## Phase 3: Document Findings
+## 阶段 3：记录发现
 
-**Reference Collection:**
+**参考收集：**
 
-- [ ] Document all research findings with specific file paths (e.g., `app/services/example_service.rb:42`)
-- [ ] Include screenshots showing the bug reproduction
-- [ ] List console errors if any
-- [ ] Document the exact reproduction steps
+- [ ] 用特定文件路径记录所有研究发现（例如，`app/services/example_service.rb:42`）
+- [ ] 包含显示 bug 重现的截图
+- [ ] 列出任何控制台错误
+- [ ] 记录确切的重现步骤
 
-## Phase 4: Report Back
+## 阶段 4：报告
 
-Add a comment to the issue with:
+向 Issue 添加评论，包含：
 
-1. **Findings** - What you discovered about the cause
-2. **Reproduction Steps** - Exact steps to reproduce (verified)
-3. **Screenshots** - Visual evidence of the bug (upload captured screenshots)
-4. **Relevant Code** - File paths and line numbers
-5. **Suggested Fix** - If you have one
+1. **发现** - 您发现的关于原因的内容
+2. **重现步骤** - 重现的确切步骤（已验证）
+3. **截图** - bug 的视觉证据（上传捕获的截图）
+4. **相关代码** - 文件路径和行号
+5. **建议的修复** - 如果您有的话
