@@ -56,8 +56,7 @@ jobs:
           Translate markdown files to Chinese using OpenAI API.
           Preserves code blocks, frontmatter, and technical terms.
           
-          Note: Uses Python 3.9+ type hints (list[Path] instead of List[Path]).
-          The workflow specifies Python 3.11 for consistency.
+          Requires Python 3.11 (uses modern type hints).
           """
           import os
           import sys
@@ -129,7 +128,7 @@ jobs:
                       )
                       content = response.choices[0].message.content
                       if content is None:
-                          raise ValueError("OpenAI returned empty content")
+                          raise ValueError(f"OpenAI returned empty content for file {filename}")
                       return content
                   
                   except RateLimitError as e:
