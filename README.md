@@ -36,6 +36,22 @@ Compound engineering inverts this. 80% is in planning and review, 20% is in exec
 - Codify knowledge so it's reusable
 - Keep quality high so future changes are easy
 
+## Translation / 翻译
+
+This repository includes a GitHub Action workflow for translating documentation to Chinese (简体中文).
+
+**Manual trigger:**
+1. Go to Actions → "Translate Documentation to Chinese"
+2. Click "Run workflow"
+3. Optionally specify a target path
+4. Review the generated PR with translations
+
+**Using Copilot Coding Agent:**
+1. Assign an issue to `@copilot` with label requesting Chinese translation
+2. Reference the translation agent: `.github/agents/translate-chinese.md`
+
+Translations are stored in `zh-CN/` subdirectories alongside the original files.
+
 ## Learn More
 
 - [Full component reference](plugins/compound-engineering/README.md) - all agents, commands, skills
