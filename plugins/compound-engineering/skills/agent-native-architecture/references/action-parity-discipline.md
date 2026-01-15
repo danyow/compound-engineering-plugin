@@ -1,7 +1,7 @@
 <overview>
-A structured discipline for ensuring agents can do everything users can do. Every UI action should have an equivalent agent tool. This isn't a one-time check—it's an ongoing practice integrated into your development workflow.
+一个结构化的规则,确保 agent 能够执行用户可以执行的所有操作。每个 UI 操作都应该有对应的 agent tool。这不是一次性的检查——而是集成到开发工作流中的持续实践。
 
-**Core principle:** When adding a UI feature, add the corresponding tool in the same PR.
+**核心原则:**添加 UI 功能时,在同一个 PR 中添加相应的 tool。
 </overview>
 
 <why_parity>
