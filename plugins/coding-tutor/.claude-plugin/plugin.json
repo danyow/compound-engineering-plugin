@@ -1,7 +1,7 @@
 {
   "name": "coding-tutor",
   "version": "1.2.1",
-  "description": "Personalized coding tutorials that use your actual codebase for examples with spaced repetition quizzes",
+  "description": "个性化编程教程，使用您的实际代码库作为示例，并配有间隔重复测验",
   "author": {
     "name": "Nityesh Agarwal"
   },
