@@ -1,141 +1,141 @@
 ---
 name: compound-docs
-description: Capture solved problems as categorized documentation with YAML frontmatter for fast lookup
+description: 将已解决的问题捕获为带有 YAML frontmatter 的分类文档，以便快速查找
 allowed-tools:
-  - Read # Parse conversation context
-  - Write # Create resolution docs
-  - Bash # Create directories
-  - Grep # Search existing docs
+  - Read # 解析对话上下文
+  - Write # 创建解决方案文档
+  - Bash # 创建目录
+  - Grep # 搜索现有文档
 preconditions:
-  - Problem has been solved (not in-progress)
-  - Solution has been verified working
+  - 问题已解决（非进行中）
+  - 解决方案已验证可工作
 ---
 
 # compound-docs Skill
 
-**Purpose:** Automatically document solved problems to build searchable institutional knowledge with category-based organization (enum-validated problem types).
+**目的：**在确认后立即自动记录已解决的问题，构建具有基于类别组织（枚举验证的问题类型）的可搜索机构知识。
 
-## Overview
+## 概述
 
-This skill captures problem solutions immediately after confirmation, creating structured documentation that serves as a searchable knowledge base for future sessions.
+此 skill 在确认后立即捕获问题解决方案，创建结构化文档，作为未来会话的可搜索知识库。
 
-**Organization:** Single-file architecture - each problem documented as one markdown file in its symptom category directory (e.g., `docs/solutions/performance-issues/n-plus-one-briefs.md`). Files use YAML frontmatter for metadata and searchability.
+**组织方式：**单文件架构 - 每个问题记录为其症状类别目录中的一个 markdown 文件（例如，`docs/solutions/performance-issues/n-plus-one-briefs.md`）。文件使用 YAML frontmatter 存储元数据和可搜索性。
 
 ---
 
 <critical_sequence name="documentation-capture" enforce_order="strict">
 
-## 7-Step Process
+## 7 步流程
 
 <step number="1" required="true">
-### Step 1: Detect Confirmation
+### 步骤 1：检测确认
 
-**Auto-invoke after phrases:**
+**在以下短语后自动调用：**
 
-- "that worked"
-- "it's fixed"
-- "working now"
-- "problem solved"
-- "that did it"
+- "that worked"（成功了）
+- "it's fixed"（修好了）
+- "working now"（现在可以工作了）
+- "problem solved"（问题已解决）
+- "that did it"（就是这样）
 
-**OR manual:** `/doc-fix` command
+**或手动：** `/doc-fix` 命令
 
-**Non-trivial problems only:**
+**仅非平凡问题：**
 
-- Multiple investigation attempts needed
-- Tricky debugging that took time
-- Non-obvious solution
-- Future sessions would benefit
+- 需要多次调查尝试
+- 耗时的棘手调试
+- 非显而易见的解决方案
+- 未来会话会受益
 
-**Skip documentation for:**
+**跳过以下情况的文档：**
 
-- Simple typos
-- Obvious syntax errors
-- Trivial fixes immediately corrected
+- 简单的拼写错误
+- 明显的语法错误
+- 立即纠正的平凡修复
 </step>
 
 <step number="2" required="true" depends_on="1">
-### Step 2: Gather Context
+### 步骤 2：收集上下文
 
-Extract from conversation history:
+从对话历史中提取：
 
-**Required information:**
+**必需信息：**
 
-- **Module name**: Which CORA module had the problem
-- **Symptom**: Observable error/behavior (exact error messages)
-- **Investigation attempts**: What didn't work and why
-- **Root cause**: Technical explanation of actual problem
-- **Solution**: What fixed it (code/config changes)
-- **Prevention**: How to avoid in future
+- **模块名称**：哪个 CORA 模块有问题
+- **症状**：可观察的错误/行为（确切的错误消息）
+- **调查尝试**：什么没有起作用以及为什么
+- **根本原因**：实际问题的技术解释
+- **解决方案**：修复它的方法（代码/配置更改）
+- **预防**：如何在未来避免
 
-**Environment details:**
+**环境详细信息：**
 
-- Rails version
-- Stage (0-6 or post-implementation)
-- OS version
-- File/line references
+- Rails 版本
+- 阶段（0-6 或实施后）
+- 操作系统版本
+- 文件/行引用
 
-**BLOCKING REQUIREMENT:** If critical context is missing (module name, exact error, stage, or resolution steps), ask user and WAIT for response before proceeding to Step 3:
+**阻塞要求：**如果缺少关键上下文（模块名称、确切错误、阶段或解决步骤），询问用户并等待响应后再继续步骤 3：
 
 ```
-I need a few details to document this properly:
+我需要一些细节来正确记录这个：
 
-1. Which module had this issue? [ModuleName]
-2. What was the exact error message or symptom?
-3. What stage were you in? (0-6 or post-implementation)
+1. 哪个模块有这个问题？[模块名称]
+2. 确切的错误消息或症状是什么？
+3. 你在哪个阶段？（0-6 或实施后）
 
-[Continue after user provides details]
+[在用户提供详细信息后继续]
 ```
 </step>
 
 <step number="3" required="false" depends_on="2">
-### Step 3: Check Existing Docs
+### 步骤 3：检查现有文档
 
-Search docs/solutions/ for similar issues:
+搜索 docs/solutions/ 中的类似问题：
 
 ```bash
-# Search by error message keywords
+# 按错误消息关键字搜索
 grep -r "exact error phrase" docs/solutions/
 
-# Search by symptom category
+# 按症状类别搜索
 ls docs/solutions/[category]/
 ```
 
-**IF similar issue found:**
+**如果找到类似问题：**
 
-THEN present decision options:
+则呈现决策选项：
 
 ```
-Found similar issue: docs/solutions/[path]
+找到类似问题：docs/solutions/[path]
 
-What's next?
-1. Create new doc with cross-reference (recommended)
-2. Update existing doc (only if same root cause)
-3. Other
+接下来做什么？
+1. 创建带交叉引用的新文档（推荐）
+2. 更新现有文档（仅当根本原因相同时）
+3. 其他
 
-Choose (1-3): _
+选择 (1-3): _
 ```
 
-WAIT for user response, then execute chosen action.
+等待用户响应，然后执行选择的操作。
 
-**ELSE** (no similar issue found):
+**否则**（未找到类似问题）：
 
-Proceed directly to Step 4 (no user interaction needed).
+直接进入步骤 4（无需用户交互）。
 </step>
 
 <step number="4" required="true" depends_on="2">
-### Step 4: Generate Filename
+### 步骤 4：生成文件名
 
-Format: `[sanitized-symptom]-[module]-[YYYYMMDD].md`
+格式：`[sanitized-symptom]-[module]-[YYYYMMDD].md`
 
-**Sanitization rules:**
+**清理规则：**
 
-- Lowercase
-- Replace spaces with hyphens
-- Remove special characters except hyphens
-- Truncate to reasonable length (< 80 chars)
+- 小写
+- 用连字符替换空格
+- 删除特殊字符（连字符除外）
+- 截断到合理长度（< 80 字符）
 
-**Examples:**
+**示例：**
 
 - `missing-include-BriefSystem-20251110.md`
 - `parameter-not-saving-state-EmailProcessing-20251110.md`
@@ -143,39 +143,39 @@ Format: `[sanitized-symptom]-[module]-[YYYYMMDD].md`
 </step>
 
 <step number="5" required="true" depends_on="4" blocking="true">
-### Step 5: Validate YAML Schema
+### 步骤 5：验证 YAML Schema
 
-**CRITICAL:** All docs require validated YAML frontmatter with enum validation.
+**关键：**所有文档都需要经过验证的 YAML frontmatter 和枚举验证。
 
 <validation_gate name="yaml-schema" blocking="true">
 
-**Validate against schema:**
-Load `schema.yaml` and classify the problem against the enum values defined in [yaml-schema.md](./references/yaml-schema.md). Ensure all required fields are present and match allowed values exactly.
+**针对 schema 验证：**
+加载 `schema.yaml` 并根据 [yaml-schema.md](./references/yaml-schema.md) 中定义的枚举值对问题进行分类。确保所有必需字段都存在并完全匹配允许的值。
 
-**BLOCK if validation fails:**
+**如果验证失败则阻塞：**
 
 ```
-❌ YAML validation failed
+❌ YAML 验证失败
 
-Errors:
-- problem_type: must be one of schema enums, got "compilation_error"
-- severity: must be one of [critical, moderate, minor], got "high"
-- symptoms: must be array with 1-5 items, got string
+错误：
+- problem_type: 必须是 schema 枚举之一，得到 "compilation_error"
+- severity: 必须是 [critical, moderate, minor] 之一，得到 "high"
+- symptoms: 必须是包含 1-5 个项目的数组，得到字符串
 
-Please provide corrected values.
+请提供更正的值。
 ```
 
-**GATE ENFORCEMENT:** Do NOT proceed to Step 6 (Create Documentation) until YAML frontmatter passes all validation rules defined in `schema.yaml`.
+**门控强制：**在 YAML frontmatter 通过 `schema.yaml` 中定义的所有验证规则之前，不要进入步骤 6（创建文档）。
 
 </validation_gate>
 </step>
 
 <step number="6" required="true" depends_on="5">
-### Step 6: Create Documentation
+### 步骤 6：创建文档
 
-**Determine category from problem_type:** Use the category mapping defined in [yaml-schema.md](./references/yaml-schema.md) (lines 49-61).
+**从 problem_type 确定类别：**使用 [yaml-schema.md](./references/yaml-schema.md)（第 49-61 行）中定义的类别映射。
 
-**Create documentation file:**
+**创建文档文件：**
 
 ```bash
 PROBLEM_TYPE="[from validated YAML]"
@@ -183,73 +183,73 @@ CATEGORY="[mapped from problem_type]"
 FILENAME="[generated-filename].md"
 DOC_PATH="docs/solutions/${CATEGORY}/${FILENAME}"
 
-# Create directory if needed
+# 如果需要则创建目录
 mkdir -p "docs/solutions/${CATEGORY}"
 
-# Write documentation using template from assets/resolution-template.md
-# (Content populated with Step 2 context and validated YAML frontmatter)
+# 使用 assets/resolution-template.md 中的模板编写文档
+# (使用步骤 2 的上下文和验证的 YAML frontmatter 填充内容)
 ```
 
-**Result:**
-- Single file in category directory
-- Enum validation ensures consistent categorization
+**结果：**
+- 类别目录中的单个文件
+- 枚举验证确保一致的分类
 
-**Create documentation:** Populate the structure from `assets/resolution-template.md` with context gathered in Step 2 and validated YAML frontmatter from Step 5.
+**创建文档：**使用步骤 2 收集的上下文和步骤 5 验证的 YAML frontmatter 填充 `assets/resolution-template.md` 中的结构。
 </step>
 
 <step number="7" required="false" depends_on="6">
-### Step 7: Cross-Reference & Critical Pattern Detection
+### 步骤 7：交叉引用和关键模式检测
 
-If similar issues found in Step 3:
+如果在步骤 3 中找到类似问题：
 
-**Update existing doc:**
+**更新现有文档：**
 
 ```bash
-# Add Related Issues link to similar doc
+# 向类似文档添加相关问题链接
 echo "- See also: [$FILENAME]($REAL_FILE)" >> [similar-doc.md]
 ```
 
-**Update new doc:**
-Already includes cross-reference from Step 6.
+**更新新文档：**
+已包含步骤 6 的交叉引用。
 
-**Update patterns if applicable:**
+**如适用则更新模式：**
 
-If this represents a common pattern (3+ similar issues):
+如果这代表一个常见模式（3+ 个类似问题）：
 
 ```bash
-# Add to docs/solutions/patterns/common-solutions.md
+# 添加到 docs/solutions/patterns/common-solutions.md
 cat >> docs/solutions/patterns/common-solutions.md << 'EOF'
 
-## [Pattern Name]
+## [模式名称]
 
-**Common symptom:** [Description]
-**Root cause:** [Technical explanation]
-**Solution pattern:** [General approach]
+**常见症状：** [描述]
+**根本原因：** [技术解释]
+**解决方案模式：** [通用方法]
 
-**Examples:**
-- [Link to doc 1]
-- [Link to doc 2]
-- [Link to doc 3]
+**示例：**
+- [链接到文档 1]
+- [链接到文档 2]
+- [链接到文档 3]
 EOF
 ```
 
-**Critical Pattern Detection (Optional Proactive Suggestion):**
+**关键模式检测（可选的主动建议）：**
 
-If this issue has automatic indicators suggesting it might be critical:
-- Severity: `critical` in YAML
-- Affects multiple modules OR foundational stage (Stage 2 or 3)
-- Non-obvious solution
+如果此问题具有表明可能是关键的自动指标：
+- 严重性：YAML 中的 `critical`
+- 影响多个模块或基础阶段（阶段 2 或 3）
+- 非显而易见的解决方案
 
-Then in the decision menu (Step 8), add a note:
+则在决策菜单（步骤 8）中添加注释：
 ```
-💡 This might be worth adding to Required Reading (Option 2)
+💡 这可能值得添加到必读内容（选项 2）
 ```
 
-But **NEVER auto-promote**. User decides via decision menu (Option 2).
+但**永远不要自动提升**。用户通过决策菜单决定（选项 2）。
 
-**Template for critical pattern addition:**
+**关键模式添加的模板：**
 
-When user selects Option 2 (Add to Required Reading), use the template from `assets/critical-pattern-template.md` to structure the pattern entry. Number it sequentially based on existing patterns in `docs/solutions/patterns/cora-critical-patterns.md`.
+当用户选择选项 2（添加到必读内容）时，使用 `assets/critical-pattern-template.md` 中的模板来构建模式条目。根据 `docs/solutions/patterns/cora-critical-patterns.md` 中的现有模式按顺序编号。
 </step>
 
 </critical_sequence>
@@ -258,86 +258,86 @@ When user selects Option 2 (Add to Required Reading), use the template from `ass
 
 <decision_gate name="post-documentation" wait_for_user="true">
 
-## Decision Menu After Capture
+## 捕获后的决策菜单
 
-After successful documentation, present options and WAIT for user response:
+成功记录后，呈现选项并等待用户响应：
 
 ```
-✓ Solution documented
+✓ 解决方案已记录
 
-File created:
+创建的文件：
 - docs/solutions/[category]/[filename].md
 
-What's next?
-1. Continue workflow (recommended)
-2. Add to Required Reading - Promote to critical patterns (cora-critical-patterns.md)
-3. Link related issues - Connect to similar problems
-4. Add to existing skill - Add to a learning skill (e.g., hotwire-native)
-5. Create new skill - Extract into new learning skill
-6. View documentation - See what was captured
-7. Other
+接下来做什么？
+1. 继续工作流（推荐）
+2. 添加到必读内容 - 提升到关键模式（cora-critical-patterns.md）
+3. 链接相关问题 - 连接到类似问题
+4. 添加到现有 skill - 添加到学习 skill（例如，hotwire-native）
+5. 创建新 skill - 提取到新的学习 skill
+6. 查看文档 - 查看捕获的内容
+7. 其他
 ```
 
-**Handle responses:**
+**处理响应：**
 
-**Option 1: Continue workflow**
+**选项 1：继续工作流**
 
-- Return to calling skill/workflow
-- Documentation is complete
+- 返回到调用 skill/工作流
+- 文档已完成
 
-**Option 2: Add to Required Reading** ⭐ PRIMARY PATH FOR CRITICAL PATTERNS
+**选项 2：添加到必读内容** ⭐ 关键模式的主要路径
 
-User selects this when:
-- System made this mistake multiple times across different modules
-- Solution is non-obvious but must be followed every time
-- Foundational requirement (Rails, Rails API, threading, etc.)
+用户在以下情况下选择此项：
+- 系统在不同模块中多次犯此错误
+- 解决方案非显而易见但每次都必须遵循
+- 基础要求（Rails、Rails API、线程等）
 
-Action:
-1. Extract pattern from the documentation
-2. Format as ❌ WRONG vs ✅ CORRECT with code examples
-3. Add to `docs/solutions/patterns/cora-critical-patterns.md`
-4. Add cross-reference back to this doc
-5. Confirm: "✓ Added to Required Reading. All subagents will see this pattern before code generation."
+操作：
+1. 从文档中提取模式
+2. 格式化为 ❌ 错误 vs ✅ 正确，带代码示例
+3. 添加到 `docs/solutions/patterns/cora-critical-patterns.md`
+4. 添加回此文档的交叉引用
+5. 确认："✓ 已添加到必读内容。所有子 Agent 将在代码生成前看到此模式。"
 
-**Option 3: Link related issues**
+**选项 3：链接相关问题**
 
-- Prompt: "Which doc to link? (provide filename or describe)"
-- Search docs/solutions/ for the doc
-- Add cross-reference to both docs
-- Confirm: "✓ Cross-reference added"
+- 提示："要链接哪个文档？（提供文件名或描述）"
+- 在 docs/solutions/ 中搜索文档
+- 向两个文档添加交叉引用
+- 确认："✓ 已添加交叉引用"
 
-**Option 4: Add to existing skill**
+**选项 4：添加到现有 skill**
 
-User selects this when the documented solution relates to an existing learning skill:
+当记录的解决方案与现有学习 skill 相关时，用户选择此项：
 
-Action:
-1. Prompt: "Which skill? (hotwire-native, etc.)"
-2. Determine which reference file to update (resources.md, patterns.md, or examples.md)
-3. Add link and brief description to appropriate section
-4. Confirm: "✓ Added to [skill-name] skill in [file]"
+操作：
+1. 提示："哪个 skill？（hotwire-native 等）"
+2. 确定要更新哪个参考文件（resources.md、patterns.md 或 examples.md）
+3. 向适当部分添加链接和简要描述
+4. 确认："✓ 已添加到 [skill-name] skill 的 [file]"
 
-Example: For Hotwire Native Tailwind variants solution:
-- Add to `hotwire-native/references/resources.md` under "CORA-Specific Resources"
-- Add to `hotwire-native/references/examples.md` with link to solution doc
+示例：对于 Hotwire Native Tailwind 变体解决方案：
+- 添加到 `hotwire-native/references/resources.md` 的"CORA 特定资源"下
+- 添加到 `hotwire-native/references/examples.md`，带解决方案文档的链接
 
-**Option 5: Create new skill**
+**选项 5：创建新 skill**
 
-User selects this when the solution represents the start of a new learning domain:
+当解决方案代表新学习领域的开始时，用户选择此项：
 
-Action:
-1. Prompt: "What should the new skill be called? (e.g., stripe-billing, email-processing)"
-2. Run `python3 .claude/skills/skill-creator/scripts/init_skill.py [skill-name]`
-3. Create initial reference files with this solution as first example
-4. Confirm: "✓ Created new [skill-name] skill with this solution as first example"
+操作：
+1. 提示："新 skill 应该叫什么？（例如，stripe-billing、email-processing）"
+2. 运行 `python3 .claude/skills/skill-creator/scripts/init_skill.py [skill-name]`
+3. 以此解决方案作为第一个示例创建初始参考文件
+4. 确认："✓ 已创建新的 [skill-name] skill，以此解决方案作为第一个示例"
 
-**Option 6: View documentation**
+**选项 6：查看文档**
 
-- Display the created documentation
-- Present decision menu again
+- 显示创建的文档
+- 再次呈现决策菜单
 
-**Option 7: Other**
+**选项 7：其他**
 
-- Ask what they'd like to do
+- 询问他们想做什么
 
 </decision_gate>
 
@@ -345,18 +345,18 @@ Action:
 
 <integration_protocol>
 
-## Integration Points
+## 集成点
 
-**Invoked by:**
-- /compound command (primary interface)
-- Manual invocation in conversation after solution confirmed
-- Can be triggered by detecting confirmation phrases like "that worked", "it's fixed", etc.
+**调用者：**
+- /compound 命令（主要接口）
+- 解决方案确认后在对话中手动调用
+- 可以通过检测确认短语触发，如"that worked"、"it's fixed"等
 
-**Invokes:**
-- None (terminal skill - does not delegate to other skills)
+**调用：**
+- 无（终端 skill - 不委托给其他 skill）
 
-**Handoff expectations:**
-All context needed for documentation should be present in conversation history before invocation.
+**交接期望：**
+在调用之前，文档所需的所有上下文应该存在于对话历史中。
 
 </integration_protocol>
 
@@ -364,103 +364,103 @@ All context needed for documentation should be present in conversation history b
 
 <success_criteria>
 
-## Success Criteria
+## 成功标准
 
-Documentation is successful when ALL of the following are true:
+当以下所有条件都为真时，文档记录成功：
 
-- ✅ YAML frontmatter validated (all required fields, correct formats)
-- ✅ File created in docs/solutions/[category]/[filename].md
-- ✅ Enum values match schema.yaml exactly
-- ✅ Code examples included in solution section
-- ✅ Cross-references added if related issues found
-- ✅ User presented with decision menu and action confirmed
+- ✅ YAML frontmatter 已验证（所有必需字段、正确格式）
+- ✅ 在 docs/solutions/[category]/[filename].md 中创建文件
+- ✅ 枚举值完全匹配 schema.yaml
+- ✅ 解决方案部分包含代码示例
+- ✅ 如果找到相关问题则添加交叉引用
+- ✅ 向用户呈现决策菜单并确认操作
 
 </success_criteria>
 
 ---
 
-## Error Handling
+## 错误处理
 
-**Missing context:**
+**缺失上下文：**
 
-- Ask user for missing details
-- Don't proceed until critical info provided
+- 向用户询问缺失的详细信息
+- 在提供关键信息之前不要继续
 
-**YAML validation failure:**
+**YAML 验证失败：**
 
-- Show specific errors
-- Present retry with corrected values
-- BLOCK until valid
+- 显示具体错误
+- 呈现带更正值的重试
+- 阻塞直到有效
 
-**Similar issue ambiguity:**
+**类似问题歧义：**
 
-- Present multiple matches
-- Let user choose: new doc, update existing, or link as duplicate
+- 呈现多个匹配
+- 让用户选择：新文档、更新现有文档或作为重复链接
 
-**Module not in CORA-MODULES.md:**
+**模块不在 CORA-MODULES.md 中：**
 
-- Warn but don't block
-- Proceed with documentation
-- Suggest: "Add [Module] to CORA-MODULES.md if not there"
-
----
-
-## Execution Guidelines
-
-**MUST do:**
-- Validate YAML frontmatter (BLOCK if invalid per Step 5 validation gate)
-- Extract exact error messages from conversation
-- Include code examples in solution section
-- Create directories before writing files (`mkdir -p`)
-- Ask user and WAIT if critical context missing
-
-**MUST NOT do:**
-- Skip YAML validation (validation gate is blocking)
-- Use vague descriptions (not searchable)
-- Omit code examples or cross-references
+- 警告但不阻塞
+- 继续文档记录
+- 建议："如果 [模块] 不在其中，添加到 CORA-MODULES.md"
 
 ---
 
-## Quality Guidelines
+## 执行指南
 
-**Good documentation has:**
+**必须做：**
+- 验证 YAML frontmatter（如果按照步骤 5 验证门控无效则阻塞）
+- 从对话中提取确切的错误消息
+- 在解决方案部分包含代码示例
+- 在写入文件之前创建目录（`mkdir -p`）
+- 如果缺少关键上下文，询问用户并等待
 
-- ✅ Exact error messages (copy-paste from output)
-- ✅ Specific file:line references
-- ✅ Observable symptoms (what you saw, not interpretations)
-- ✅ Failed attempts documented (helps avoid wrong paths)
-- ✅ Technical explanation (not just "what" but "why")
-- ✅ Code examples (before/after if applicable)
-- ✅ Prevention guidance (how to catch early)
-- ✅ Cross-references (related issues)
-
-**Avoid:**
-
-- ❌ Vague descriptions ("something was wrong")
-- ❌ Missing technical details ("fixed the code")
-- ❌ No context (which version? which file?)
-- ❌ Just code dumps (explain why it works)
-- ❌ No prevention guidance
-- ❌ No cross-references
+**不得做：**
+- 跳过 YAML 验证（验证门控是阻塞的）
+- 使用模糊描述（不可搜索）
+- 省略代码示例或交叉引用
 
 ---
 
-## Example Scenario
+## 质量指南
 
-**User:** "That worked! The N+1 query is fixed."
+**好的文档具有：**
 
-**Skill activates:**
+- ✅ 确切的错误消息（从输出复制粘贴）
+- ✅ 具体的文件:行引用
+- ✅ 可观察的症状（你看到的，而非解释）
+- ✅ 记录失败的尝试（帮助避免错误路径）
+- ✅ 技术解释（不仅是"什么"还有"为什么"）
+- ✅ 代码示例（如适用，之前/之后）
+- ✅ 预防指导（如何早期发现）
+- ✅ 交叉引用（相关问题）
 
-1. **Detect confirmation:** "That worked!" triggers auto-invoke
-2. **Gather context:**
-   - Module: Brief System
-   - Symptom: Brief generation taking >5 seconds, N+1 query when loading email threads
-   - Failed attempts: Added pagination (didn't help), checked background job performance
-   - Solution: Added eager loading with `includes(:emails)` on Brief model
-   - Root cause: Missing eager loading causing separate database query per email thread
-3. **Check existing:** No similar issue found
-4. **Generate filename:** `n-plus-one-brief-generation-BriefSystem-20251110.md`
-5. **Validate YAML:**
+**避免：**
+
+- ❌ 模糊描述（"出了些问题"）
+- ❌ 缺少技术细节（"修复了代码"）
+- ❌ 无上下文（哪个版本？哪个文件？）
+- ❌ 只是代码转储（解释为什么有效）
+- ❌ 无预防指导
+- ❌ 无交叉引用
+
+---
+
+## 示例场景
+
+**用户：**"成功了！N+1 查询已修复。"
+
+**Skill 激活：**
+
+1. **检测确认：**"成功了！"触发自动调用
+2. **收集上下文：**
+   - 模块：Brief System
+   - 症状：Brief 生成耗时 >5 秒，加载电子邮件线程时出现 N+1 查询
+   - 失败尝试：添加分页（没有帮助）、检查后台作业性能
+   - 解决方案：在 Brief 模型上添加 `includes(:emails)` 急加载
+   - 根本原因：缺少急加载导致每个电子邮件线程单独数据库查询
+3. **检查现有：**未找到类似问题
+4. **生成文件名：**`n-plus-one-brief-generation-BriefSystem-20251110.md`
+5. **验证 YAML：**
    ```yaml
    module: Brief System
    date: 2025-11-10
@@ -473,38 +473,38 @@ Documentation is successful when ALL of the following are true:
    severity: high
    tags: [n-plus-one, eager-loading, performance]
    ```
-   ✅ Valid
-6. **Create documentation:**
+   ✅ 有效
+6. **创建文档：**
    - `docs/solutions/performance-issues/n-plus-one-brief-generation-BriefSystem-20251110.md`
-7. **Cross-reference:** None needed (no similar issues)
+7. **交叉引用：**不需要（无类似问题）
 
-**Output:**
+**输出：**
 
 ```
-✓ Solution documented
+✓ 解决方案已记录
 
-File created:
+创建的文件：
 - docs/solutions/performance-issues/n-plus-one-brief-generation-BriefSystem-20251110.md
 
-What's next?
-1. Continue workflow (recommended)
-2. Add to Required Reading - Promote to critical patterns (cora-critical-patterns.md)
-3. Link related issues - Connect to similar problems
-4. Add to existing skill - Add to a learning skill (e.g., hotwire-native)
-5. Create new skill - Extract into new learning skill
-6. View documentation - See what was captured
-7. Other
+接下来做什么？
+1. 继续工作流（推荐）
+2. 添加到必读内容 - 提升到关键模式（cora-critical-patterns.md）
+3. 链接相关问题 - 连接到类似问题
+4. 添加到现有 skill - 添加到学习 skill（例如，hotwire-native）
+5. 创建新 skill - 提取到新的学习 skill
+6. 查看文档 - 查看捕获的内容
+7. 其他
 ```
 
 ---
 
-## Future Enhancements
+## 未来增强
 
-**Not in Phase 7 scope, but potential:**
+**不在阶段 7 范围内，但有潜力：**
 
-- Search by date range
-- Filter by severity
-- Tag-based search interface
-- Metrics (most common issues, resolution time)
-- Export to shareable format (community knowledge sharing)
-- Import community solutions
+- 按日期范围搜索
+- 按严重性过滤
+- 基于标签的搜索界面
+- 指标（最常见问题、解决时间）
+- 导出为可共享格式（社区知识共享）
+- 导入社区解决方案
