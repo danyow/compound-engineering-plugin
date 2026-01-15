@@ -1,150 +1,150 @@
 ---
 name: file-todos
-description: This skill should be used when managing the file-based todo tracking system in the todos/ directory. It provides workflows for creating todos, managing status and dependencies, conducting triage, and integrating with slash commands and code review processes.
+description: 管理 todos/ 目录中基于文件的待办事项跟踪系统时应使用此技能。它提供了创建待办事项、管理状态和依赖关系、进行分类审查以及与斜杠命令和代码审查流程集成的工作流程。
 ---
 
-# File-Based Todo Tracking Skill
+# 基于文件的待办事项跟踪技能
 
-## Overview
+## 概述
 
-The `todos/` directory contains a file-based tracking system for managing code review feedback, technical debt, feature requests, and work items. Each todo is a markdown file with YAML frontmatter and structured sections.
+`todos/` 目录包含一个基于文件的跟踪系统，用于管理代码审查反馈、技术债务、功能请求和工作项。每个待办事项都是一个带有 YAML frontmatter 和结构化章节的 markdown 文件。
 
-This skill should be used when:
-- Creating new todos from findings or feedback
-- Managing todo lifecycle (pending → ready → complete)
-- Triaging pending items for approval
-- Checking or managing dependencies
-- Converting PR comments or code findings into tracked work
-- Updating work logs during todo execution
+此技能应在以下情况使用：
+- 从发现或反馈创建新的待办事项
+- 管理待办事项生命周期（pending → ready → complete）
+- 对待审核项目进行分类审批
+- 检查或管理依赖关系
+- 将 PR 评论或代码发现转换为跟踪的工作
+- 在待办事项执行期间更新工作日志
 
-## File Naming Convention
+## 文件命名约定
 
-Todo files follow this naming pattern:
+待办事项文件遵循以下命名模式：
 
 ```
 {issue_id}-{status}-{priority}-{description}.md
 ```
 
-**Components:**
-- **issue_id**: Sequential number (001, 002, 003...) - never reused
-- **status**: `pending` (needs triage), `ready` (approved), `complete` (done)
-- **priority**: `p1` (critical), `p2` (important), `p3` (nice-to-have)
-- **description**: kebab-case, brief description
+**组成部分：**
+- **issue_id**：顺序编号（001、002、003...）- 永不重用
+- **status**：`pending`（需要审查）、`ready`（已批准）、`complete`（已完成）
+- **priority**：`p1`（关键）、`p2`（重要）、`p3`（可选）
+- **description**：kebab-case，简要描述
 
-**Examples:**
+**示例：**
 ```
 001-pending-p1-mailer-test.md
 002-ready-p1-fix-n-plus-1.md
 005-complete-p2-refactor-csv.md
 ```
 
-## File Structure
+## 文件结构
 
-Each todo is a markdown file with YAML frontmatter and structured sections. Use the template at [todo-template.md](./assets/todo-template.md) as a starting point when creating new todos.
+每个待办事项都是一个带有 YAML frontmatter 和结构化章节的 markdown 文件。创建新待办事项时使用 [todo-template.md](./assets/todo-template.md) 模板作为起点。
 
-**Required sections:**
-- **Problem Statement** - What is broken, missing, or needs improvement?
-- **Findings** - Investigation results, root cause, key discoveries
-- **Proposed Solutions** - Multiple options with pros/cons, effort, risk
-- **Recommended Action** - Clear plan (filled during triage)
-- **Acceptance Criteria** - Testable checklist items
-- **Work Log** - Chronological record with date, actions, learnings
+**必需的章节：**
+- **Problem Statement（问题陈述）** - 什么出了问题、缺失或需要改进？
+- **Findings（发现）** - 调查结果、根本原因、关键发现
+- **Proposed Solutions（建议的解决方案）** - 多个选项及其优缺点、工作量、风险
+- **Recommended Action（推荐的行动）** - 清晰的计划（在审查期间填写）
+- **Acceptance Criteria（验收标准）** - 可测试的检查清单项目
+- **Work Log（工作日志）** - 按时间顺序记录日期、行动、学习
 
-**Optional sections:**
-- **Technical Details** - Affected files, related components, DB changes
-- **Resources** - Links to errors, tests, PRs, documentation
-- **Notes** - Additional context or decisions
+**可选的章节：**
+- **Technical Details（技术细节）** - 受影响的文件、相关组件、DB 更改
+- **Resources（资源）** - 错误链接、测试、PR、文档
+- **Notes（备注）** - 额外的上下文或决策
 
-**YAML frontmatter fields:**
+**YAML frontmatter 字段：**
 ```yaml
 ---
 status: ready              # pending | ready | complete
 priority: p1              # p1 | p2 | p3
 issue_id: "002"
 tags: [rails, performance, database]
-dependencies: ["001"]     # Issue IDs this is blocked by
+dependencies: ["001"]     # 此项被阻塞的 Issue ID
 ---
 ```
 
-## Common Workflows
+## 常见工作流程
 
-### Creating a New Todo
+### 创建新的待办事项
 
-**To create a new todo from findings or feedback:**
+**从发现或反馈创建新待办事项：**
 
-1. Determine next issue ID: `ls todos/ | grep -o '^[0-9]\+' | sort -n | tail -1`
-2. Copy template: `cp assets/todo-template.md todos/{NEXT_ID}-pending-{priority}-{description}.md`
-3. Edit and fill required sections:
-   - Problem Statement
-   - Findings (if from investigation)
-   - Proposed Solutions (multiple options)
-   - Acceptance Criteria
-   - Add initial Work Log entry
-4. Determine status: `pending` (needs triage) or `ready` (pre-approved)
-5. Add relevant tags for filtering
+1. 确定下一个 issue ID：`ls todos/ | grep -o '^[0-9]\+' | sort -n | tail -1`
+2. 复制模板：`cp assets/todo-template.md todos/{NEXT_ID}-pending-{priority}-{description}.md`
+3. 编辑并填写必需的章节：
+   - Problem Statement（问题陈述）
+   - Findings（发现）（如果来自调查）
+   - Proposed Solutions（建议的解决方案）（多个选项）
+   - Acceptance Criteria（验收标准）
+   - 添加初始 Work Log 条目
+4. 确定状态：`pending`（需要审查）或 `ready`（预先批准）
+5. 添加相关标签以便过滤
 
-**When to create a todo:**
-- Requires more than 15-20 minutes of work
-- Needs research, planning, or multiple approaches considered
-- Has dependencies on other work
-- Requires manager approval or prioritization
-- Part of larger feature or refactor
-- Technical debt needing documentation
+**何时创建待办事项：**
+- 需要超过 15-20 分钟的工作
+- 需要研究、计划或考虑多种方法
+- 对其他工作有依赖关系
+- 需要经理批准或确定优先级
+- 更大功能或重构的一部分
+- 需要记录的技术债务
 
-**When to act immediately instead:**
-- Issue is trivial (< 15 minutes)
-- Complete context available now
-- No planning needed
-- User explicitly requests immediate action
-- Simple bug fix with obvious solution
+**何时立即行动：**
+- 问题很简单（< 15 分钟）
+- 现在有完整的上下文
+- 不需要计划
+- 用户明确要求立即行动
+- 有明显解决方案的简单 bug 修复
 
-### Triaging Pending Items
+### 对待审核项目进行分类
 
-**To triage pending todos:**
+**对待审核的待办事项进行分类：**
 
-1. List pending items: `ls todos/*-pending-*.md`
-2. For each todo:
-   - Read Problem Statement and Findings
-   - Review Proposed Solutions
-   - Make decision: approve, defer, or modify priority
-3. Update approved todos:
-   - Rename file: `mv {file}-pending-{pri}-{desc}.md {file}-ready-{pri}-{desc}.md`
-   - Update frontmatter: `status: pending` → `status: ready`
-   - Fill "Recommended Action" section with clear plan
-   - Adjust priority if different from initial assessment
-4. Deferred todos stay in `pending` status
+1. 列出待审核项目：`ls todos/*-pending-*.md`
+2. 对于每个待办事项：
+   - 阅读 Problem Statement 和 Findings
+   - 审查 Proposed Solutions
+   - 做出决定：批准、推迟或修改优先级
+3. 更新已批准的待办事项：
+   - 重命名文件：`mv {file}-pending-{pri}-{desc}.md {file}-ready-{pri}-{desc}.md`
+   - 更新 frontmatter：`status: pending` → `status: ready`
+   - 填写"Recommended Action"章节，提供清晰的计划
+   - 如果与初始评估不同，调整优先级
+4. 推迟的待办事项保持 `pending` 状态
 
-**Use slash command:** `/triage` for interactive approval workflow
+**使用斜杠命令：** `/triage` 进行交互式批准工作流程
 
-### Managing Dependencies
+### 管理依赖关系
 
-**To track dependencies:**
+**跟踪依赖关系：**
 
 ```yaml
-dependencies: ["002", "005"]  # This todo blocked by issues 002 and 005
-dependencies: []               # No blockers - can work immediately
+dependencies: ["002", "005"]  # 此待办事项被 issue 002 和 005 阻塞
+dependencies: []               # 无阻塞者 - 可以立即开始工作
 ```
 
-**To check what blocks a todo:**
+**检查什么阻塞了待办事项：**
 ```bash
 grep "^dependencies:" todos/003-*.md
 ```
 
-**To find what a todo blocks:**
+**查找待办事项阻塞了什么：**
 ```bash
 grep -l 'dependencies:.*"002"' todos/*.md
 ```
 
-**To verify blockers are complete before starting:**
+**在开始之前验证阻塞者是否已完成：**
 ```bash
 for dep in 001 002 003; do
   [ -f "todos/${dep}-complete-*.md" ] || echo "Issue $dep not complete"
 done
 ```
 
-### Updating Work Logs
+### 更新工作日志
 
-**When working on a todo, always add a work log entry:**
+**在处理待办事项时，始终添加工作日志条目：**
 
 ```markdown
 ### YYYY-MM-DD - Session Title
@@ -152,100 +152,100 @@ done
 **By:** Claude Code / Developer Name
 
 **Actions:**
-- Specific changes made (include file:line references)
-- Commands executed
-- Tests run
-- Results of investigation
+- 具体做出的更改（包括 file:line 引用）
+- 执行的命令
+- 运行的测试
+- 调查结果
 
 **Learnings:**
-- What worked / what didn't
-- Patterns discovered
-- Key insights for future work
+- 什么有效 / 什么无效
+- 发现的模式
+- 未来工作的关键见解
 ```
 
-Work logs serve as:
-- Historical record of investigation
-- Documentation of approaches attempted
-- Knowledge sharing for team
-- Context for future similar work
+工作日志用于：
+- 调查的历史记录
+- 尝试方法的文档
+- 团队知识共享
+- 未来类似工作的上下文
 
-### Completing a Todo
+### 完成待办事项
 
-**To mark a todo as complete:**
+**将待办事项标记为完成：**
 
-1. Verify all acceptance criteria checked off
-2. Update Work Log with final session and results
-3. Rename file: `mv {file}-ready-{pri}-{desc}.md {file}-complete-{pri}-{desc}.md`
-4. Update frontmatter: `status: ready` → `status: complete`
-5. Check for unblocked work: `grep -l 'dependencies:.*"002"' todos/*-ready-*.md`
-6. Commit with issue reference: `feat: resolve issue 002`
+1. 验证所有验收标准已完成勾选
+2. 使用最终会话和结果更新 Work Log
+3. 重命名文件：`mv {file}-ready-{pri}-{desc}.md {file}-complete-{pri}-{desc}.md`
+4. 更新 frontmatter：`status: ready` → `status: complete`
+5. 检查未被阻塞的工作：`grep -l 'dependencies:.*"002"' todos/*-ready-*.md`
+6. 使用 issue 引用提交：`feat: resolve issue 002`
 
-## Integration with Development Workflows
+## 与开发工作流程的集成
 
-| Trigger | Flow | Tool |
+| 触发器 | 流程 | 工具 |
 |---------|------|------|
-| Code review | `/workflows:review` → Findings → `/triage` → Todos | Review agent + skill |
-| PR comments | `/resolve_pr_parallel` → Individual fixes → Todos | gh CLI + skill |
-| Code TODOs | `/resolve_todo_parallel` → Fixes + Complex todos | Agent + skill |
-| Planning | Brainstorm → Create todo → Work → Complete | Skill |
-| Feedback | Discussion → Create todo → Triage → Work | Skill + slash |
+| 代码审查 | `/workflows:review` → Findings → `/triage` → Todos | Review agent + skill |
+| PR 评论 | `/resolve_pr_parallel` → 个别修复 → Todos | gh CLI + skill |
+| 代码 TODOs | `/resolve_todo_parallel` → 修复 + 复杂 todos | Agent + skill |
+| 计划 | 头脑风暴 → 创建 todo → 工作 → 完成 | Skill |
+| 反馈 | 讨论 → 创建 todo → 审查 → 工作 | Skill + slash |
 
-## Quick Reference Commands
+## 快速参考命令
 
-**Finding work:**
+**查找工作：**
 ```bash
-# List highest priority unblocked work
+# 列出最高优先级无阻塞的工作
 grep -l 'dependencies: \[\]' todos/*-ready-p1-*.md
 
-# List all pending items needing triage
+# 列出所有需要审查的待审核项目
 ls todos/*-pending-*.md
 
-# Find next issue ID
+# 查找下一个 issue ID
 ls todos/ | grep -o '^[0-9]\+' | sort -n | tail -1 | awk '{printf "%03d", $1+1}'
 
-# Count by status
+# 按状态统计
 for status in pending ready complete; do
   echo "$status: $(ls -1 todos/*-$status-*.md 2>/dev/null | wc -l)"
 done
 ```
 
-**Dependency management:**
+**依赖管理：**
 ```bash
-# What blocks this todo?
+# 什么阻塞了这个待办事项？
 grep "^dependencies:" todos/003-*.md
 
-# What does this todo block?
+# 这个待办事项阻塞了什么？
 grep -l 'dependencies:.*"002"' todos/*.md
 ```
 
-**Searching:**
+**搜索：**
 ```bash
-# Search by tag
+# 按标签搜索
 grep -l "tags:.*rails" todos/*.md
 
-# Search by priority
+# 按优先级搜索
 ls todos/*-p1-*.md
 
-# Full-text search
+# 全文搜索
 grep -r "payment" todos/
 ```
 
-## Key Distinctions
+## 关键区别
 
-**File-todos system (this skill):**
-- Markdown files in `todos/` directory
-- Development/project tracking
-- Standalone markdown files with YAML frontmatter
-- Used by humans and agents
+**File-todos 系统（此技能）：**
+- `todos/` 目录中的 Markdown 文件
+- 开发/项目跟踪
+- 带有 YAML frontmatter 的独立 markdown 文件
+- 由人类和 agent 使用
 
-**Rails Todo model:**
-- Database model in `app/models/todo.rb`
-- User-facing feature in the application
-- Active Record CRUD operations
-- Different from this file-based system
+**Rails Todo 模型：**
+- `app/models/todo.rb` 中的数据库模型
+- 应用程序中面向用户的功能
+- Active Record CRUD 操作
+- 与此基于文件的系统不同
 
-**TodoWrite tool:**
-- In-memory task tracking during agent sessions
-- Temporary tracking for single conversation
-- Not persisted to disk
-- Different from both systems above
+**TodoWrite 工具：**
+- agent 会话期间的内存任务跟踪
+- 单次对话的临时跟踪
+- 不持久化到磁盘
+- 与上述两个系统都不同
