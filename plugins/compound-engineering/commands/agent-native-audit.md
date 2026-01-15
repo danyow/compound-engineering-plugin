@@ -1,158 +1,158 @@
 ---
 name: agent-native-audit
-description: Run comprehensive agent-native architecture review with scored principles
-argument-hint: "[optional: specific principle to audit]"
+description: 使用评分原则运行全面的 agent-native 架构审查
+argument-hint: "[可选：要审计的特定原则]"
 ---
 
-# Agent-Native Architecture Audit
+# Agent-Native 架构审计
 
-Conduct a comprehensive review of the codebase against agent-native architecture principles, launching parallel sub-agents for each principle and producing a scored report.
+根据 agent-native 架构原则对代码库进行全面审查，为每个原则启动并行子 agent 并生成评分报告。
 
-## Core Principles to Audit
+## 要审计的核心原则
 
-1. **Action Parity** - "Whatever the user can do, the agent can do"
-2. **Tools as Primitives** - "Tools provide capability, not behavior"
-3. **Context Injection** - "System prompt includes dynamic context about app state"
-4. **Shared Workspace** - "Agent and user work in the same data space"
-5. **CRUD Completeness** - "Every entity has full CRUD (Create, Read, Update, Delete)"
-6. **UI Integration** - "Agent actions immediately reflected in UI"
-7. **Capability Discovery** - "Users can discover what the agent can do"
-8. **Prompt-Native Features** - "Features are prompts defining outcomes, not code"
+1. **动作对等** - "用户能做什么，agent 就能做什么"
+2. **工具作为原语** - "工具提供能力，而非行为"
+3. **上下文注入** - "系统提示包含关于应用状态的动态上下文"
+4. **共享工作空间** - "Agent 和用户在相同的数据空间中工作"
+5. **CRUD 完整性** - "每个实体都有完整的 CRUD（创建、读取、更新、删除）"
+6. **UI 集成** - "Agent 操作立即反映在 UI 中"
+7. **能力发现** - "用户可以发现 agent 能做什么"
+8. **提示原生特性** - "特性是定义结果的提示，而非代码"
 
-## Workflow
+## 工作流
 
-### Step 1: Load the Agent-Native Skill
+### 步骤 1：加载 Agent-Native Skill
 
-First, invoke the agent-native-architecture skill to understand all principles:
+首先，调用 agent-native-architecture skill 以理解所有原则：
 
 ```
 /compound-engineering:agent-native-architecture
 ```
 
-Select option 7 (action parity) to load the full reference material.
+选择选项 7（动作对等）以加载完整参考材料。
 
-### Step 2: Launch Parallel Sub-Agents
+### 步骤 2：启动并行子 Agent
 
-Launch 8 parallel sub-agents using the Task tool with `subagent_type: Explore`, one for each principle. Each agent should:
+使用 Task 工具启动 8 个并行子 agent（`subagent_type: Explore`），每个原则一个。每个 agent 应该：
 
-1. Enumerate ALL instances in the codebase (user actions, tools, contexts, data stores, etc.)
-2. Check compliance against the principle
-3. Provide a SPECIFIC SCORE like "X out of Y (percentage%)"
-4. List specific gaps and recommendations
+1. 枚举代码库中的所有实例（用户操作、工具、上下文、数据存储等）
+2. 检查是否符合原则
+3. 提供具体评分，如 "X / Y（百分比%）"
+4. 列出具体差距和建议
 
 <sub-agents>
 
-**Agent 1: Action Parity**
+**Agent 1：动作对等**
 ```
-Audit for ACTION PARITY - "Whatever the user can do, the agent can do."
+审计动作对等 - "用户能做什么，agent 就能做什么。"
 
-Tasks:
-1. Enumerate ALL user actions in frontend (API calls, button clicks, form submissions)
-   - Search for API service files, fetch calls, form handlers
-   - Check routes and components for user interactions
-2. Check which have corresponding agent tools
-   - Search for agent tool definitions
-   - Map user actions to agent capabilities
-3. Score: "Agent can do X out of Y user actions"
+任务：
+1. 枚举前端中的所有用户操作（API 调用、按钮点击、表单提交）
+   - 搜索 API 服务文件、fetch 调用、表单处理器
+   - 检查路由和组件中的用户交互
+2. 检查哪些有对应的 agent 工具
+   - 搜索 agent 工具定义
+   - 将用户操作映射到 agent 能力
+3. 评分："Agent 可以做 X / Y 用户操作"
 
-Format:
-## Action Parity Audit
-### User Actions Found
-| Action | Location | Agent Tool | Status |
-### Score: X/Y (percentage%)
-### Missing Agent Tools
-### Recommendations
-```
-
-**Agent 2: Tools as Primitives**
-```
-Audit for TOOLS AS PRIMITIVES - "Tools provide capability, not behavior."
-
-Tasks:
-1. Find and read ALL agent tool files
-2. Classify each as:
-   - PRIMITIVE (good): read, write, store, list - enables capability without business logic
-   - WORKFLOW (bad): encodes business logic, makes decisions, orchestrates steps
-3. Score: "X out of Y tools are proper primitives"
-
-Format:
-## Tools as Primitives Audit
-### Tool Analysis
-| Tool | File | Type | Reasoning |
-### Score: X/Y (percentage%)
-### Problematic Tools (workflows that should be primitives)
-### Recommendations
+格式：
+## 动作对等审计
+### 发现的用户操作
+| 操作 | 位置 | Agent 工具 | 状态 |
+### 评分：X/Y（百分比%）
+### 缺失的 Agent 工具
+### 建议
 ```
 
-**Agent 3: Context Injection**
+**Agent 2：工具作为原语**
 ```
-Audit for CONTEXT INJECTION - "System prompt includes dynamic context about app state"
+审计工具作为原语 - "工具提供能力，而非行为。"
 
-Tasks:
-1. Find context injection code (search for "context", "system prompt", "inject")
-2. Read agent prompts and system messages
-3. Enumerate what IS injected vs what SHOULD be:
-   - Available resources (files, drafts, documents)
-   - User preferences/settings
-   - Recent activity
-   - Available capabilities listed
-   - Session history
-   - Workspace state
+任务：
+1. 查找并阅读所有 agent 工具文件
+2. 将每个分类为：
+   - 原语（好）：read、write、store、list - 提供能力而无业务逻辑
+   - 工作流（坏）：编码业务逻辑、做出决策、编排步骤
+3. 评分："X / Y 工具是正确的原语"
 
-Format:
-## Context Injection Audit
-### Context Types Analysis
-| Context Type | Injected? | Location | Notes |
-### Score: X/Y (percentage%)
-### Missing Context
-### Recommendations
+格式：
+## 工具作为原语审计
+### 工具分析
+| 工具 | 文件 | 类型 | 理由 |
+### 评分：X/Y（百分比%）
+### 有问题的工具（应该是原语的工作流）
+### 建议
 ```
 
-**Agent 4: Shared Workspace**
+**Agent 3：上下文注入**
 ```
-Audit for SHARED WORKSPACE - "Agent and user work in the same data space"
+审计上下文注入 - "系统提示包含关于应用状态的动态上下文"
 
-Tasks:
+任务：
+1. 查找上下文注入代码（搜索 "context"、"system prompt"、"inject"）
+2. 阅读 agent 提示和系统消息
+3. 枚举已注入的内容与应该注入的内容：
+   - 可用资源（文件、草稿、文档）
+   - 用户偏好/设置
+   - 最近活动
+   - 列出的可用能力
+   - 会话历史
+   - 工作空间状态
+
+格式：
+## 上下文注入审计
+### 上下文类型分析
+| 上下文类型 | 是否已注入？ | 位置 | 备注 |
+### 评分： X/Y (百分比%)
+### 缺失的上下文
+### 建议
+```
+
+**Agent 4：共享工作空间**
+```
+审计SHARED WORKSPACE - "Agent and user work in the same data space"
+
+任务：
 1. Identify all data stores/tables/models
 2. Check if agents read/write to SAME tables or separate ones
 3. Look for sandbox isolation anti-pattern (agent has separate data space)
 
-Format:
-## Shared Workspace Audit
-### Data Store Analysis
-| Data Store | User Access | Agent Access | Shared? |
-### Score: X/Y (percentage%)
-### Isolated Data (anti-pattern)
-### Recommendations
+格式：
+## 共享工作空间审计
+### 数据存储分析
+| 数据存储 | 用户访问 | Agent 访问 | 是否共享？ |
+### 评分： X/Y (百分比%)
+### 隔离数据（反模式）
+### 建议
 ```
 
-**Agent 5: CRUD Completeness**
+**Agent 5：CRUD 完整性**
 ```
-Audit for CRUD COMPLETENESS - "Every entity has full CRUD"
+审计CRUD COMPLETENESS - "Every entity has full CRUD"
 
-Tasks:
+任务：
 1. Identify all entities/models in the codebase
 2. For each entity, check if agent tools exist for:
-   - Create
-   - Read
-   - Update
-   - Delete
+   - 创建
+   - 读取
+   - 更新
+   - 删除
 3. Score per entity and overall
 
-Format:
-## CRUD Completeness Audit
-### Entity CRUD Analysis
-| Entity | Create | Read | Update | Delete | Score |
-### Overall Score: X/Y entities with full CRUD (percentage%)
-### Incomplete Entities (list missing operations)
-### Recommendations
+格式：
+## CRUD 完整性审计
+### 实体 CRUD 分析
+| 实体 | 创建 | 读取 | 更新 | 删除 | Score |
+### Overall 评分： X/Y entities with full CRUD (百分比%)
+### 不完整实体（列出缺失操作）
+### 建议
 ```
 
-**Agent 6: UI Integration**
+**Agent 6：UI 集成**
 ```
-Audit for UI INTEGRATION - "Agent actions immediately reflected in UI"
+审计UI INTEGRATION - "Agent actions immediately reflected in UI"
 
-Tasks:
+任务：
 1. Check how agent writes/changes propagate to frontend
 2. Look for:
    - Streaming updates (SSE, WebSocket)
@@ -162,20 +162,20 @@ Tasks:
    - File watching
 3. Identify "silent actions" anti-pattern (agent changes state but UI doesn't update)
 
-Format:
-## UI Integration Audit
-### Agent Action → UI Update Analysis
-| Agent Action | UI Mechanism | Immediate? | Notes |
-### Score: X/Y (percentage%)
-### Silent Actions (anti-pattern)
-### Recommendations
+格式：
+## UI 集成审计
+### Agent 操作 → UI 更新 Analysis
+| Agent 操作 | UI 机制 | 是否立即？ | 备注 |
+### 评分： X/Y (百分比%)
+### 静默操作（反模式）
+### 建议
 ```
 
-**Agent 7: Capability Discovery**
+**Agent 7：能力发现**
 ```
-Audit for CAPABILITY DISCOVERY - "Users can discover what the agent can do"
+审计CAPABILITY DISCOVERY - "Users can discover what the agent can do"
 
-Tasks:
+任务：
 1. Check for these 7 discovery mechanisms:
    - Onboarding flow showing agent capabilities
    - Help documentation
@@ -186,87 +186,87 @@ Tasks:
    - Slash commands (/help, /tools)
 2. Score against 7 mechanisms
 
-Format:
-## Capability Discovery Audit
-### Discovery Mechanism Analysis
-| Mechanism | Exists? | Location | Quality |
-### Score: X/7 (percentage%)
-### Missing Discovery
-### Recommendations
+格式：
+## 能力发现审计
+### 发现机制分析
+| 机制 | 是否存在？ | 位置 | 质量 |
+### 评分： X/7 (百分比%)
+### 缺失的发现
+### 建议
 ```
 
-**Agent 8: Prompt-Native Features**
+**Agent 8：提示原生特性**
 ```
-Audit for PROMPT-NATIVE FEATURES - "Features are prompts defining outcomes, not code"
+审计PROMPT-NATIVE FEATURES - "特性s are prompts defining outcomes, not code"
 
-Tasks:
-1. Read all agent prompts
+任务：
+1. 读取 all agent prompts
 2. Classify each feature/behavior as defined in:
    - PROMPT (good): outcomes defined in natural language
    - CODE (bad): business logic hardcoded
 3. Check if behavior changes require prompt edit vs code change
 
-Format:
-## Prompt-Native Features Audit
-### Feature Definition Analysis
-| Feature | Defined In | Type | Notes |
-### Score: X/Y (percentage%)
-### Code-Defined Features (anti-pattern)
-### Recommendations
+格式：
+## 提示原生特性审计
+### 特性定义分析
+| 特性 | 定义于 | 类型 | 备注 |
+### 评分： X/Y (百分比%)
+### Code-Defined 特性s (anti-pattern)
+### 建议
 ```
 
 </sub-agents>
 
-### Step 3: Compile Summary Report
+### 步骤 3：编译摘要报告
 
-After all agents complete, compile a summary with:
+所有 agent 完成后，编译摘要：
 
 ```markdown
 ## Agent-Native Architecture Review: [Project Name]
 
-### Overall Score Summary
+### 总体评分摘要
 
-| Core Principle | Score | Percentage | Status |
+| 核心原则 | Score | 百分比 | 状态 |
 |----------------|-------|------------|--------|
-| Action Parity | X/Y | Z% | ✅/⚠️/❌ |
-| Tools as Primitives | X/Y | Z% | ✅/⚠️/❌ |
-| Context Injection | X/Y | Z% | ✅/⚠️/❌ |
-| Shared Workspace | X/Y | Z% | ✅/⚠️/❌ |
-| CRUD Completeness | X/Y | Z% | ✅/⚠️/❌ |
-| UI Integration | X/Y | Z% | ✅/⚠️/❌ |
-| Capability Discovery | X/Y | Z% | ✅/⚠️/❌ |
-| Prompt-Native Features | X/Y | Z% | ✅/⚠️/❌ |
+| 动作对等 | X/Y | Z% | ✅/⚠️/❌ |
+| 工具作为原语 | X/Y | Z% | ✅/⚠️/❌ |
+| 上下文注入 | X/Y | Z% | ✅/⚠️/❌ |
+| 共享工作空间 | X/Y | Z% | ✅/⚠️/❌ |
+| CRUD 完整性 | X/Y | Z% | ✅/⚠️/❌ |
+| UI 集成 | X/Y | Z% | ✅/⚠️/❌ |
+| 能力发现 | X/Y | Z% | ✅/⚠️/❌ |
+| Prompt-Native 特性s | X/Y | Z% | ✅/⚠️/❌ |
 
-**Overall Agent-Native Score: X%**
+**Overall Agent-Native 评分： X%**
 
-### Status Legend
-- ✅ Excellent (80%+)
-- ⚠️ Partial (50-79%)
-- ❌ Needs Work (<50%)
+### 状态 Legend
+- ✅ 优秀 (80%+)
+- ⚠️ 部分 (50-79%)
+- ❌ 需要改进 (<50%)
 
-### Top 10 Recommendations by Impact
+### 前 10 建议 按影响
 
-| Priority | Action | Principle | Effort |
+| 优先级 | 操作 | 原则 | 工作量 |
 |----------|--------|-----------|--------|
 
-### What's Working Excellently
+### What's Working 优秀ly
 
-[List top 5 strengths]
+[列出前 5 个优势]
 ```
 
-## Success Criteria
+## 成功标准
 
-- [ ] All 8 sub-agents complete their audits
-- [ ] Each principle has a specific numeric score (X/Y format)
-- [ ] Summary table shows all scores and status indicators
-- [ ] Top 10 recommendations are prioritized by impact
-- [ ] Report identifies both strengths and gaps
+- [ ] 所有 8 个子 agent 完成审计
+- [ ] 每个原则都有具体的数值评分（X/Y 格式）
+- [ ] 摘要表显示所有评分和状态指示器
+- [ ] 前 10 recommendations are prioritized by impact
+- [ ] 报告确定优势和差距
 
-## Optional: Single Principle Audit
+## Optional: Single 原则 Audit
 
-If $ARGUMENTS specifies a single principle (e.g., "action parity"), only run that sub-agent and provide detailed findings for that principle alone.
+如果 $ARGUMENTS 指定单一原则 (e.g., "action parity"), 仅运行该子 agent 并为该原则提供详细发现.
 
-Valid arguments:
+有效参数：
 - `action parity` or `1`
 - `tools` or `primitives` or `2`
 - `context` or `injection` or `3`

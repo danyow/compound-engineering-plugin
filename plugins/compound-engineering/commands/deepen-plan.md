@@ -1,157 +1,157 @@
 ---
 name: deepen-plan
-description: Enhance a plan with parallel research agents for each section to add depth, best practices, and implementation details
-argument-hint: "[path to plan file]"
+description: 使用并行研究 agent 增强计划的每个部分，添加深度、最佳实践和实施细节
+argument-hint: "[计划文件路径]"
 ---
 
-# Deepen Plan - Power Enhancement Mode
+# 深化计划 - 强力增强模式
 
-## Introduction
+## 简介
 
-**Note: The current year is 2025.** Use this when searching for recent documentation and best practices.
+**注意：当前年份是 2025。** 在搜索最新文档和最佳实践时使用此信息。
 
-This command takes an existing plan (from `/workflows:plan`) and enhances each section with parallel research agents. Each major element gets its own dedicated research sub-agent to find:
-- Best practices and industry patterns
-- Performance optimizations
-- UI/UX improvements (if applicable)
-- Quality enhancements and edge cases
-- Real-world implementation examples
+此命令获取现有计划（来自 `/workflows:plan`）并使用并行研究 agent 增强每个部分。 每个主要元素都有自己专用的研究子 agent 来查找：
+- 最佳实践和行业模式
+- 性能优化
+- UI/UX 改进（如适用）
+- 质量增强和边界情况
+- 实际实施示例
 
-The result is a deeply grounded, production-ready plan with concrete implementation details.
+结果是一个有深厚基础、可投入生产的计划，包含具体实施细节。
 
-## Plan File
+## 计划文件
 
 <plan_path> #$ARGUMENTS </plan_path>
 
-**If the plan path above is empty:**
-1. Check for recent plans: `ls -la plans/`
-2. Ask the user: "Which plan would you like to deepen? Please provide the path (e.g., `plans/my-feature.md`)."
+**如果上面的计划路径为空：**
+1. 检查最近的计划： `ls -la plans/`
+2. 询问用户："您想深化哪个计划？请提供路径 (e.g., `plans/my-feature.md`)."
 
-Do not proceed until you have a valid plan file path.
+在获得有效的计划文件路径之前不要继续。
 
-## Main Tasks
+## 主要任务
 
-### 1. Parse and Analyze Plan Structure
+### 1. 解析和分析计划结构
 
 <thinking>
-First, read and parse the plan to identify each major section that can be enhanced with research.
+首先，读取并解析计划以识别可以通过研究增强的每个主要部分。
 </thinking>
 
-**Read the plan file and extract:**
-- [ ] Overview/Problem Statement
-- [ ] Proposed Solution sections
-- [ ] Technical Approach/Architecture
-- [ ] Implementation phases/steps
-- [ ] Code examples and file references
-- [ ] Acceptance criteria
-- [ ] Any UI/UX components mentioned
-- [ ] Technologies/frameworks mentioned (Rails, React, Python, TypeScript, etc.)
-- [ ] Domain areas (data models, APIs, UI, security, performance, etc.)
+**读取计划文件并提取：**
+- [ ] 概述/问题陈述
+- [ ] 建议解决方案部分
+- [ ] 技术方法/架构
+- [ ] 实施阶段/步骤
+- [ ] 代码示例和文件引用
+- [ ] 验收标准
+- [ ] 提到的任何 UI/UX 组件
+- [ ] 提到的技术/框架 (Rails, React, Python, TypeScript, etc.)
+- [ ] 领域区域（数据模型、API、UI、安全、性能等）
 
-**Create a section manifest:**
+**创建部分清单：**
 ```
-Section 1: [Title] - [Brief description of what to research]
-Section 2: [Title] - [Brief description of what to research]
+部分 1： [Title] - [要研究内容的简要描述]
+Section 2: [Title] - [要研究内容的简要描述]
 ...
 ```
 
-### 2. Discover and Apply Available Skills
+### 2. 发现并应用可用 Skill
 
 <thinking>
-Dynamically discover all available skills and match them to plan sections. Don't assume what skills exist - discover them at runtime.
+动态发现所有可用 skill 并将它们匹配到计划部分。 不要假设存在哪些 skill - 在运行时发现它们。
 </thinking>
 
-**Step 1: Discover ALL available skills from ALL sources**
+**步骤 1：从所有来源发现所有可用 skill**
 
 ```bash
-# 1. Project-local skills (highest priority - project-specific)
+# 1. 项目本地 skill（最高优先级 - 项目特定）
 ls .claude/skills/
 
-# 2. User's global skills (~/.claude/)
+# 2. 用户的全局 skill (~/.claude/)
 ls ~/.claude/skills/
 
-# 3. compound-engineering plugin skills
+# 3. compound-engineering 插件 skill
 ls ~/.claude/plugins/cache/*/compound-engineering/*/skills/
 
-# 4. ALL other installed plugins - check every plugin for skills
+# 4. 所有其他已安装插件 - 检查每个插件的 skill
 find ~/.claude/plugins/cache -type d -name "skills" 2>/dev/null
 
-# 5. Also check installed_plugins.json for all plugin locations
+# 5. 还要检查 installed_plugins.json 以获取所有插件位置
 cat ~/.claude/plugins/installed_plugins.json
 ```
 
-**Important:** Check EVERY source. Don't assume compound-engineering is the only plugin. Use skills from ANY installed plugin that's relevant.
+**Important:** Check EVERY source. 不要假设 compound-engineering 是唯一的插件。 使用任何已安装插件的 skill's relevant.
 
-**Step 2: For each discovered skill, read its SKILL.md to understand what it does**
+**步骤 2：对于每个发现的 skill，读取其 SKILL.md 以了解它的功能**
 
 ```bash
-# For each skill directory found, read its documentation
+# 对于找到的每个 skill 目录，读取其文档
 cat [skill-path]/SKILL.md
 ```
 
-**Step 3: Match skills to plan content**
+**步骤 3：将 skill 匹配到计划内容**
 
-For each skill discovered:
-- Read its SKILL.md description
-- Check if any plan sections match the skill's domain
-- If there's a match, spawn a sub-agent to apply that skill's knowledge
+对于发现的每个 skill：
+- 读取其 SKILL.md 描述
+- 检查是否有任何计划部分匹配该 skill's domain
+- 如果匹配，生成子 agent 以应用该 skill 的知识
 
-**Step 4: Spawn a sub-agent for EVERY matched skill**
+**步骤 4：为每个匹配的 skill 生成子 agent**
 
-**CRITICAL: For EACH skill that matches, spawn a separate sub-agent and instruct it to USE that skill.**
+**关键：对于每个匹配的 skill，生成单独的子 agent 并指示它使用该 skill。**
 
-For each matched skill:
+对于每个匹配的 skill：
 ```
 Task general-purpose: "You have the [skill-name] skill available at [skill-path].
 
-YOUR JOB: Use this skill on the plan.
+你的工作：在计划上使用此 skill。
 
-1. Read the skill: cat [skill-path]/SKILL.md
-2. Follow the skill's instructions exactly
-3. Apply the skill to this content:
+1. 读取 skill： cat [skill-path]/SKILL.md
+2. 遵循 skill's instructions exactly
+3. 将 skill 应用到此内容：
 
-[relevant plan section or full plan]
+[相关计划部分或完整计划]
 
-4. Return the skill's full output
+4. 返回 skill's full output
 
-The skill tells you what to do - follow it. Execute the skill completely."
+skill 告诉你该做什么 - 遵循它。完整执行 skill。"
 ```
 
-**Spawn ALL skill sub-agents in PARALLEL:**
-- 1 sub-agent per matched skill
-- Each sub-agent reads and uses its assigned skill
-- All run simultaneously
-- 10, 20, 30 skill sub-agents is fine
+**并行生成所有 skill 子 agent：**
+- 每个匹配的 skill 1 个子 agent
+- 每个子 agent 读取并使用其分配的 skill
+- 全部同时运行
+- 10、20、30 个 skill 子 agent 都可以
 
-**Each sub-agent:**
-1. Reads its skill's SKILL.md
-2. Follows the skill's workflow/instructions
-3. Applies the skill to the plan
-4. Returns whatever the skill produces (code, recommendations, patterns, reviews, etc.)
+**每个子 agent：**
+1. 读取其 skill's SKILL.md
+2. 遵循 skill's workflow/instructions
+3. 将 skill 应用到计划
+4. 返回 skill 生成的任何内容 (代码、建议、模式、审查等)
 
-**Example spawns:**
+**示例生成：**
 ```
-Task general-purpose: "Use the dhh-rails-style skill at ~/.claude/plugins/.../dhh-rails-style. Read SKILL.md and apply it to: [Rails sections of plan]"
+Task general-purpose: "使用 dhh-rails-style skill at ~/.claude/plugins/.../dhh-rails-style. 读取 SKILL.md 并将其应用于： [计划的 Rails 部分]"
 
-Task general-purpose: "Use the frontend-design skill at ~/.claude/plugins/.../frontend-design. Read SKILL.md and apply it to: [UI sections of plan]"
+Task general-purpose: "使用 frontend-design skill at ~/.claude/plugins/.../frontend-design. 读取 SKILL.md 并将其应用于： [计划的 UI 部分]"
 
-Task general-purpose: "Use the agent-native-architecture skill at ~/.claude/plugins/.../agent-native-architecture. Read SKILL.md and apply it to: [agent/tool sections of plan]"
+Task general-purpose: "使用 agent-native-architecture skill at ~/.claude/plugins/.../agent-native-architecture. 读取 SKILL.md 并将其应用于： [计划的 agent/tool 部分]"
 
-Task general-purpose: "Use the security-patterns skill at ~/.claude/skills/security-patterns. Read SKILL.md and apply it to: [full plan]"
+Task general-purpose: "使用 security-patterns skill at ~/.claude/skills/security-patterns. 读取 SKILL.md 并将其应用于： [完整计划]"
 ```
 
-**No limit on skill sub-agents. Spawn one for every skill that could possibly be relevant.**
+**对 skill 子 agent 没有限制。为每个可能相关的 skill 生成一个。**
 
-### 3. Discover and Apply Learnings/Solutions
+### 3. 发现并应用经验教训/解决方案
 
 <thinking>
-Check for documented learnings from /workflows:compound. These are solved problems stored as markdown files. Spawn a sub-agent for each learning to check if it's relevant.
+检查来自 /workflows:compound 的记录的经验教训。 这些是存储为 markdown 文件的已解决问题。 为每个经验教训生成子 agent 以检查是否 it's relevant.
 </thinking>
 
-**LEARNINGS LOCATION - Check these exact folders:**
+**经验教训位置 - 检查这些确切的文件夹：**
 
 ```
-docs/solutions/           <-- PRIMARY: Project-level learnings (created by /workflows:compound)
+docs/solutions/           <-- 主要：项目级经验教训（由 /workflows:compound 创建）
 ├── performance-issues/
 │   └── *.md
 ├── debugging-patterns/
@@ -166,28 +166,28 @@ docs/solutions/           <-- PRIMARY: Project-level learnings (created by /work
     └── *.md
 ```
 
-**Step 1: Find ALL learning markdown files**
+**步骤 1：查找所有经验教训 markdown 文件**
 
-Run these commands to get every learning file:
+运行这些命令以获取每个经验教训文件：
 
 ```bash
-# PRIMARY LOCATION - Project learnings
+# 主要位置 - 项目经验教训
 find docs/solutions -name "*.md" -type f 2>/dev/null
 
-# If docs/solutions doesn't exist, check alternate locations:
+# 如果 docs/solutions 不't exist, 检查备用位置：
 find .claude/docs -name "*.md" -type f 2>/dev/null
 find ~/.claude/docs -name "*.md" -type f 2>/dev/null
 ```
 
-**Step 2: Read frontmatter of each learning to filter**
+**步骤 2：读取每个经验教训的 frontmatter 以过滤**
 
-Each learning file has YAML frontmatter with metadata. Read the first ~20 lines of each file to get:
+每个经验教训文件都有带元数据的 YAML frontmatter。 读取每个文件的前约 20 行以获取：
 
 ```yaml
 ---
 title: "N+1 Query Fix for Briefs"
 category: performance-issues
-tags: [activerecord, n-plus-one, includes, eager-loading]
+标签： [activerecord, n-plus-one, includes, eager-loading]
 module: Briefs
 symptom: "Slow page load, multiple queries in logs"
 root_cause: "Missing includes on association"
@@ -197,169 +197,169 @@ root_cause: "Missing includes on association"
 **For each .md file, quickly scan its frontmatter:**
 
 ```bash
-# Read first 20 lines of each learning (frontmatter + summary)
+# 读取每个经验教训的前 20 行（frontmatter + 摘要）
 head -20 docs/solutions/**/*.md
 ```
 
-**Step 3: Filter - only spawn sub-agents for LIKELY relevant learnings**
+**步骤 3：过滤 - 仅为可能相关的经验教训生成子 agent**
 
-Compare each learning's frontmatter against the plan:
-- `tags:` - Do any tags match technologies/patterns in the plan?
-- `category:` - Is this category relevant? (e.g., skip deployment-issues if plan is UI-only)
-- `module:` - Does the plan touch this module?
-- `symptom:` / `root_cause:` - Could this problem occur with the plan?
+比较每个经验教训's frontmatter 与计划：
+- `标签：` - 是否有任何标签与计划中的技术/模式匹配？
+- `category:` - 这个类别是否相关？ (e.g., 如果计划仅是 UI，则跳过 deployment-issues)
+- `module:` - 计划是否涉及此模块？
+- `symptom:` / `root_cause:` - 此问题是否可能出现在计划中？
 
-**SKIP learnings that are clearly not applicable:**
-- Plan is frontend-only → skip `database-migrations/` learnings
-- Plan is Python → skip `rails-specific/` learnings
-- Plan has no auth → skip `authentication-issues/` learnings
+**跳过明显不适用的经验教训：**
+- 计划仅是前端 → 跳过 `database-migrations/` 经验教训
+- 计划是 Python → 跳过 `rails-specific/` 经验教训
+- 计划没有 auth → 跳过 `authentication-issues/` 经验教训
 
-**SPAWN sub-agents for learnings that MIGHT apply:**
-- Any tag overlap with plan technologies
-- Same category as plan domain
-- Similar patterns or concerns
+**SPAWN sub-agents for 经验教训 that MIGHT apply:**
+- 与计划技术有任何标签重叠
+- 与计划领域相同的类别
+- 相似的模式或关注点
 
-**Step 4: Spawn sub-agents for filtered learnings**
+**Step 4: Spawn sub-agents for filtered 经验教训**
 
-For each learning that passes the filter:
+对于通过过滤器的每个经验教训：
 
 ```
 Task general-purpose: "
-LEARNING FILE: [full path to .md file]
+经验教训文件： [.md 文件的完整路径]
 
-1. Read this learning file completely
-2. This learning documents a previously solved problem
+1. 完整阅读此经验教训文件
+2. 此经验教训记录了先前解决的问题
 
-Check if this learning applies to this plan:
+检查此经验教训是否适用于此计划：
 
 ---
-[full plan content]
+[完整计划 content]
 ---
 
-If relevant:
-- Explain specifically how it applies
-- Quote the key insight or solution
-- Suggest where/how to incorporate it
+如果相关：
+- 具体解释如何适用
+- 引用关键见解或解决方案
+- 建议在何处/如何纳入
 
-If NOT relevant after deeper analysis:
-- Say 'Not applicable: [reason]'
+如果经过更深入分析后不相关：
+- Say '不适用：[原因]'
 "
 ```
 
-**Example filtering:**
+**示例过滤：**
 ```
-# Found 15 learning files, plan is about "Rails API caching"
+# 找到 15 个经验教训文件，计划是关于 "Rails API caching"
 
-# SPAWN (likely relevant):
-docs/solutions/performance-issues/n-plus-one-queries.md      # tags: [activerecord] ✓
-docs/solutions/performance-issues/redis-cache-stampede.md    # tags: [caching, redis] ✓
-docs/solutions/configuration-fixes/redis-connection-pool.md  # tags: [redis] ✓
+# 生成（可能相关）：
+docs/solutions/performance-issues/n-plus-one-queries.md      # 标签： [activerecord] ✓
+docs/solutions/performance-issues/redis-cache-stampede.md    # 标签： [caching, redis] ✓
+docs/solutions/configuration-fixes/redis-connection-pool.md  # 标签： [redis] ✓
 
-# SKIP (clearly not applicable):
-docs/solutions/deployment-issues/heroku-memory-quota.md      # not about caching
-docs/solutions/frontend-issues/stimulus-race-condition.md    # plan is API, not frontend
-docs/solutions/authentication-issues/jwt-expiry.md           # plan has no auth
+# 跳过（明显不适用）：
+docs/solutions/deployment-issues/heroku-memory-quota.md      # 不是关于缓存
+docs/solutions/frontend-issues/stimulus-race-condition.md    # 计划是 API，不是前端
+docs/solutions/authentication-issues/jwt-expiry.md           # 计划没有 auth
 ```
 
-**Spawn sub-agents in PARALLEL for all filtered learnings.**
+**Spawn sub-agents in PARALLEL for all filtered 经验教训.**
 
-**These learnings are institutional knowledge - applying them prevents repeating past mistakes.**
+**These 经验教训 are institutional knowledge - 应用它们可以防止重复过去的错误。**
 
-### 4. Launch Per-Section Research Agents
+### 4. 为每个部分启动研究 Agent
 
 <thinking>
-For each major section in the plan, spawn dedicated sub-agents to research improvements. Use the Explore agent type for open-ended research.
+对于计划中的每个主要部分，生成专用的子 agent 以研究改进。 使用 Explore agent 类型进行开放式研究。
 </thinking>
 
-**For each identified section, launch parallel research:**
+**对于每个已识别的部分，启动并行研究：**
 
 ```
-Task Explore: "Research best practices, patterns, and real-world examples for: [section topic].
+Task Explore: "研究以下方面的最佳实践、模式和实际示例： [部分主题].
 Find:
-- Industry standards and conventions
-- Performance considerations
-- Common pitfalls and how to avoid them
-- Documentation and tutorials
-Return concrete, actionable recommendations."
+- 行业标准和约定
+- 性能考虑
+- 常见陷阱以及如何避免它们
+- 文档和教程
+返回具体的、可操作的建议。"
 ```
 
-**Also use Context7 MCP for framework documentation:**
+**还使用 Context7 MCP 获取框架文档：**
 
-For any technologies/frameworks mentioned in the plan, query Context7:
+对于计划中提到的任何技术/框架，查询 Context7：
 ```
-mcp__plugin_compound-engineering_context7__resolve-library-id: Find library ID for [framework]
-mcp__plugin_compound-engineering_context7__query-docs: Query documentation for specific patterns
+mcp__plugin_compound-engineering_context7__resolve-library-id: 查找 [framework] 的库 ID
+mcp__plugin_compound-engineering_context7__query-docs: 查询特定模式的文档
 ```
 
-**Use WebSearch for current best practices:**
+**使用 WebSearch 获取当前最佳实践：**
 
-Search for recent (2024-2025) articles, blog posts, and documentation on topics in the plan.
+搜索计划中主题的最新（2024-2025）文章、博客文章和文档。
 
-### 5. Discover and Run ALL Review Agents
+### 5. 发现并运行所有审查 Agent
 
 <thinking>
-Dynamically discover every available agent and run them ALL against the plan. Don't filter, don't skip, don't assume relevance. 40+ parallel agents is fine. Use everything available.
+动态发现每个可用的 agent 并对计划运行它们全部。 Don't filter, don't 跳过, don't assume relevance. 40+ parallel agents is fine. 使用所有可用的。
 </thinking>
 
-**Step 1: Discover ALL available agents from ALL sources**
+**步骤 1：从所有来源发现所有可用 agent**
 
 ```bash
-# 1. Project-local agents (highest priority - project-specific)
+# 1. 项目本地 agent（最高优先级 - 项目特定）
 find .claude/agents -name "*.md" 2>/dev/null
 
 # 2. User's global agents (~/.claude/)
 find ~/.claude/agents -name "*.md" 2>/dev/null
 
-# 3. compound-engineering plugin agents (all subdirectories)
+# 3. compound-engineering 插件 agent（所有子目录）
 find ~/.claude/plugins/cache/*/compound-engineering/*/agents -name "*.md" 2>/dev/null
 
-# 4. ALL other installed plugins - check every plugin for agents
+# 4. 所有其他已安装插件 - 检查每个插件的 agent
 find ~/.claude/plugins/cache -path "*/agents/*.md" 2>/dev/null
 
-# 5. Check installed_plugins.json to find all plugin locations
+# 5. 检查 installed_plugins.json 以查找所有插件位置
 cat ~/.claude/plugins/installed_plugins.json
 
-# 6. For local plugins (isLocal: true), check their source directories
-# Parse installed_plugins.json and find local plugin paths
+# 6. 对于本地插件（isLocal: true），检查它们的源目录
+# 解析 installed_plugins.json 并查找本地插件路径
 ```
 
-**Important:** Check EVERY source. Include agents from:
+**Important:** 检查每个来源。包括来自以下的 agent：
 - Project `.claude/agents/`
 - User's `~/.claude/agents/`
 - compound-engineering plugin (but SKIP workflow/ agents - only use review/, research/, design/, docs/)
 - ALL other installed plugins (agent-sdk-dev, frontend-design, etc.)
 - Any local plugins
 
-**For compound-engineering plugin specifically:**
-- USE: `agents/review/*` (all reviewers)
-- USE: `agents/research/*` (all researchers)
-- USE: `agents/design/*` (design agents)
-- USE: `agents/docs/*` (documentation agents)
-- SKIP: `agents/workflow/*` (these are workflow orchestrators, not reviewers)
+**特别针对 compound-engineering 插件：**
+- 使用： `agents/review/*` (所有审查者)
+- 使用： `agents/research/*` (所有研究人员)
+- 使用： `agents/design/*` (设计 agent)
+- 使用： `agents/docs/*` (文档 agent)
+- 跳过： `agents/workflow/*` (这些是工作流编排器，不是审查者)
 
-**Step 2: For each discovered agent, read its description**
+**步骤 2：对于每个发现的 agent，读取其描述**
 
-Read the first few lines of each agent file to understand what it reviews/analyzes.
+读取每个 agent 文件的前几行以了解它审查/分析什么。
 
-**Step 3: Launch ALL agents in parallel**
+**步骤 3：并行启动所有 agent**
 
-For EVERY agent discovered, launch a Task in parallel:
+对于发现的每个 agent，并行启动一个任务：
 
 ```
-Task [agent-name]: "Review this plan using your expertise. Apply all your checks and patterns. Plan content: [full plan content]"
+Task [agent-name]: "使用您的专业知识审查此计划。应用您所有的检查和模式。计划内容： [完整计划 content]"
 ```
 
-**CRITICAL RULES:**
-- Do NOT filter agents by "relevance" - run them ALL
-- Do NOT skip agents because they "might not apply" - let them decide
-- Launch ALL agents in a SINGLE message with multiple Task tool calls
-- 20, 30, 40 parallel agents is fine - use everything
-- Each agent may catch something others miss
-- The goal is MAXIMUM coverage, not efficiency
+**关键规则：**
+- 不要根据 "relevance" 运行它们全部
+- Do NOT 跳过 agents because they "可能不适用" 让它们决定
+- 在单个消息中使用多个任务工具调用启动所有 agent
+- 20、30、40 个并行 agent 很好 - 使用所有
+- 每个 agent 可能会捕获其他人遗漏的东西
+- 目标是最大覆盖率，而不是效率
 
-**Step 4: Also discover and run research agents**
+**步骤 4：还要发现并运行研究 agent**
 
-Research agents (like `best-practices-researcher`, `framework-docs-researcher`, `git-history-analyzer`, `repo-research-analyst`) should also be run for relevant plan sections.
+研究 agent（如 `best-practices-researcher`, `framework-docs-researcher`, `git-history-analyzer`, `repo-research-analyst`) 也应该为相关计划部分运行。
 
 ### 6. Wait for ALL Agents and Synthesize Everything
 
@@ -370,7 +370,7 @@ Wait for ALL parallel agents to complete - skills, research agents, review agent
 **Collect outputs from ALL sources:**
 
 1. **Skill-based sub-agents** - Each skill's full output (code examples, patterns, recommendations)
-2. **Learnings/Solutions sub-agents** - Relevant documented learnings from /workflows:compound
+2. **Learnings/Solutions sub-agents** - Relevant documented 经验教训 from /workflows:compound
 3. **Research agents** - Best practices, documentation, real-world examples
 4. **Review agents** - All feedback from every reviewer (architecture, security, performance, simplicity, etc.)
 5. **Context7 queries** - Framework documentation and patterns
@@ -380,12 +380,12 @@ Wait for ALL parallel agents to complete - skills, research agents, review agent
 - [ ] Concrete recommendations (actionable items)
 - [ ] Code patterns and examples (copy-paste ready)
 - [ ] Anti-patterns to avoid (warnings)
-- [ ] Performance considerations (metrics, benchmarks)
+- [ ] 性能考虑 (metrics, benchmarks)
 - [ ] Security considerations (vulnerabilities, mitigations)
 - [ ] Edge cases discovered (handling strategies)
 - [ ] Documentation links (references)
 - [ ] Skill-specific patterns (from matched skills)
-- [ ] Relevant learnings (past solutions that apply - prevent repeating mistakes)
+- [ ] Relevant 经验教训 (past solutions that apply - prevent repeating mistakes)
 
 **Deduplicate and prioritize:**
 - Merge similar recommendations from multiple agents
