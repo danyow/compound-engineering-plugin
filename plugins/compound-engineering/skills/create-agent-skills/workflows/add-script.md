@@ -1,93 +1,93 @@
-# Workflow: Add a Script to a Skill
+# Workflow：向 Skill 添加 Script
 
 <required_reading>
-**Read these reference files NOW:**
+**立即阅读这些参考文件：**
 1. references/using-scripts.md
 </required_reading>
 
 <process>
-## Step 1: Identify the Skill
+## 步骤 1：识别 Skill
 
-Ask (if not already provided):
-- Which skill needs a script?
-- What operation should the script perform?
+询问（如果尚未提供）：
+- 哪个 skill 需要 script？
+- script 应执行什么操作？
 
-## Step 2: Analyze Script Need
+## 步骤 2：分析 Script 需求
 
-Confirm this is a good script candidate:
-- [ ] Same code runs across multiple invocations
-- [ ] Operation is error-prone when rewritten
-- [ ] Consistency matters more than flexibility
+确认这是一个好的 script 候选：
+- [ ] 相同的代码在多次调用中运行
+- [ ] 重写时操作容易出错
+- [ ] 一致性比灵活性更重要
 
-If not a good fit, suggest alternatives (inline code in workflow, reference examples).
+如果不合适，建议替代方案（workflow 中的内联代码、reference 示例）。
 
-## Step 3: Create Scripts Directory
+## 步骤 3：创建 Scripts 目录
 
 ```bash
 mkdir -p ~/.claude/skills/{skill-name}/scripts
 ```
 
-## Step 4: Design Script
+## 步骤 4：设计 Script
 
-Gather requirements:
-- What inputs does the script need?
-- What should it output or accomplish?
-- What errors might occur?
-- Should it be idempotent?
+收集需求：
+- script 需要什么输入？
+- 它应该输出或完成什么？
+- 可能发生什么错误？
+- 它应该是幂等的吗？
 
-Choose language:
-- **bash** - Shell operations, file manipulation, CLI tools
-- **python** - Data processing, API calls, complex logic
-- **node/ts** - JavaScript ecosystem, async operations
+选择语言：
+- **bash** - Shell 操作、文件操作、CLI 工具
+- **python** - 数据处理、API 调用、复杂逻辑
+- **node/ts** - JavaScript 生态系统、异步操作
 
-## Step 5: Write Script File
+## 步骤 5：编写 Script 文件
 
-Create `scripts/{script-name}.{ext}` with:
-- Purpose comment at top
-- Usage instructions
-- Input validation
-- Error handling
-- Clear output/feedback
+创建 `scripts/{script-name}.{ext}`，包含：
+- 顶部的目的注释
+- 使用说明
+- 输入验证
+- 错误处理
+- 清晰的输出/反馈
 
-For bash scripts:
+对于 bash script：
 ```bash
 #!/bin/bash
 set -euo pipefail
 ```
 
-## Step 6: Make Executable (if bash)
+## 步骤 6：使其可执行（如果是 bash）
 
 ```bash
 chmod +x ~/.claude/skills/{skill-name}/scripts/{script-name}.sh
 ```
 
-## Step 7: Update Workflow to Use Script
+## 步骤 7：更新 Workflow 以使用 Script
 
-Find the workflow that needs this operation. Add:
+找到需要此操作的 workflow。添加：
 ```xml
 <process>
 ...
-N. Run `scripts/{script-name}.sh [arguments]`
-N+1. Verify operation succeeded
+N. 运行 `scripts/{script-name}.sh [arguments]`
+N+1. 验证操作成功
 ...
 </process>
 ```
 
-## Step 8: Test
+## 步骤 8：测试
 
-Invoke the skill workflow and verify:
-- Script runs at the right step
-- Inputs are passed correctly
-- Errors are handled gracefully
-- Output matches expectations
+调用 skill workflow 并验证：
+- Script 在正确的步骤运行
+- 输入正确传递
+- 错误得到优雅处理
+- 输出符合预期
 </process>
 
 <success_criteria>
-Script is complete when:
-- [ ] scripts/ directory exists
-- [ ] Script file has proper structure (comments, validation, error handling)
-- [ ] Script is executable (if bash)
-- [ ] At least one workflow references the script
-- [ ] No hardcoded secrets or credentials
-- [ ] Tested with real invocation
+Script 在以下情况下完成：
+- [ ] scripts/ 目录存在
+- [ ] Script 文件具有正确的结构（注释、验证、错误处理）
+- [ ] Script 是可执行的（如果是 bash）
+- [ ] 至少有一个 workflow 引用该 script
+- [ ] 没有硬编码的秘密或凭据
+- [ ] 使用真实调用进行测试
 </success_criteria>

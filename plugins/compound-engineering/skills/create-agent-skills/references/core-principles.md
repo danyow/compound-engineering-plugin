@@ -1,98 +1,98 @@
 <overview>
-Core principles guide skill authoring decisions. These principles ensure skills are efficient, effective, and maintainable across different models and use cases.
+核心原则指导 skill 编写决策。这些原则确保 skills 在不同模型和用例中高效、有效且可维护。
 </overview>
 
 <xml_structure_principle>
 <description>
-Skills use pure XML structure for consistent parsing, efficient token usage, and improved Claude performance.
+Skills 使用纯 XML 结构以实现一致的解析、高效的 token 使用和改进的 Claude 性能。
 </description>
 
 <why_xml>
 <consistency>
-XML enforces consistent structure across all skills. All skills use the same tag names for the same purposes:
-- `<objective>` always defines what the skill does
-- `<quick_start>` always provides immediate guidance
-- `<success_criteria>` always defines completion
+XML 在所有 skills 中强制执行一致的结构。所有 skills 使用相同的标签名称用于相同的目的：
+- `<objective>` 始终定义 skill 做什么
+- `<quick_start>` 始终提供即时指导
+- `<success_criteria>` 始终定义完成标准
 
-This consistency makes skills predictable and easier to maintain.
+这种一致性使 skills 可预测且更易于维护。
 </consistency>
 
 <parseability>
-XML provides unambiguous boundaries and semantic meaning. Claude can reliably:
-- Identify section boundaries (where content starts and ends)
-- Understand content purpose (what role each section plays)
-- Skip irrelevant sections (progressive disclosure)
-- Parse programmatically (validation tools can check structure)
+XML 提供明确的边界和语义含义。Claude 可以可靠地：
+- 识别节边界（内容开始和结束的位置）
+- 理解内容目的（每个部分扮演的角色）
+- 跳过不相关的部分（渐进式披露）
+- 程序化解析（验证工具可以检查结构）
 
-Markdown headings are just visual formatting. Claude must infer meaning from heading text, which is less reliable.
+Markdown 标题只是视觉格式。Claude 必须从标题文本推断含义，这不太可靠。
 </parseability>
 
 <token_efficiency>
-XML tags are more efficient than markdown headings:
+XML 标签比 markdown 标题更高效：
 
-**Markdown headings**:
+**Markdown 标题**:
 ```markdown
 ## Quick start
 ## Workflow
 ## Advanced features
 ## Success criteria
 ```
-Total: ~20 tokens, no semantic meaning to Claude
+总计：~20 tokens，对 Claude 没有语义含义
 
-**XML tags**:
+**XML 标签**:
 ```xml
 <quick_start>
 <workflow>
 <advanced_features>
 <success_criteria>
 ```
-Total: ~15 tokens, semantic meaning built-in
+总计：~15 tokens，内置语义含义
 
-Savings compound across all skills in the ecosystem.
+节省在生态系统中的所有 skills 中累积。
 </token_efficiency>
 
 <claude_performance>
-Claude performs better with pure XML because:
-- Unambiguous section boundaries reduce parsing errors
-- Semantic tags convey intent directly (no inference needed)
-- Nested tags create clear hierarchies
-- Consistent structure across skills reduces cognitive load
-- Progressive disclosure works more reliably
+Claude 在使用纯 XML 时表现更好，因为：
+- 明确的节边界减少解析错误
+- 语义标签直接传达意图（无需推断）
+- 嵌套标签创建清晰的层次结构
+- 跨 skills 的一致结构减少认知负担
+- 渐进式披露工作更可靠
 
-Pure XML structure is not just a style preference—it's a performance optimization.
+纯 XML 结构不仅仅是风格偏好——它是性能优化。
 </claude_performance>
 </why_xml>
 
 <critical_rule>
-**Remove ALL markdown headings (#, ##, ###) from skill body content.** Replace with semantic XML tags. Keep markdown formatting WITHIN content (bold, italic, lists, code blocks, links).
+**从 skill 主体内容中删除所有 markdown 标题（#、##、###）。** 用语义 XML 标签替换。保留内容中的 markdown 格式（粗体、斜体、列表、代码块、链接）。
 </critical_rule>
 
 <required_tags>
-Every skill MUST have:
-- `<objective>` - What the skill does and why it matters
-- `<quick_start>` - Immediate, actionable guidance
-- `<success_criteria>` or `<when_successful>` - How to know it worked
+每个 skill 必须具有：
+- `<objective>` - Skill 做什么以及为什么重要
+- `<quick_start>` - 即时、可操作的指导
+- `<success_criteria>` 或 `<when_successful>` - 如何知道它工作了
 
-See [use-xml-tags.md](use-xml-tags.md) for conditional tags and intelligence rules.
+查看 [use-xml-tags.md](use-xml-tags.md) 了解条件标签和智能规则。
 </required_tags>
 </xml_structure_principle>
 
 <conciseness_principle>
 <description>
-The context window is shared. Your skill shares it with the system prompt, conversation history, other skills' metadata, and the actual request.
+上下文窗口是共享的。你的 skill 与系统 prompt、对话历史、其他 skills 的元数据和实际请求共享它。
 </description>
 
 <guidance>
-Only add context Claude doesn't already have. Challenge each piece of information:
-- "Does Claude really need this explanation?"
-- "Can I assume Claude knows this?"
-- "Does this paragraph justify its token cost?"
+只添加 Claude 还没有的上下文。质疑每条信息：
+- "Claude 真的需要这个解释吗？"
+- "我可以假设 Claude 知道这个吗？"
+- "这段话值得它的 token 成本吗？"
 
-Assume Claude is smart. Don't explain obvious concepts.
+假设 Claude 很聪明。不要解释显而易见的概念。
 </guidance>
 
 <concise_example>
-**Concise** (~50 tokens):
+**简洁** (~50 tokens):
 ```xml
 <quick_start>
 Extract PDF text with pdfplumber:
@@ -106,7 +106,7 @@ with pdfplumber.open("file.pdf") as pdf:
 </quick_start>
 ```
 
-**Verbose** (~150 tokens):
+**冗长** (~150 tokens):
 ```xml
 <quick_start>
 PDF files are a common file format used for documents. To extract text from them, we'll use a Python library called pdfplumber. First, you'll need to import the library, then open the PDF file using the open method, and finally extract the text from each page. Here's how to do it:
@@ -122,35 +122,35 @@ This code opens the PDF and extracts text from the first page.
 </quick_start>
 ```
 
-The concise version assumes Claude knows what PDFs are, understands Python imports, and can read code. All those assumptions are correct.
+简洁版本假设 Claude 知道什么是 PDF，理解 Python imports，并且可以阅读代码。所有这些假设都是正确的。
 </concise_example>
 
 <when_to_elaborate>
-Add explanation when:
-- Concept is domain-specific (not general programming knowledge)
-- Pattern is non-obvious or counterintuitive
-- Context affects behavior in subtle ways
-- Trade-offs require judgment
+在以下情况下添加解释：
+- 概念是特定领域的（不是通用编程知识）
+- 模式不明显或违反直觉
+- 上下文以微妙的方式影响行为
+- 权衡需要判断
 
-Don't add explanation for:
-- Common programming concepts (loops, functions, imports)
-- Standard library usage (reading files, making HTTP requests)
-- Well-known tools (git, npm, pip)
-- Obvious next steps
+不要为以下内容添加解释：
+- 常见的编程概念（循环、函数、imports）
+- 标准库使用（读取文件、发出 HTTP 请求）
+- 众所周知的工具（git、npm、pip）
+- 显而易见的下一步
 </when_to_elaborate>
 </conciseness_principle>
 
 <degrees_of_freedom_principle>
 <description>
-Match the level of specificity to the task's fragility and variability. Give Claude more freedom for creative tasks, less freedom for fragile operations.
+将具体程度与任务的脆弱性和可变性相匹配。对于创造性任务给予 Claude 更多自由，对于脆弱的操作给予更少自由。
 </description>
 
 <high_freedom>
 <when>
-- Multiple approaches are valid
-- Decisions depend on context
-- Heuristics guide the approach
-- Creative solutions welcome
+- 多种方法都有效
+- 决策取决于上下文
+- 启发式方法指导方法
+- 欢迎创造性解决方案
 </when>
 
 <example>
@@ -173,16 +173,16 @@ Review code for quality, bugs, and maintainability.
 </success_criteria>
 ```
 
-Claude has freedom to adapt the review based on what the code needs.
+Claude 可以根据代码需要自由调整审查。
 </example>
 </high_freedom>
 
 <medium_freedom>
 <when>
-- A preferred pattern exists
-- Some variation is acceptable
-- Configuration affects behavior
-- Template can be adapted
+- 存在首选模式
+- 可以接受一些变化
+- 配置影响行为
+- 模板可以调整
 </when>
 
 <example>
@@ -209,16 +209,16 @@ def generate_report(data, format="markdown", include_charts=True):
 </success_criteria>
 ```
 
-Claude can customize the template based on requirements.
+Claude 可以根据要求自定义模板。
 </example>
 </medium_freedom>
 
 <low_freedom>
 <when>
-- Operations are fragile and error-prone
-- Consistency is critical
-- A specific sequence must be followed
-- Deviation causes failures
+- 操作脆弱且容易出错
+- 一致性至关重要
+- 必须遵循特定顺序
+- 偏差导致失败
 </when>
 
 <example>
@@ -244,84 +244,84 @@ python scripts/migrate.py --verify --backup
 </success_criteria>
 ```
 
-Claude must follow the exact command with no variation.
+Claude 必须完全按照命令执行，不能有任何变化。
 </example>
 </low_freedom>
 
 <matching_specificity>
-The key is matching specificity to fragility:
+关键是将具体性与脆弱性相匹配：
 
-- **Fragile operations** (database migrations, payment processing, security): Low freedom, exact instructions
-- **Standard operations** (API calls, file processing, data transformation): Medium freedom, preferred pattern with flexibility
-- **Creative operations** (code review, content generation, analysis): High freedom, heuristics and principles
+- **脆弱操作**（数据库迁移、支付处理、安全）：低自由度，精确指令
+- **标准操作**（API 调用、文件处理、数据转换）：中等自由度，具有灵活性的首选模式
+- **创造性操作**（代码审查、内容生成、分析）：高自由度，启发式和原则
 
-Mismatched specificity causes problems:
-- Too much freedom on fragile tasks → errors and failures
-- Too little freedom on creative tasks → rigid, suboptimal outputs
+不匹配的具体性会导致问题：
+- 脆弱任务上的太多自由 → 错误和失败
+- 创造性任务上的太少自由 → 僵化、次优输出
 </matching_specificity>
 </degrees_of_freedom_principle>
 
 <model_testing_principle>
 <description>
-Skills act as additions to models, so effectiveness depends on the underlying model. What works for Opus might need more detail for Haiku.
+Skills 作为模型的补充，因此有效性取决于底层模型。适用于 Opus 的可能需要为 Haiku 提供更多细节。
 </description>
 
 <testing_across_models>
-Test your skill with all models you plan to use:
+使用你计划使用的所有模型测试你的 skill：
 
 <haiku_testing>
-**Claude Haiku** (fast, economical)
+**Claude Haiku**（快速、经济）
 
-Questions to ask:
-- Does the skill provide enough guidance?
-- Are examples clear and complete?
-- Do implicit assumptions become explicit?
-- Does Haiku need more structure?
+要问的问题：
+- Skill 是否提供足够的指导？
+- 示例是否清晰完整？
+- 隐含假设是否变得明确？
+- Haiku 是否需要更多结构？
 
-Haiku benefits from:
-- More explicit instructions
-- Complete examples (no partial code)
-- Clear success criteria
-- Step-by-step workflows
+Haiku 受益于：
+- 更明确的指令
+- 完整的示例（没有部分代码）
+- 明确的成功标准
+- 逐步工作流程
 </haiku_testing>
 
 <sonnet_testing>
-**Claude Sonnet** (balanced)
+**Claude Sonnet**（平衡）
 
-Questions to ask:
-- Is the skill clear and efficient?
-- Does it avoid over-explanation?
-- Are workflows well-structured?
-- Does progressive disclosure work?
+要问的问题：
+- Skill 是否清晰高效？
+- 是否避免过度解释？
+- 工作流程是否结构良好？
+- 渐进式披露是否有效？
 
-Sonnet benefits from:
-- Balanced detail level
-- XML structure for clarity
-- Progressive disclosure
-- Concise but complete guidance
+Sonnet 受益于：
+- 平衡的细节级别
+- 用于清晰度的 XML 结构
+- 渐进式披露
+- 简洁但完整的指导
 </sonnet_testing>
 
 <opus_testing>
-**Claude Opus** (powerful reasoning)
+**Claude Opus**（强大推理）
 
-Questions to ask:
-- Does the skill avoid over-explaining?
-- Can Opus infer obvious steps?
-- Are constraints clear?
-- Is context minimal but sufficient?
+要问的问题：
+- Skill 是否避免过度解释？
+- Opus 能否推断明显的步骤？
+- 约束是否明确？
+- 上下文是否最少但足够？
 
-Opus benefits from:
-- Concise instructions
-- Principles over procedures
-- High degrees of freedom
-- Trust in reasoning capabilities
+Opus 受益于：
+- 简洁的指令
+- 原则优于程序
+- 高度自由
+- 信任推理能力
 </opus_testing>
 </testing_across_models>
 
 <balancing_across_models>
-Aim for instructions that work well across all target models:
+目标是跨所有目标模型都能良好工作的指令：
 
-**Good balance**:
+**良好的平衡**:
 ```xml
 <quick_start>
 Use pdfplumber for text extraction:
@@ -336,19 +336,19 @@ For scanned PDFs requiring OCR, use pdf2image with pytesseract instead.
 </quick_start>
 ```
 
-This works for all models:
-- Haiku gets complete working example
-- Sonnet gets clear default with escape hatch
-- Opus gets enough context without over-explanation
+这适用于所有模型：
+- Haiku 获得完整的工作示例
+- Sonnet 获得带有备选方案的清晰默认值
+- Opus 获得足够的上下文而不过度解释
 
-**Too minimal for Haiku**:
+**对 Haiku 来说太简单**:
 ```xml
 <quick_start>
 Use pdfplumber for text extraction.
 </quick_start>
 ```
 
-**Too verbose for Opus**:
+**对 Opus 来说太冗长**:
 ```xml
 <quick_start>
 PDF files are documents that contain text. To extract that text, we use a library called pdfplumber. First, import the library at the top of your Python file. Then, open the PDF file using the pdfplumber.open() method. This returns a PDF object. Access the pages attribute to get a list of pages. Each page has an extract_text() method that returns the text content...
@@ -357,81 +357,81 @@ PDF files are documents that contain text. To extract that text, we use a librar
 </balancing_across_models>
 
 <iterative_improvement>
-1. Start with medium detail level
-2. Test with target models
-3. Observe where models struggle or succeed
-4. Adjust based on actual performance
-5. Re-test and iterate
+1. 从中等细节级别开始
+2. 使用目标模型测试
+3. 观察模型在哪里挣扎或成功
+4. 根据实际性能调整
+5. 重新测试并迭代
 
-Don't optimize for one model. Find the balance that works across your target models.
+不要为一个模型优化。找到适用于目标模型的平衡。
 </iterative_improvement>
 </model_testing_principle>
 
 <progressive_disclosure_principle>
 <description>
-SKILL.md serves as an overview. Reference files contain details. Claude loads reference files only when needed.
+SKILL.md 作为概述。参考文件包含详细信息。Claude 仅在需要时加载参考文件。
 </description>
 
 <token_efficiency>
-Progressive disclosure keeps token usage proportional to task complexity:
+渐进式披露使 token 使用与任务复杂性成比例：
 
-- Simple task: Load SKILL.md only (~500 tokens)
-- Medium task: Load SKILL.md + one reference (~1000 tokens)
-- Complex task: Load SKILL.md + multiple references (~2000 tokens)
+- 简单任务：仅加载 SKILL.md（~500 tokens）
+- 中等任务：加载 SKILL.md + 一个参考（~1000 tokens）
+- 复杂任务：加载 SKILL.md + 多个参考（~2000 tokens）
 
-Without progressive disclosure, every task loads all content regardless of need.
+没有渐进式披露，每个任务都会加载所有内容，无论是否需要。
 </token_efficiency>
 
 <implementation>
-- Keep SKILL.md under 500 lines
-- Split detailed content into reference files
-- Keep references one level deep from SKILL.md
-- Link to references from relevant sections
-- Use descriptive reference file names
+- 保持 SKILL.md 在 500 行以下
+- 将详细内容拆分为参考文件
+- 保持参考文件从 SKILL.md 深度为一级
+- 从相关部分链接到参考
+- 使用描述性的参考文件名
 
-See [skill-structure.md](skill-structure.md) for progressive disclosure patterns.
+查看 [skill-structure.md](skill-structure.md) 了解渐进式披露模式。
 </implementation>
 </progressive_disclosure_principle>
 
 <validation_principle>
 <description>
-Validation scripts are force multipliers. They catch errors that Claude might miss and provide actionable feedback.
+验证脚本是力量倍增器。它们捕获 Claude 可能遗漏的错误并提供可操作的反馈。
 </description>
 
 <characteristics>
-Good validation scripts:
-- Provide verbose, specific error messages
-- Show available valid options when something is invalid
-- Pinpoint exact location of problems
-- Suggest actionable fixes
-- Are deterministic and reliable
+好的验证脚本：
+- 提供详细、具体的错误消息
+- 当某些内容无效时显示可用的有效选项
+- 精确定位问题的确切位置
+- 建议可操作的修复
+- 是确定性和可靠的
 
-See [workflows-and-validation.md](workflows-and-validation.md) for validation patterns.
+查看 [workflows-and-validation.md](workflows-and-validation.md) 了解验证模式。
 </characteristics>
 </validation_principle>
 
 <principle_summary>
 <xml_structure>
-Use pure XML structure for consistency, parseability, and Claude performance. Required tags: objective, quick_start, success_criteria.
+使用纯 XML 结构以实现一致性、可解析性和 Claude 性能。必需标签：objective、quick_start、success_criteria。
 </xml_structure>
 
 <conciseness>
-Only add context Claude doesn't have. Assume Claude is smart. Challenge every piece of content.
+只添加 Claude 没有的上下文。假设 Claude 很聪明。质疑每条内容。
 </conciseness>
 
 <degrees_of_freedom>
-Match specificity to fragility. High freedom for creative tasks, low freedom for fragile operations, medium for standard work.
+将具体性与脆弱性相匹配。创造性任务高自由度，脆弱操作低自由度，标准工作中等。
 </degrees_of_freedom>
 
 <model_testing>
-Test with all target models. Balance detail level to work across Haiku, Sonnet, and Opus.
+使用所有目标模型测试。平衡细节级别以跨 Haiku、Sonnet 和 Opus 工作。
 </model_testing>
 
 <progressive_disclosure>
-Keep SKILL.md concise. Split details into reference files. Load reference files only when needed.
+保持 SKILL.md 简洁。将详细信息拆分为参考文件。仅在需要时加载参考文件。
 </progressive_disclosure>
 
 <validation>
-Make validation scripts verbose and specific. Catch errors early with actionable feedback.
+使验证脚本详细且具体。通过可操作的反馈尽早捕获错误。
 </validation>
 </principle_summary>

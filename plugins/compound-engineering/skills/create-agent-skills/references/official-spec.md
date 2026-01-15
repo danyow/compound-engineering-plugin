@@ -1,12 +1,12 @@
-# Anthropic Official Skill Specification
+# Anthropic 官方 Skill 规范
 
-Source: [code.claude.com/docs/en/skills](https://code.claude.com/docs/en/skills)
+来源：[code.claude.com/docs/en/skills](https://code.claude.com/docs/en/skills)
 
-## SKILL.md File Structure
+## SKILL.md 文件结构
 
-Every Skill requires a `SKILL.md` file with YAML frontmatter followed by Markdown instructions.
+每个 Skill 都需要一个包含 YAML frontmatter 和 Markdown 指令的 `SKILL.md` 文件。
 
-### Basic Format
+### 基本格式
 
 ```markdown
 ---
@@ -23,50 +23,50 @@ Provide clear, step-by-step guidance for Claude.
 Show concrete examples of using this Skill.
 ```
 
-## Required Frontmatter Fields
+## 必需的 Frontmatter 字段
 
-| Field | Required | Description |
+| 字段 | 必需 | 描述 |
 |-------|----------|-------------|
-| `name` | Yes | Skill name using lowercase letters, numbers, and hyphens only (max 64 characters). Should match the directory name. |
-| `description` | Yes | What the Skill does and when to use it (max 1024 characters). Claude uses this to decide when to apply the Skill. |
-| `allowed-tools` | No | Tools Claude can use without asking permission when this Skill is active. Example: `Read, Grep, Glob` |
-| `model` | No | Specific model to use when this Skill is active (e.g., `claude-sonnet-4-20250514`). Defaults to the conversation's model. |
+| `name` | 是 | 仅使用小写字母、数字和连字符的 Skill 名称（最多 64 个字符）。应与目录名称匹配。 |
+| `description` | 是 | Skill 的作用以及何时使用（最多 1024 个字符）。Claude 使用此来决定何时应用 Skill。 |
+| `allowed-tools` | 否 | 当此 Skill 激活时 Claude 可以使用而无需请求许可的工具。示例：`Read, Grep, Glob` |
+| `model` | 否 | 此 Skill 激活时要使用的特定模型（例如，`claude-sonnet-4-20250514`）。默认为对话的模型。 |
 
-## Skill Locations & Priority
+## Skill 位置和优先级
 
 ```
-Enterprise (highest priority) → Personal → Project → Plugin (lowest priority)
+Enterprise（最高优先级）→ Personal → Project → Plugin（最低优先级）
 ```
 
-| Type | Path | Applies to |
+| 类型 | 路径 | 适用于 |
 |------|------|-----------|
-| **Enterprise** | See managed settings | All users in organization |
-| **Personal** | `~/.claude/skills/` | You, across all projects |
-| **Project** | `.claude/skills/` | Anyone working in repository |
-| **Plugin** | Bundled with plugins | Anyone with plugin installed |
+| **Enterprise** | 参见托管设置 | 组织中的所有用户 |
+| **Personal** | `~/.claude/skills/` | 你，跨所有项目 |
+| **Project** | `.claude/skills/` | 在仓库中工作的任何人 |
+| **Plugin** | 与 plugin 捆绑 | 安装了 plugin 的任何人 |
 
-## How Skills Work
+## Skill 如何工作
 
-1. **Discovery**: Claude loads only name and description at startup
-2. **Activation**: When your request matches a Skill's description, Claude asks for confirmation
-3. **Execution**: Claude follows the Skill's instructions and loads referenced files
+1. **发现**：Claude 在启动时只加载名称和描述
+2. **激活**：当你的请求匹配 Skill 的描述时，Claude 会要求确认
+3. **执行**：Claude 遵循 Skill 的指令并加载引用的文件
 
-**Key Principle**: Skills are **model-invoked** — Claude automatically decides which Skills to use based on your request.
+**关键原则**：Skill 是**模型调用的** —— Claude 根据你的请求自动决定使用哪些 Skill。
 
-## Progressive Disclosure Pattern
+## 渐进式披露模式
 
-Keep `SKILL.md` under 500 lines by linking to supporting files:
+通过链接到支持文件，保持 `SKILL.md` 少于 500 行：
 
 ```
 my-skill/
-├── SKILL.md (required - overview and navigation)
-├── reference.md (detailed API docs - loaded when needed)
-├── examples.md (usage examples - loaded when needed)
+├── SKILL.md（必需 - 概述和导航）
+├── reference.md（详细的 API 文档 - 需要时加载）
+├── examples.md（用法示例 - 需要时加载）
 └── scripts/
-    └── helper.py (utility script - executed, not loaded)
+    └── helper.py（实用脚本 - 执行，不加载）
 ```
 
-### Example SKILL.md with References
+### 带参考的示例 SKILL.md
 
 ```markdown
 ---
@@ -77,27 +77,27 @@ allowed-tools: Read, Bash(python:*)
 
 # PDF Processing
 
-## Quick start
+## 快速开始
 
-Extract text:
+提取文本：
 ```python
 import pdfplumber
 with pdfplumber.open("doc.pdf") as pdf:
     text = pdf.pages[0].extract_text()
 ```
 
-For form filling, see [FORMS.md](FORMS.md).
-For detailed API reference, see [REFERENCE.md](REFERENCE.md).
+对于表单填充，参见 [FORMS.md](FORMS.md)。
+对于详细的 API 参考，参见 [REFERENCE.md](REFERENCE.md)。
 
-## Requirements
+## 要求
 
-Packages must be installed:
+必须安装包：
 ```bash
 pip install pypdf pdfplumber
 ```
 ```
 
-## Restricting Tool Access
+## 限制工具访问
 
 ```yaml
 ---
@@ -107,34 +107,34 @@ allowed-tools: Read, Grep, Glob
 ---
 ```
 
-Benefits:
-- Read-only Skills that shouldn't modify files
-- Limited scope for specific tasks
-- Security-sensitive workflows
+优势：
+- 不应修改文件的只读 Skill
+- 特定任务的有限范围
+- 安全敏感的工作流
 
-## Writing Effective Descriptions
+## 编写有效的描述
 
-The `description` field enables Skill discovery and should include both what the Skill does and when to use it.
+`description` 字段启用 Skill 发现，应包括 Skill 的作用和何时使用它。
 
-**Always write in third person.** The description is injected into the system prompt.
+**始终使用第三人称。** 描述会被注入到系统提示中。
 
-- **Good:** "Processes Excel files and generates reports"
-- **Avoid:** "I can help you process Excel files"
-- **Avoid:** "You can use this to process Excel files"
+- **正确**："处理 Excel 文件并生成报告"
+- **避免**："我可以帮你处理 Excel 文件"
+- **避免**："你可以使用它处理 Excel 文件"
 
-**Be specific and include key terms:**
+**要具体并包含关键术语：**
 
 ```yaml
 description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
 ```
 
-**Avoid vague descriptions:**
+**避免模糊的描述：**
 
 ```yaml
-description: Helps with documents  # Too vague!
+description: Helps with documents  # 太模糊！
 ```
 
-## Complete Example: Commit Message Generator
+## 完整示例：提交消息生成器
 
 ```markdown
 ---
@@ -144,21 +144,21 @@ description: Generates clear commit messages from git diffs. Use when writing co
 
 # Generating Commit Messages
 
-## Instructions
+## 指令
 
-1. Run `git diff --staged` to see changes
-2. I'll suggest a commit message with:
-   - Summary under 50 characters
-   - Detailed description
-   - Affected components
+1. 运行 `git diff --staged` 查看更改
+2. 我会建议一个提交消息，包括：
+   - 少于 50 个字符的摘要
+   - 详细描述
+   - 受影响的组件
 
-## Best practices
+## 最佳实践
 
-- Use present tense
-- Explain what and why, not how
+- 使用现在时
+- 解释是什么和为什么，而不是如何
 ```
 
-## Complete Example: Code Explanation Skill
+## 完整示例：代码解释 Skill
 
 ```markdown
 ---
@@ -168,18 +168,18 @@ description: Explains code with visual diagrams and analogies. Use when explaini
 
 # Explaining Code
 
-When explaining code, always include:
+解释代码时，始终包括：
 
-1. **Start with an analogy**: Compare the code to something from everyday life
-2. **Draw a diagram**: Use ASCII art to show the flow, structure, or relationships
-3. **Walk through the code**: Explain step-by-step what happens
-4. **Highlight a gotcha**: What's a common misconception?
+1. **从类比开始**：将代码与日常生活中的东西进行比较
+2. **绘制图表**：使用 ASCII 艺术显示流程、结构或关系
+3. **遍历代码**：逐步解释发生了什么
+4. **突出一个陷阱**：常见的误解是什么？
 
-Keep explanations conversational. For complex concepts, use multiple analogies.
+保持解释对话化。对于复杂的概念，使用多个类比。
 ```
 
-## Distribution
+## 分发
 
-- **Project Skills**: Commit `.claude/skills/` to version control
-- **Plugins**: Add `skills/` directory to plugin with Skill folders
-- **Enterprise**: Deploy organization-wide through managed settings
+- **Project Skill**：将 `.claude/skills/` 提交到版本控制
+- **Plugin**：将 `skills/` 目录添加到带有 Skill 文件夹的 plugin
+- **Enterprise**：通过托管设置部署到整个组织

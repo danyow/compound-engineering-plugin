@@ -1,242 +1,242 @@
-# Workflow: Create Exhaustive Domain Expertise Skill
+# Workflow：创建详尽的领域专业知识 Skill
 
 <objective>
-Build a comprehensive execution skill that does real work in a specific domain. Domain expertise skills are full-featured build skills with exhaustive domain knowledge in references, complete workflows for the full lifecycle (build → debug → optimize → ship), and can be both invoked directly by users AND loaded by other skills (like create-plans) for domain knowledge.
+构建一个在特定领域执行实际工作的综合执行 skill。领域专业知识 skill 是功能齐全的构建 skill，reference 中包含详尽的领域知识，涵盖完整生命周期的完整 workflow（build → debug → optimize → ship），既可以由用户直接调用，也可以由其他 skill（如 create-plans）加载以获取领域知识。
 </objective>
 
 <critical_distinction>
-**Regular skill:** "Do one specific task"
-**Domain expertise skill:** "Do EVERYTHING in this domain, with complete practitioner knowledge"
+**常规 skill：**"执行一个特定任务"
+**领域专业知识 skill：**"在这个领域执行所有事情，具备完整的从业者知识"
 
-Examples:
-- `expertise/macos-apps` - Build macOS apps from scratch through shipping
-- `expertise/python-games` - Build complete Python games with full game dev lifecycle
-- `expertise/rust-systems` - Build Rust systems programs with exhaustive systems knowledge
-- `expertise/web-scraping` - Build scrapers, handle all edge cases, deploy at scale
+示例：
+- `expertise/macos-apps` - 从头构建 macOS 应用程序到发布
+- `expertise/python-games` - 构建完整的 Python 游戏与完整的游戏开发生命周期
+- `expertise/rust-systems` - 构建 Rust 系统程序，具备详尽的系统知识
+- `expertise/web-scraping` - 构建爬虫、处理所有边缘情况、大规模部署
 
-Domain expertise skills:
-- ✅ Execute tasks (build, debug, optimize, ship)
-- ✅ Have comprehensive domain knowledge in references
-- ✅ Are invoked directly by users ("build a macOS app")
-- ✅ Can be loaded by other skills (create-plans reads references for planning)
-- ✅ Cover the FULL lifecycle, not just getting started
+领域专业知识 skill：
+- ✅ 执行任务（build、debug、optimize、ship）
+- ✅ reference 中有全面的领域知识
+- ✅ 由用户直接调用（"构建一个 macOS 应用"）
+- ✅ 可以被其他 skill 加载（create-plans 读取 reference 进行规划）
+- ✅ 涵盖完整的生命周期，不仅仅是入门
 </critical_distinction>
 
 <required_reading>
-**Read these reference files NOW:**
+**立即阅读这些参考文件：**
 1. references/recommended-structure.md
 2. references/core-principles.md
 3. references/use-xml-tags.md
 </required_reading>
 
 <process>
-## Step 1: Identify Domain
+## 步骤 1：识别领域
 
-Ask user what domain expertise to build:
+询问用户要构建什么领域专业知识：
 
-**Example domains:**
-- macOS/iOS app development
-- Python game development
-- Rust systems programming
-- Machine learning / AI
-- Web scraping and automation
-- Data engineering pipelines
-- Audio processing / DSP
-- 3D graphics / shaders
-- Unity/Unreal game development
-- Embedded systems
+**示例领域：**
+- macOS/iOS 应用开发
+- Python 游戏开发
+- Rust 系统编程
+- 机器学习 / AI
+- Web 爬虫和自动化
+- 数据工程管道
+- 音频处理 / DSP
+- 3D 图形 / 着色器
+- Unity/Unreal 游戏开发
+- 嵌入式系统
 
-Get specific: "Python games" or "Python games with Pygame specifically"?
+具体化："Python 游戏"还是"专门使用 Pygame 的 Python 游戏"？
 
-## Step 2: Confirm Target Location
+## 步骤 2：确认目标位置
 
-Explain:
+解释：
 ```
-Domain expertise skills go in: ~/.claude/skills/expertise/{domain-name}/
+领域专业知识 skill 放在：~/.claude/skills/expertise/{domain-name}/
 
-These are comprehensive BUILD skills that:
-- Execute tasks (build, debug, optimize, ship)
-- Contain exhaustive domain knowledge
-- Can be invoked directly by users
-- Can be loaded by other skills for domain knowledge
+这些是综合的构建 skill，它们：
+- 执行任务（build、debug、optimize、ship）
+- 包含详尽的领域知识
+- 可以由用户直接调用
+- 可以被其他 skill 加载以获取领域知识
 
-Name suggestion: {suggested-name}
-Location: ~/.claude/skills/expertise/{suggested-name}/
+名称建议：{suggested-name}
+位置：~/.claude/skills/expertise/{suggested-name}/
 ```
 
-Confirm or adjust name.
+确认或调整名称。
 
-## Step 3: Identify Workflows
+## 步骤 3：识别 Workflow
 
-Domain expertise skills cover the FULL lifecycle. Identify what workflows are needed.
+领域专业知识 skill 涵盖完整的生命周期。识别需要哪些 workflow。
 
-**Common workflows for most domains:**
-1. **build-new-{thing}.md** - Create from scratch
-2. **add-feature.md** - Extend existing {thing}
-3. **debug-{thing}.md** - Find and fix bugs
-4. **write-tests.md** - Test for correctness
-5. **optimize-performance.md** - Profile and speed up
-6. **ship-{thing}.md** - Deploy/distribute
+**大多数领域的常见 workflow：**
+1. **build-new-{thing}.md** - 从头创建
+2. **add-feature.md** - 扩展现有的 {thing}
+3. **debug-{thing}.md** - 查找和修复错误
+4. **write-tests.md** - 测试正确性
+5. **optimize-performance.md** - 分析和加速
+6. **ship-{thing}.md** - 部署/分发
 
-**Domain-specific workflows:**
-- Games: `implement-game-mechanic.md`, `add-audio.md`, `polish-ui.md`
-- Web apps: `setup-auth.md`, `add-api-endpoint.md`, `setup-database.md`
-- Systems: `optimize-memory.md`, `profile-cpu.md`, `cross-compile.md`
+**特定领域的 workflow：**
+- 游戏：`implement-game-mechanic.md`、`add-audio.md`、`polish-ui.md`
+- Web 应用：`setup-auth.md`、`add-api-endpoint.md`、`setup-database.md`
+- 系统：`optimize-memory.md`、`profile-cpu.md`、`cross-compile.md`
 
-Each workflow = one complete task type that users actually do.
+每个 workflow = 用户实际执行的一种完整任务类型。
 
-## Step 4: Exhaustive Research Phase
+## 步骤 4：详尽的研究阶段
 
-**CRITICAL:** This research must be comprehensive, not superficial.
+**关键：**此研究必须全面，而不是肤浅的。
 
-### Research Strategy
+### 研究策略
 
-Run multiple web searches to ensure coverage:
+运行多次 web 搜索以确保覆盖：
 
-**Search 1: Current ecosystem**
+**搜索 1：当前生态系统**
 - "best {domain} libraries 2024 2025"
 - "popular {domain} frameworks comparison"
 - "{domain} tech stack recommendations"
 
-**Search 2: Architecture patterns**
+**搜索 2：架构模式**
 - "{domain} architecture patterns"
 - "{domain} best practices design patterns"
 - "how to structure {domain} projects"
 
-**Search 3: Lifecycle and tooling**
+**搜索 3：生命周期和工具**
 - "{domain} development workflow"
 - "{domain} testing debugging best practices"
 - "{domain} deployment distribution"
 
-**Search 4: Common pitfalls**
+**搜索 4：常见陷阱**
 - "{domain} common mistakes avoid"
 - "{domain} anti-patterns"
 - "what not to do {domain}"
 
-**Search 5: Real-world usage**
+**搜索 5：实际使用**
 - "{domain} production examples GitHub"
 - "{domain} case studies"
 - "successful {domain} projects"
 
-### Verification Requirements
+### 验证要求
 
-For EACH major library/tool/pattern found:
-- **Check recency:** When was it last updated?
-- **Check adoption:** Is it actively maintained? Community size?
-- **Check alternatives:** What else exists? When to use each?
-- **Check deprecation:** Is anything being replaced?
+对于找到的每个主要库/工具/模式：
+- **检查时效性：**最后一次更新是什么时候？
+- **检查采用情况：**是否积极维护？社区规模？
+- **检查替代方案：**还有什么存在？何时使用每个？
+- **检查弃用：**是否有东西正在被替换？
 
-**Red flags for outdated content:**
-- Articles from before 2023 (unless fundamental concepts)
-- Abandoned libraries (no commits in 12+ months)
-- Deprecated APIs or patterns
-- "This used to be popular but..."
+**过时内容的危险信号：**
+- 2023 年之前的文章（除非是基本概念）
+- 废弃的库（12 个月以上没有提交）
+- 已弃用的 API 或模式
+- "这曾经很流行，但是..."
 
-### Documentation Sources
+### 文档来源
 
-Use Context7 MCP when available:
+在可用时使用 Context7 MCP：
 ```
 mcp__context7__resolve-library-id: {library-name}
 mcp__context7__get-library-docs: {library-id}
 ```
 
-Focus on official docs, not tutorials.
+专注于官方文档，而不是教程。
 
-## Step 5: Organize Knowledge Into Domain Areas
+## 步骤 5：将知识组织到领域区域
 
-Structure references by domain concerns, NOT by arbitrary categories.
+按领域关注点构建 reference，而不是按任意类别。
 
-**For game development example:**
+**游戏开发示例：**
 ```
 references/
-├── architecture.md         # ECS, component-based, state machines
-├── libraries.md           # Pygame, Arcade, Panda3D (when to use each)
-├── graphics-rendering.md  # 2D/3D rendering, sprites, shaders
-├── physics.md             # Collision, physics engines
-├── audio.md               # Sound effects, music, spatial audio
-├── input.md               # Keyboard, mouse, gamepad, touch
-├── ui-menus.md            # HUD, menus, dialogs
-├── game-loop.md           # Update/render loop, fixed timestep
-├── state-management.md    # Game states, scene management
-├── networking.md          # Multiplayer, client-server, P2P
-├── asset-pipeline.md      # Loading, caching, optimization
-├── testing-debugging.md   # Unit tests, profiling, debugging tools
-├── performance.md         # Optimization, profiling, benchmarking
-├── packaging.md           # Building executables, installers
-├── distribution.md        # Steam, itch.io, app stores
-└── anti-patterns.md       # Common mistakes, what NOT to do
+├── architecture.md         # ECS、基于组件、状态机
+├── libraries.md           # Pygame、Arcade、Panda3D（何时使用每个）
+├── graphics-rendering.md  # 2D/3D 渲染、精灵、着色器
+├── physics.md             # 碰撞、物理引擎
+├── audio.md               # 音效、音乐、空间音频
+├── input.md               # 键盘、鼠标、游戏手柄、触摸
+├── ui-menus.md            # HUD、菜单、对话框
+├── game-loop.md           # 更新/渲染循环、固定时间步长
+├── state-management.md    # 游戏状态、场景管理
+├── networking.md          # 多人游戏、客户端-服务器、P2P
+├── asset-pipeline.md      # 加载、缓存、优化
+├── testing-debugging.md   # 单元测试、分析、调试工具
+├── performance.md         # 优化、分析、基准测试
+├── packaging.md           # 构建可执行文件、安装程序
+├── distribution.md        # Steam、itch.io、应用商店
+└── anti-patterns.md       # 常见错误、不应该做的事情
 ```
 
-**For macOS app development example:**
+**macOS 应用开发示例：**
 ```
 references/
-├── app-architecture.md     # State management, dependency injection
-├── swiftui-patterns.md     # Declarative UI patterns
-├── appkit-integration.md   # Using AppKit with SwiftUI
-├── concurrency-patterns.md # Async/await, actors, structured concurrency
-├── data-persistence.md     # Storage strategies
-├── networking.md           # URLSession, async networking
-├── system-apis.md          # macOS-specific frameworks
-├── testing-tdd.md          # Testing patterns
-├── testing-debugging.md    # Debugging tools and techniques
-├── performance.md          # Profiling, optimization
-├── design-system.md        # Platform conventions
-├── macos-polish.md         # Native feel, accessibility
-├── security-code-signing.md # Signing, notarization
-└── project-scaffolding.md  # CLI-based setup
+├── app-architecture.md     # 状态管理、依赖注入
+├── swiftui-patterns.md     # 声明式 UI 模式
+├── appkit-integration.md   # 将 AppKit 与 SwiftUI 一起使用
+├── concurrency-patterns.md # Async/await、actor、结构化并发
+├── data-persistence.md     # 存储策略
+├── networking.md           # URLSession、异步网络
+├── system-apis.md          # macOS 特定的 framework
+├── testing-tdd.md          # 测试模式
+├── testing-debugging.md    # 调试工具和技术
+├── performance.md          # 分析、优化
+├── design-system.md        # 平台约定
+├── macos-polish.md         # 原生感觉、可访问性
+├── security-code-signing.md # 签名、公证
+└── project-scaffolding.md  # 基于 CLI 的设置
 ```
 
-**For each reference file:**
-- Pure XML structure
-- Decision trees: "If X, use Y. If Z, use A instead."
-- Comparison tables: Library vs Library (speed, features, learning curve)
-- Code examples showing patterns
-- "When to use" guidance
-- Platform-specific considerations
-- Current versions and compatibility
+**对于每个 reference 文件：**
+- 纯 XML 结构
+- 决策树："如果 X，使用 Y。如果 Z，使用 A。"
+- 比较表：库 vs 库（速度、功能、学习曲线）
+- 显示模式的代码示例
+- "何时使用"指导
+- 平台特定的考虑因素
+- 当前版本和兼容性
 
-## Step 6: Create SKILL.md
+## 步骤 6：创建 SKILL.md
 
-Domain expertise skills use router pattern with essential principles:
+领域专业知识 skill 使用带有 essential principles 的 router 模式：
 
 ```yaml
 ---
 name: build-{domain-name}
-description: Build {domain things} from scratch through shipping. Full lifecycle - build, debug, test, optimize, ship. {Any specific constraints like "CLI-only, no IDE"}.
+description: 从头构建 {domain things} 到发布。完整生命周期 - build、debug、test、optimize、ship。{任何特定约束，如"仅 CLI，无 IDE"}。
 ---
 
 <essential_principles>
-## How {This Domain} Works
+## {此领域} 如何工作
 
-{Domain-specific principles that ALWAYS apply}
+{始终适用的特定领域原则}
 
-### 1. {First Principle}
-{Critical practice that can't be skipped}
+### 1. {第一个原则}
+{不能跳过的关键实践}
 
-### 2. {Second Principle}
-{Another fundamental practice}
+### 2. {第二个原则}
+{另一个基本实践}
 
-### 3. {Third Principle}
-{Core workflow pattern}
+### 3. {第三个原则}
+{核心 workflow 模式}
 </essential_principles>
 
 <intake>
-**Ask the user:**
+**询问用户：**
 
-What would you like to do?
-1. Build a new {thing}
-2. Debug an existing {thing}
-3. Add a feature
-4. Write/run tests
-5. Optimize performance
-6. Ship/release
-7. Something else
+您想做什么？
+1. 构建新的 {thing}
+2. 调试现有的 {thing}
+3. 添加功能
+4. 编写/运行测试
+5. 优化性能
+6. 发布/发行
+7. 其他
 
-**Then read the matching workflow from `workflows/` and follow it.**
+**然后从 `workflows/` 读取匹配的 workflow 并遵循它。**
 </intake>
 
 <routing>
-| Response | Workflow |
+| 响应 | Workflow |
 |----------|----------|
 | 1, "new", "create", "build", "start" | `workflows/build-new-{thing}.md` |
 | 2, "broken", "fix", "debug", "crash", "bug" | `workflows/debug-{thing}.md` |
@@ -244,92 +244,92 @@ What would you like to do?
 | 4, "test", "tests", "TDD", "coverage" | `workflows/write-tests.md` |
 | 5, "slow", "optimize", "performance", "fast" | `workflows/optimize-performance.md` |
 | 6, "ship", "release", "deploy", "publish" | `workflows/ship-{thing}.md` |
-| 7, other | Clarify, then select workflow or references |
+| 7, other | 澄清，然后选择 workflow 或 reference |
 </routing>
 
 <verification_loop>
-## After Every Change
+## 每次更改后
 
-{Domain-specific verification steps}
+{特定领域的验证步骤}
 
-Example for compiled languages:
+编译语言的示例：
 ```bash
-# 1. Does it build?
+# 1. 它能构建吗？
 {build command}
 
-# 2. Do tests pass?
+# 2. 测试通过了吗？
 {test command}
 
-# 3. Does it run?
+# 3. 它能运行吗？
 {run command}
 ```
 
-Report to the user:
+向用户报告：
 - "Build: ✓"
 - "Tests: X pass, Y fail"
 - "Ready for you to check [specific thing]"
 </verification_loop>
 
 <reference_index>
-## Domain Knowledge
+## 领域知识
 
-All in `references/`:
+全部在 `references/` 中：
 
-**Architecture:** {list files}
-**{Domain Area}:** {list files}
-**{Domain Area}:** {list files}
-**Development:** {list files}
-**Shipping:** {list files}
+**架构：** {list files}
+**{领域区域}：** {list files}
+**{领域区域}：** {list files}
+**开发：** {list files}
+**发布：** {list files}
 </reference_index>
 
 <workflows_index>
 ## Workflows
 
-All in `workflows/`:
+全部在 `workflows/` 中：
 
-| File | Purpose |
+| 文件 | 用途 |
 |------|---------|
-| build-new-{thing}.md | Create new {thing} from scratch |
-| debug-{thing}.md | Find and fix bugs |
-| add-feature.md | Add to existing {thing} |
-| write-tests.md | Write and run tests |
-| optimize-performance.md | Profile and speed up |
-| ship-{thing}.md | Deploy/distribute |
+| build-new-{thing}.md | 从头创建新的 {thing} |
+| debug-{thing}.md | 查找和修复错误 |
+| add-feature.md | 添加到现有的 {thing} |
+| write-tests.md | 编写和运行测试 |
+| optimize-performance.md | 分析和加速 |
+| ship-{thing}.md | 部署/分发 |
 </workflows_index>
 ```
 
-## Step 7: Write Workflows
+## 步骤 7：编写 Workflow
 
-For EACH workflow identified in Step 3:
+对于步骤 3 中确定的每个 workflow：
 
-### Workflow Template
+### Workflow 模板
 
 ```markdown
-# Workflow: {Workflow Name}
+# Workflow：{Workflow 名称}
 
 <required_reading>
-**Read these reference files NOW before {doing the task}:**
+**在 {执行任务} 之前立即阅读这些参考文件：**
 1. references/{relevant-file}.md
 2. references/{another-relevant-file}.md
 3. references/{third-relevant-file}.md
 </required_reading>
 
 <process>
-## Step 1: {First Action}
+## 步骤 1：{第一个操作}
 
-{What to do}
+{要做什么}
 
-## Step 2: {Second Action}
+## 步骤 2：{第二个操作}
 
-{What to do - actual implementation steps}
+{要做什么 - 实际的实施步骤}
 
-## Step 3: {Third Action}
+## 步骤 3：{第三个操作}
 
-{What to do}
+{要做什么}
 
-## Step 4: Verify
+## 步骤 4：验证
 
-{How to prove it works}
+{如何证明它有效}
 
 ```bash
 {verification commands}
@@ -337,269 +337,269 @@ For EACH workflow identified in Step 3:
 </process>
 
 <anti_patterns>
-Avoid:
-- {Common mistake 1}
-- {Common mistake 2}
-- {Common mistake 3}
+避免：
+- {常见错误 1}
+- {常见错误 2}
+- {常见错误 3}
 </anti_patterns>
 
 <success_criteria>
-A well-{completed task}:
-- {Criterion 1}
-- {Criterion 2}
-- {Criterion 3}
-- Builds/runs without errors
-- Tests pass
-- Feels {native/professional/correct}
+一个完成良好的 {completed task}：
+- {标准 1}
+- {标准 2}
+- {标准 3}
+- 构建/运行没有错误
+- 测试通过
+- 感觉 {native/professional/correct}
 </success_criteria>
 ```
 
-**Key workflow characteristics:**
-- Starts with required_reading (which references to load)
-- Contains actual implementation steps (not just "read references")
-- Includes verification steps
-- Has success criteria
-- Documents anti-patterns
+**关键 workflow 特征：**
+- 从 required_reading 开始（加载哪些 reference）
+- 包含实际的实施步骤（不仅仅是"阅读 reference"）
+- 包括验证步骤
+- 有成功标准
+- 记录反模式
 
-## Step 8: Write Comprehensive References
+## 步骤 8：编写全面的 Reference
 
-For EACH reference file identified in Step 5:
+对于步骤 5 中确定的每个 reference 文件：
 
-### Structure Template
+### 结构模板
 
 ```xml
 <overview>
-Brief introduction to this domain area
+此领域区域的简要介绍
 </overview>
 
 <options>
-## Available Approaches/Libraries
+## 可用的方法/库
 
 <option name="Library A">
-**When to use:** [specific scenarios]
-**Strengths:** [what it's best at]
-**Weaknesses:** [what it's not good for]
-**Current status:** v{version}, actively maintained
-**Learning curve:** [easy/medium/hard]
+**何时使用：** [特定场景]
+**优势：** [最擅长的地方]
+**劣势：** [不适合的地方]
+**当前状态：** v{version}，积极维护
+**学习曲线：** [easy/medium/hard]
 
 ```code
-# Example usage
+# 示例用法
 ```
 </option>
 
 <option name="Library B">
-[Same structure]
+[相同结构]
 </option>
 </options>
 
 <decision_tree>
-## Choosing the Right Approach
+## 选择正确的方法
 
-**If you need [X]:** Use [Library A]
-**If you need [Y]:** Use [Library B]
-**If you have [constraint Z]:** Use [Library C]
+**如果您需要 [X]：** 使用 [Library A]
+**如果您需要 [Y]：** 使用 [Library B]
+**如果您有 [约束 Z]：** 使用 [Library C]
 
-**Avoid [Library D] if:** [specific scenarios]
+**避免 [Library D] 如果：** [特定场景]
 </decision_tree>
 
 <patterns>
-## Common Patterns
+## 常见模式
 
 <pattern name="Pattern Name">
-**Use when:** [scenario]
-**Implementation:** [code example]
-**Considerations:** [trade-offs]
+**何时使用：** [场景]
+**实施：** [代码示例]
+**考虑因素：** [权衡]
 </pattern>
 </patterns>
 
 <anti_patterns>
-## What NOT to Do
+## 不应该做的事情
 
 <anti_pattern name="Common Mistake">
-**Problem:** [what people do wrong]
-**Why it's bad:** [consequences]
-**Instead:** [correct approach]
+**问题：** [人们做错的地方]
+**为什么不好：** [后果]
+**相反：** [正确的方法]
 </anti_pattern>
 </anti_patterns>
 
 <platform_considerations>
-## Platform-Specific Notes
+## 平台特定说明
 
-**Windows:** [considerations]
-**macOS:** [considerations]
-**Linux:** [considerations]
-**Mobile:** [if applicable]
+**Windows：** [考虑因素]
+**macOS：** [考虑因素]
+**Linux：** [考虑因素]
+**Mobile：** [如果适用]
 </platform_considerations>
 ```
 
-### Quality Standards
+### 质量标准
 
-Each reference must include:
-- **Current information** (verify dates)
-- **Multiple options** (not just one library)
-- **Decision guidance** (when to use each)
-- **Real examples** (working code, not pseudocode)
-- **Trade-offs** (no silver bullets)
-- **Anti-patterns** (what NOT to do)
+每个 reference 必须包括：
+- **当前信息**（验证日期）
+- **多个选项**（不仅仅是一个库）
+- **决策指导**（何时使用每个）
+- **真实示例**（工作代码，而不是伪代码）
+- **权衡**（没有银弹）
+- **反模式**（不应该做的事情）
 
-### Common Reference Files
+### 常见 Reference 文件
 
-Most domains need:
-- **architecture.md** - How to structure projects
-- **libraries.md** - Ecosystem overview with comparisons
-- **patterns.md** - Design patterns specific to domain
-- **testing-debugging.md** - How to verify correctness
-- **performance.md** - Optimization strategies
-- **deployment.md** - How to ship/distribute
-- **anti-patterns.md** - Common mistakes consolidated
+大多数领域需要：
+- **architecture.md** - 如何构建项目
+- **libraries.md** - 生态系统概述与比较
+- **patterns.md** - 特定领域的设计模式
+- **testing-debugging.md** - 如何验证正确性
+- **performance.md** - 优化策略
+- **deployment.md** - 如何发布/分发
+- **anti-patterns.md** - 常见错误汇总
 
-## Step 9: Validate Completeness
+## 步骤 9：验证完整性
 
-### Completeness Checklist
+### 完整性检查清单
 
-Ask: "Could a user build a professional {domain thing} from scratch through shipping using just this skill?"
+询问："用户能否仅使用此 skill 从头构建专业的 {domain thing} 到发布？"
 
-**Must answer YES to:**
-- [ ] All major libraries/frameworks covered?
-- [ ] All architectural approaches documented?
-- [ ] Complete lifecycle addressed (build → debug → test → optimize → ship)?
-- [ ] Platform-specific considerations included?
-- [ ] "When to use X vs Y" guidance provided?
-- [ ] Common pitfalls documented?
-- [ ] Current as of 2024-2025?
-- [ ] Workflows actually execute tasks (not just reference knowledge)?
-- [ ] Each workflow specifies which references to read?
+**必须回答"是"：**
+- [ ] 涵盖所有主要库/framework？
+- [ ] 记录所有架构方法？
+- [ ] 解决完整生命周期（build → debug → test → optimize → ship）？
+- [ ] 包括平台特定的考虑因素？
+- [ ] 提供"何时使用 X vs Y"指导？
+- [ ] 记录常见陷阱？
+- [ ] 截至 2024-2025 是最新的？
+- [ ] Workflow 实际执行任务（不仅仅是引用知识）？
+- [ ] 每个 workflow 指定要读取哪些 reference？
 
-**Specific gaps to check:**
-- [ ] Testing strategy covered?
-- [ ] Debugging/profiling tools listed?
-- [ ] Deployment/distribution methods documented?
-- [ ] Performance optimization addressed?
-- [ ] Security considerations (if applicable)?
-- [ ] Asset/resource management (if applicable)?
-- [ ] Networking (if applicable)?
+**要检查的特定差距：**
+- [ ] 涵盖测试策略？
+- [ ] 列出调试/分析工具？
+- [ ] 记录部署/分发方法？
+- [ ] 解决性能优化？
+- [ ] 安全考虑（如果适用）？
+- [ ] 资产/资源管理（如果适用）？
+- [ ] 网络（如果适用）？
 
-### Dual-Purpose Test
+### 双重用途测试
 
-Test both use cases:
+测试两个用例：
 
-**Direct invocation:** "Can a user invoke this skill and build something?"
-- Intake routes to appropriate workflow
-- Workflow loads relevant references
-- Workflow provides implementation steps
-- Success criteria are clear
+**直接调用：**"用户能否调用此 skill 并构建某些东西？"
+- Intake 路由到适当的 workflow
+- Workflow 加载相关 reference
+- Workflow 提供实施步骤
+- 成功标准清晰
 
-**Knowledge reference:** "Can create-plans load references to plan a project?"
-- References contain decision guidance
-- All options compared
-- Complete lifecycle covered
-- Architecture patterns documented
+**知识引用：**"create-plans 能否加载 reference 来规划项目？"
+- Reference 包含决策指导
+- 比较所有选项
+- 涵盖完整生命周期
+- 记录架构模式
 
-## Step 10: Create Directory and Files
+## 步骤 10：创建目录和文件
 
 ```bash
-# Create structure
+# 创建结构
 mkdir -p ~/.claude/skills/expertise/{domain-name}
 mkdir -p ~/.claude/skills/expertise/{domain-name}/workflows
 mkdir -p ~/.claude/skills/expertise/{domain-name}/references
 
-# Write SKILL.md
-# Write all workflow files
-# Write all reference files
+# 编写 SKILL.md
+# 编写所有 workflow 文件
+# 编写所有 reference 文件
 
-# Verify structure
+# 验证结构
 ls -R ~/.claude/skills/expertise/{domain-name}
 ```
 
-## Step 11: Document in create-plans
+## 步骤 11：在 create-plans 中记录
 
-Update `~/.claude/skills/create-plans/SKILL.md` to reference this new domain:
+更新 `~/.claude/skills/create-plans/SKILL.md` 以引用此新领域：
 
-Add to the domain inference table:
+添加到领域推断表：
 ```markdown
 | "{keyword}", "{domain term}" | expertise/{domain-name} |
 ```
 
-So create-plans can auto-detect and offer to load it.
+这样 create-plans 可以自动检测并提供加载它。
 
-## Step 12: Final Quality Check
+## 步骤 12：最终质量检查
 
-Review entire skill:
+审查整个 skill：
 
-**SKILL.md:**
-- [ ] Name matches directory (build-{domain-name})
-- [ ] Description explains it builds things from scratch through shipping
-- [ ] Essential principles inline (always loaded)
-- [ ] Intake asks what user wants to do
-- [ ] Routing maps to workflows
-- [ ] Reference index complete and organized
-- [ ] Workflows index complete
+**SKILL.md：**
+- [ ] 名称与目录匹配（build-{domain-name}）
+- [ ] 描述解释它从头构建到发布
+- [ ] Essential principles 内联（始终加载）
+- [ ] Intake 询问用户想做什么
+- [ ] Routing 映射到 workflow
+- [ ] Reference 索引完整且有组织
+- [ ] Workflow 索引完整
 
-**Workflows:**
-- [ ] Each workflow starts with required_reading
-- [ ] Each workflow has actual implementation steps
-- [ ] Each workflow has verification steps
-- [ ] Each workflow has success criteria
-- [ ] Workflows cover full lifecycle (build, debug, test, optimize, ship)
+**Workflows：**
+- [ ] 每个 workflow 都从 required_reading 开始
+- [ ] 每个 workflow 都有实际的实施步骤
+- [ ] 每个 workflow 都有验证步骤
+- [ ] 每个 workflow 都有成功标准
+- [ ] Workflow 涵盖完整生命周期（build、debug、test、optimize、ship）
 
-**References:**
-- [ ] Pure XML structure (no markdown headings)
-- [ ] Decision guidance in every file
-- [ ] Current versions verified
-- [ ] Code examples work
-- [ ] Anti-patterns documented
-- [ ] Platform considerations included
+**References：**
+- [ ] 纯 XML 结构（没有 markdown 标题）
+- [ ] 每个文件中的决策指导
+- [ ] 验证当前版本
+- [ ] 代码示例有效
+- [ ] 记录反模式
+- [ ] 包括平台考虑因素
 
-**Completeness:**
-- [ ] A professional practitioner would find this comprehensive
-- [ ] No major libraries/patterns missing
-- [ ] Full lifecycle covered
-- [ ] Passes the "build from scratch through shipping" test
-- [ ] Can be invoked directly by users
-- [ ] Can be loaded by create-plans for knowledge
+**完整性：**
+- [ ] 专业从业者会发现这很全面
+- [ ] 没有遗漏主要库/模式
+- [ ] 涵盖完整生命周期
+- [ ] 通过"从头构建到发布"测试
+- [ ] 可以由用户直接调用
+- [ ] 可以被 create-plans 加载以获取知识
 
 </process>
 
 <success_criteria>
-Domain expertise skill is complete when:
+领域专业知识 skill 在以下情况下完成：
 
-- [ ] Comprehensive research completed (5+ web searches)
-- [ ] All sources verified for currency (2024-2025)
-- [ ] Knowledge organized by domain areas (not arbitrary)
-- [ ] Essential principles in SKILL.md (always loaded)
-- [ ] Intake routes to appropriate workflows
-- [ ] Each workflow has required_reading + implementation steps + verification
-- [ ] Each reference has decision trees and comparisons
-- [ ] Anti-patterns documented throughout
-- [ ] Full lifecycle covered (build → debug → test → optimize → ship)
-- [ ] Platform-specific considerations included
-- [ ] Located in ~/.claude/skills/expertise/{domain-name}/
-- [ ] Referenced in create-plans domain inference table
-- [ ] Passes dual-purpose test: Can be invoked directly AND loaded for knowledge
-- [ ] User can build something professional from scratch through shipping
+- [ ] 完成全面研究（5 次以上 web 搜索）
+- [ ] 验证所有来源的时效性（2024-2025）
+- [ ] 按领域区域组织知识（不是任意的）
+- [ ] SKILL.md 中的 Essential principles（始终加载）
+- [ ] Intake 路由到适当的 workflow
+- [ ] 每个 workflow 都有 required_reading + 实施步骤 + 验证
+- [ ] 每个 reference 都有决策树和比较
+- [ ] 全面记录反模式
+- [ ] 涵盖完整生命周期（build → debug → test → optimize → ship）
+- [ ] 包括平台特定的考虑因素
+- [ ] 位于 ~/.claude/skills/expertise/{domain-name}/
+- [ ] 在 create-plans 领域推断表中引用
+- [ ] 通过双重用途测试：可以直接调用和加载知识
+- [ ] 用户可以从头构建专业的东西到发布
 </success_criteria>
 
 <anti_patterns>
-**DON'T:**
-- Copy tutorial content without verification
-- Include only "getting started" material
-- Skip the "when NOT to use" guidance
-- Forget to check if libraries are still maintained
-- Organize by document type instead of domain concerns
-- Make it knowledge-only with no execution workflows
-- Skip verification steps in workflows
-- Include outdated content from old blog posts
-- Skip decision trees and comparisons
-- Create workflows that just say "read the references"
+**不要：**
+- 复制教程内容而不验证
+- 仅包括"入门"材料
+- 跳过"何时不使用"指导
+- 忘记检查库是否仍在维护
+- 按文档类型而不是领域关注点组织
+- 使其仅包含知识而没有执行 workflow
+- 跳过 workflow 中的验证步骤
+- 包括来自旧博客文章的过时内容
+- 跳过决策树和比较
+- 创建只说"阅读 reference"的 workflow
 
-**DO:**
-- Verify everything is current
-- Include complete lifecycle (build → ship)
-- Provide decision guidance
-- Document anti-patterns
-- Make workflows execute real tasks
-- Start workflows with required_reading
-- Include verification in every workflow
-- Make it exhaustive, not minimal
-- Test both direct invocation and knowledge reference use cases
+**要：**
+- 验证一切都是最新的
+- 包括完整生命周期（build → ship）
+- 提供决策指导
+- 记录反模式
+- 使 workflow 执行实际任务
+- 从 required_reading 开始 workflow
+- 在每个 workflow 中包含验证
+- 使其详尽，而不是最小化
+- 测试直接调用和知识引用用例
 </anti_patterns>

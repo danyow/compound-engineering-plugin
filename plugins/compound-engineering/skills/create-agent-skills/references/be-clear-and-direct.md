@@ -1,21 +1,21 @@
 <golden_rule>
-Show your skill to someone with minimal context and ask them to follow the instructions. If they're confused, Claude will likely be too.
+将你的 skill 展示给没有上下文的人，让他们按照说明操作。如果他们感到困惑，Claude 也很可能会困惑。
 </golden_rule>
 
 <overview>
-Clarity and directness are fundamental to effective skill authoring. Clear instructions reduce errors, improve execution quality, and minimize token waste.
+清晰和直接是有效编写 skill 的基础。清晰的指令可以减少错误、提高执行质量并最小化 token 浪费。
 </overview>
 
 <guidelines>
 <contextual_information>
-Give Claude contextual information that frames the task:
+为 Claude 提供界定任务范围的上下文信息：
 
-- What the task results will be used for
-- What audience the output is meant for
-- What workflow the task is part of
-- The end goal or what successful completion looks like
+- 任务结果将用于什么用途
+- 输出面向什么受众
+- 任务是哪个工作流程的一部分
+- 最终目标或成功完成的标准
 
-Context helps Claude make better decisions and produce more appropriate outputs.
+上下文帮助 Claude 做出更好的决策并产生更合适的输出。
 
 <example>
 ```xml
@@ -27,19 +27,19 @@ This analysis will be presented to investors who value transparency and actionab
 </contextual_information>
 
 <specificity>
-Be specific about what you want Claude to do. If you want code only and nothing else, say so.
+明确说明你希望 Claude 做什么。如果你只想要代码，没有其他内容，就明确说出来。
 
-**Vague**: "Help with the report"
-**Specific**: "Generate a markdown report with three sections: Executive Summary, Key Findings, Recommendations"
+**模糊**: "帮助处理报告"
+**具体**: "生成一个包含三个部分的 markdown 报告：执行摘要、关键发现、建议"
 
-**Vague**: "Process the data"
-**Specific**: "Extract customer names and email addresses from the CSV file, removing duplicates, and save to JSON format"
+**模糊**: "处理数据"
+**具体**: "从 CSV 文件中提取客户姓名和电子邮件地址，删除重复项，并保存为 JSON 格式"
 
-Specificity eliminates ambiguity and reduces iteration cycles.
+具体性消除了歧义并减少了迭代周期。
 </specificity>
 
 <sequential_steps>
-Provide instructions as sequential steps. Use numbered lists or bullet points.
+以连续步骤的形式提供指令。使用编号列表或项目符号。
 
 ```xml
 <workflow>
@@ -51,7 +51,7 @@ Provide instructions as sequential steps. Use numbered lists or bullet points.
 </workflow>
 ```
 
-Sequential steps create clear expectations and reduce the chance Claude skips important operations.
+连续步骤创建清晰的期望，减少 Claude 跳过重要操作的可能性。
 </sequential_steps>
 </guidelines>
 
@@ -63,12 +63,12 @@ Please remove all personally identifiable information from these customer feedba
 </quick_start>
 ```
 
-**Problems**:
-- What counts as PII?
-- What should replace PII?
-- What format should the output be?
-- What if no PII is found?
-- Should product names be redacted?
+**问题**:
+- 什么算作 PII？
+- 应该用什么替换 PII？
+- 输出应该是什么格式？
+- 如果没有找到 PII 怎么办？
+- 产品名称是否应该删除？
 </unclear_example>
 
 <clear_example>
@@ -98,29 +98,29 @@ Data to process: {{FEEDBACK_DATA}}
 </success_criteria>
 ```
 
-**Why this is better**:
-- States the purpose (quarterly review)
-- Provides explicit step-by-step rules
-- Defines output format clearly
-- Specifies edge cases (product names, no PII found)
-- Defines success criteria
+**为什么这样更好**:
+- 说明了目的（季度审查）
+- 提供明确的逐步规则
+- 清晰地定义输出格式
+- 指定边界情况（产品名称、未找到 PII）
+- 定义成功标准
 </clear_example>
 </example_comparison>
 
 <key_differences>
-The clear version:
-- States the purpose (quarterly review)
-- Provides explicit step-by-step rules
-- Defines output format
-- Specifies edge cases (product names, no PII found)
-- Includes success criteria
+清晰版本：
+- 说明了目的（季度审查）
+- 提供明确的逐步规则
+- 定义输出格式
+- 指定边界情况（产品名称、未找到 PII）
+- 包含成功标准
 
-The unclear version leaves all these decisions to Claude, increasing the chance of misalignment with expectations.
+不清晰的版本将所有这些决策留给 Claude，增加了与期望不一致的可能性。
 </key_differences>
 
 <show_dont_just_tell>
 <principle>
-When format matters, show an example rather than just describing it.
+当格式很重要时，展示示例而不是仅仅描述。
 </principle>
 
 <telling_example>
@@ -164,44 +164,44 @@ Follow this style: type(scope): brief description, then detailed explanation.
 </showing_example>
 
 <why_showing_works>
-Examples communicate nuances that text descriptions can't:
-- Exact formatting (spacing, capitalization, punctuation)
-- Tone and style
-- Level of detail
-- Pattern across multiple cases
+示例传达了文本描述无法传达的细微差别：
+- 精确格式（间距、大小写、标点）
+- 语气和风格
+- 详细程度
+- 跨多个案例的模式
 
-Claude learns patterns from examples more reliably than from descriptions.
+Claude 从示例中学习模式比从描述中学习更可靠。
 </why_showing_works>
 </show_dont_just_tell>
 
 <avoid_ambiguity>
 <principle>
-Eliminate words and phrases that create ambiguity or leave decisions open.
+消除造成歧义或留下开放决策的词语和短语。
 </principle>
 
 <ambiguous_phrases>
-❌ **"Try to..."** - Implies optional
-✅ **"Always..."** or **"Never..."** - Clear requirement
+❌ **"尝试..."** - 暗示可选
+✅ **"始终..."** 或 **"从不..."** - 明确要求
 
-❌ **"Should probably..."** - Unclear obligation
-✅ **"Must..."** or **"May optionally..."** - Clear obligation level
+❌ **"可能应该..."** - 义务不明确
+✅ **"必须..."** 或 **"可以选择性地..."** - 明确义务级别
 
-❌ **"Generally..."** - When are exceptions allowed?
-✅ **"Always... except when..."** - Clear rule with explicit exceptions
+❌ **"通常..."** - 何时允许例外？
+✅ **"始终... 除非..."** - 具有明确例外的清晰规则
 
-❌ **"Consider..."** - Should Claude always do this or only sometimes?
-✅ **"If X, then Y"** or **"Always..."** - Clear conditions
+❌ **"考虑..."** - Claude 应该总是这样做还是只是有时候？
+✅ **"如果 X，则 Y"** 或 **"始终..."** - 明确条件
 </ambiguous_phrases>
 
 <example>
-❌ **Ambiguous**:
+❌ **模糊**:
 ```xml
 <validation>
 You should probably validate the output and try to fix any errors.
 </validation>
 ```
 
-✅ **Clear**:
+✅ **清晰**:
 ```xml
 <validation>
 Always validate output before proceeding:
@@ -218,7 +218,7 @@ If validation fails, fix errors and re-validate. Only proceed when validation pa
 
 <define_edge_cases>
 <principle>
-Anticipate edge cases and define how to handle them. Don't leave Claude guessing.
+预测边界情况并定义如何处理它们。不要让 Claude 猜测。
 </principle>
 
 <without_edge_cases>
@@ -228,11 +228,11 @@ Extract email addresses from the text file and save to a JSON array.
 </quick_start>
 ```
 
-**Questions left unanswered**:
-- What if no emails are found?
-- What if the same email appears multiple times?
-- What if emails are malformed?
-- What JSON format exactly?
+**未回答的问题**:
+- 如果没有找到电子邮件怎么办？
+- 如果同一个电子邮件出现多次怎么办？
+- 如果电子邮件格式错误怎么办？
+- 确切的 JSON 格式是什么？
 </without_edge_cases>
 
 <with_edge_cases>
@@ -262,7 +262,7 @@ Extract email addresses from the text file and save to a JSON array.
 
 <output_format_specification>
 <principle>
-When output format matters, specify it precisely. Show examples.
+当输出格式很重要时，精确地指定它。展示示例。
 </principle>
 
 <vague_format>
@@ -310,7 +310,7 @@ Generate a markdown report with this exact structure:
 
 <decision_criteria>
 <principle>
-When Claude must make decisions, provide clear criteria.
+当 Claude 必须做出决策时，提供明确的标准。
 </principle>
 
 <no_criteria>
@@ -320,7 +320,7 @@ Analyze the data and decide which visualization to use.
 </workflow>
 ```
 
-**Problem**: What factors should guide this decision?
+**问题**: 应该由哪些因素指导这个决策？
 </no_criteria>
 
 <with_criteria>
@@ -347,13 +347,13 @@ Analyze the data and select appropriate visualization:
 </workflow>
 ```
 
-**Benefits**: Claude has objective criteria for making the decision rather than guessing.
+**优势**: Claude 有客观标准来做决策，而不是猜测。
 </with_criteria>
 </decision_criteria>
 
 <constraints_and_requirements>
 <principle>
-Clearly separate "must do" from "nice to have" from "must not do".
+清楚地区分"必须做"、"最好有"和"不能做"。
 </principle>
 
 <unclear_requirements>
@@ -363,10 +363,10 @@ The report should include financial data, customer metrics, and market analysis.
 </requirements>
 ```
 
-**Problems**:
-- Are all three content types required?
-- Are visualizations optional or required?
-- How long is "too long"?
+**问题**:
+- 这三种内容类型都是必需的吗？
+- 可视化是可选的还是必需的？
+- "太长"是多长？
 </unclear_requirements>
 
 <clear_requirements>
@@ -393,13 +393,13 @@ The report should include financial data, customer metrics, and market analysis.
 </requirements>
 ```
 
-**Benefits**: Clear priorities and constraints prevent misalignment.
+**优势**: 清晰的优先级和约束防止不一致。
 </clear_requirements>
 </constraints_and_requirements>
 
 <success_criteria>
 <principle>
-Define what success looks like. How will Claude know it succeeded?
+定义成功是什么样子。Claude 如何知道它成功了？
 </principle>
 
 <without_success_criteria>
@@ -409,7 +409,7 @@ Process the CSV file and generate a report.
 </objective>
 ```
 
-**Problem**: When is this task complete? What defines success?
+**问题**: 这个任务何时完成？什么定义了成功？
 </without_success_criteria>
 
 <with_success_criteria>
@@ -428,37 +428,37 @@ Process the CSV file and generate a summary report.
 </success_criteria>
 ```
 
-**Benefits**: Clear completion criteria eliminate ambiguity about when the task is done.
+**优势**: 明确的完成标准消除了关于任务何时完成的歧义。
 </with_success_criteria>
 </success_criteria>
 
 <testing_clarity>
 <principle>
-Test your instructions by asking: "Could I hand these instructions to a junior developer and expect correct results?"
+通过问自己来测试你的指令："我能否将这些指令交给初级开发人员并期望得到正确的结果？"
 </principle>
 
 <testing_process>
-1. Read your skill instructions
-2. Remove context only you have (project knowledge, unstated assumptions)
-3. Identify ambiguous terms or vague requirements
-4. Add specificity where needed
-5. Test with someone who doesn't have your context
-6. Iterate based on their questions and confusion
+1. 阅读你的 skill 指令
+2. 删除只有你才有的上下文（项目知识、未明说的假设）
+3. 识别模糊的术语或模糊的要求
+4. 在需要的地方添加具体性
+5. 与没有你的上下文的人一起测试
+6. 根据他们的问题和困惑进行迭代
 
-If a human with minimal context struggles, Claude will too.
+如果具有最少上下文的人感到困难，Claude 也会如此。
 </testing_process>
 </testing_clarity>
 
 <practical_examples>
 <example domain="data_processing">
-❌ **Unclear**:
+❌ **不清晰**:
 ```xml
 <quick_start>
 Clean the data and remove bad entries.
 </quick_start>
 ```
 
-✅ **Clear**:
+✅ **清晰**:
 ```xml
 <quick_start>
 <data_cleaning>
@@ -481,14 +481,14 @@ Clean the data and remove bad entries.
 </example>
 
 <example domain="code_generation">
-❌ **Unclear**:
+❌ **不清晰**:
 ```xml
 <quick_start>
 Write a function to process user input.
 </quick_start>
 ```
 
-✅ **Clear**:
+✅ **清晰**:
 ```xml
 <quick_start>
 <function_specification>

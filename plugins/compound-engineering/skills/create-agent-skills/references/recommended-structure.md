@@ -1,16 +1,16 @@
-# Recommended Skill Structure
+# 推荐的 Skill 结构
 
-The optimal structure for complex skills separates routing, workflows, and knowledge.
+复杂 skill 的最佳结构将路由、工作流和知识分开。
 
 <structure>
 ```
 skill-name/
-├── SKILL.md              # Router + essential principles (unavoidable)
-├── workflows/            # Step-by-step procedures (how)
+├── SKILL.md              # 路由器 + 基本原则（不可避免）
+├── workflows/            # 分步程序（如何）
 │   ├── workflow-a.md
 │   ├── workflow-b.md
 │   └── ...
-└── references/           # Domain knowledge (what)
+└── references/           # 领域知识（是什么）
     ├── reference-a.md
     ├── reference-b.md
     └── ...
@@ -18,27 +18,27 @@ skill-name/
 </structure>
 
 <why_this_works>
-## Problems This Solves
+## 解决的问题
 
-**Problem 1: Context gets skipped**
-When important principles are in a separate file, Claude may not read them.
-**Solution:** Put essential principles directly in SKILL.md. They load automatically.
+**问题 1：上下文被跳过**
+当重要原则在单独的文件中时，Claude 可能不会读取它们。
+**解决方案：** 将基本原则直接放在 SKILL.md 中。它们会自动加载。
 
-**Problem 2: Wrong context loaded**
-A "build" task loads debugging references. A "debug" task loads build references.
-**Solution:** Intake question determines intent → routes to specific workflow → workflow specifies which references to read.
+**问题 2：加载了错误的上下文**
+"构建"任务加载调试参考。"调试"任务加载构建参考。
+**解决方案：** 引导问题确定意图 → 路由到特定工作流 → 工作流指定要读取的参考。
 
-**Problem 3: Monolithic skills are overwhelming**
-500+ lines of mixed content makes it hard to find relevant parts.
-**Solution:** Small router (SKILL.md) + focused workflows + reference library.
+**问题 3：单体 skill 令人不知所措**
+500+ 行混合内容使查找相关部分变得困难。
+**解决方案：** 小路由器（SKILL.md）+ 专注的工作流 + 参考库。
 
-**Problem 4: Procedures mixed with knowledge**
-"How to do X" mixed with "What X means" creates confusion.
-**Solution:** Workflows are procedures (steps). References are knowledge (patterns, examples).
+**问题 4：程序与知识混合**
+"如何做 X"与"X 是什么意思"混合会造成混淆。
+**解决方案：** 工作流是程序（步骤）。参考是知识（模式、示例）。
 </why_this_works>
 
 <skill_md_template>
-## SKILL.md Template
+## SKILL.md 模板
 
 ```markdown
 ---
@@ -49,80 +49,80 @@ description: What it does and when to use it.
 <essential_principles>
 ## How This Skill Works
 
-[Inline principles that apply to ALL workflows. Cannot be skipped.]
+[适用于所有工作流的内联原则。不能跳过。]
 
 ### Principle 1: [Name]
-[Brief explanation]
+[简要解释]
 
 ### Principle 2: [Name]
-[Brief explanation]
+[简要解释]
 </essential_principles>
 
 <intake>
-**Ask the user:**
+**询问用户：**
 
-What would you like to do?
+你想做什么？
 1. [Option A]
 2. [Option B]
 3. [Option C]
 4. Something else
 
-**Wait for response before proceeding.**
+**等待响应后再继续。**
 </intake>
 
 <routing>
-| Response | Workflow |
+| 响应 | 工作流 |
 |----------|----------|
 | 1, "keyword", "keyword" | `workflows/option-a.md` |
 | 2, "keyword", "keyword" | `workflows/option-b.md` |
 | 3, "keyword", "keyword" | `workflows/option-c.md` |
-| 4, other | Clarify, then select |
+| 4, other | 澄清，然后选择 |
 
-**After reading the workflow, follow it exactly.**
+**读取工作流后，精确遵循它。**
 </routing>
 
 <reference_index>
-All domain knowledge in `references/`:
+`references/` 中的所有领域知识：
 
 **Category A:** file-a.md, file-b.md
 **Category B:** file-c.md, file-d.md
 </reference_index>
 
 <workflows_index>
-| Workflow | Purpose |
+| 工作流 | 目的 |
 |----------|---------|
-| option-a.md | [What it does] |
-| option-b.md | [What it does] |
-| option-c.md | [What it does] |
+| option-a.md | [它的作用] |
+| option-b.md | [它的作用] |
+| option-c.md | [它的作用] |
 </workflows_index>
 ```
 </skill_md_template>
 
 <workflow_template>
-## Workflow Template
+## 工作流模板
 
 ```markdown
 # Workflow: [Name]
 
 <required_reading>
-**Read these reference files NOW:**
+**现在读取这些参考文件：**
 1. references/relevant-file.md
 2. references/another-file.md
 </required_reading>
 
 <process>
 ## Step 1: [Name]
-[What to do]
+[要做什么]
 
 ## Step 2: [Name]
-[What to do]
+[要做什么]
 
 ## Step 3: [Name]
-[What to do]
+[要做什么]
 </process>
 
 <success_criteria>
-This workflow is complete when:
+此工作流在以下情况下完成：
 - [ ] Criterion 1
 - [ ] Criterion 2
 - [ ] Criterion 3
@@ -131,38 +131,38 @@ This workflow is complete when:
 </workflow_template>
 
 <when_to_use_this_pattern>
-## When to Use This Pattern
+## 何时使用此模式
 
-**Use router + workflows + references when:**
-- Multiple distinct workflows (build vs debug vs ship)
-- Different workflows need different references
-- Essential principles must not be skipped
-- Skill has grown beyond 200 lines
+**何时使用路由器 + 工作流 + 参考：**
+- 多个不同的工作流（构建 vs 调试 vs 发布）
+- 不同的工作流需要不同的参考
+- 基本原则不能被跳过
+- Skill 已超过 200 行
 
-**Use simple single-file skill when:**
-- One workflow
-- Small reference set
-- Under 200 lines total
-- No essential principles to enforce
+**何时使用简单的单文件 skill：**
+- 一个工作流
+- 小型参考集
+- 总共少于 200 行
+- 没有要强制执行的基本原则
 </when_to_use_this_pattern>
 
 <key_insight>
-## The Key Insight
+## 关键见解
 
-**SKILL.md is always loaded. Use this guarantee.**
+**SKILL.md 始终加载。使用此保证。**
 
-Put unavoidable content in SKILL.md:
-- Essential principles
-- Intake question
-- Routing logic
+将不可避免的内容放在 SKILL.md 中：
+- 基本原则
+- 引导问题
+- 路由逻辑
 
-Put workflow-specific content in workflows/:
-- Step-by-step procedures
-- Required references for that workflow
-- Success criteria for that workflow
+将特定于工作流的内容放在 workflows/ 中：
+- 分步程序
+- 该工作流所需的参考
+- 该工作流的成功标准
 
-Put reusable knowledge in references/:
-- Patterns and examples
-- Technical details
-- Domain expertise
+将可重用的知识放在 references/ 中：
+- 模式和示例
+- 技术细节
+- 领域专业知识
 </key_insight>

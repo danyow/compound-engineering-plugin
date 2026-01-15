@@ -1,120 +1,120 @@
-# Workflow: Add a Workflow to Existing Skill
+# Workflow：向现有 Skill 添加 Workflow
 
 <required_reading>
-**Read these reference files NOW:**
+**立即阅读这些参考文件：**
 1. references/recommended-structure.md
 2. references/workflows-and-validation.md
 </required_reading>
 
 <process>
-## Step 1: Select the Skill
+## 步骤 1：选择 Skill
 
-**DO NOT use AskUserQuestion** - there may be many skills.
+**不要使用 AskUserQuestion** - 可能有很多 skill。
 
 ```bash
 ls ~/.claude/skills/
 ```
 
-Present numbered list, ask: "Which skill needs a new workflow?"
+显示编号列表，询问："哪个 skill 需要新的 workflow？"
 
-## Step 2: Analyze Current Structure
+## 步骤 2：分析当前结构
 
-Read the skill:
+读取 skill：
 ```bash
 cat ~/.claude/skills/{skill-name}/SKILL.md
 ls ~/.claude/skills/{skill-name}/workflows/ 2>/dev/null
 ```
 
-Determine:
-- **Simple skill?** → May need to upgrade to router pattern first
-- **Already has workflows/?** → Good, can add directly
-- **What workflows exist?** → Avoid duplication
+确定：
+- **简单的 skill？** → 可能需要先升级到 router 模式
+- **已经有 workflows/?** → 好，可以直接添加
+- **存在哪些 workflow？** → 避免重复
 
-Report current structure to user.
+向用户报告当前结构。
 
-## Step 3: Gather Workflow Requirements
+## 步骤 3：收集 Workflow 需求
 
-Ask using AskUserQuestion or direct question:
-- What should this workflow do?
-- When would someone use it vs existing workflows?
-- What references would it need?
+使用 AskUserQuestion 或直接问题询问：
+- 这个 workflow 应该做什么？
+- 什么时候有人会使用它而不是现有的 workflow？
+- 它需要哪些 reference？
 
-## Step 4: Upgrade to Router Pattern (if needed)
+## 步骤 4：升级到 Router 模式（如果需要）
 
-**If skill is currently simple (no workflows/):**
+**如果 skill 当前是简单的（没有 workflows/）：**
 
-Ask: "This skill needs to be upgraded to the router pattern first. Should I restructure it?"
+询问："此 skill 需要先升级到 router 模式。我应该重构它吗？"
 
-If yes:
-1. Create workflows/ directory
-2. Move existing process content to workflows/main.md
-3. Rewrite SKILL.md as router with intake + routing
-4. Verify structure works before proceeding
+如果是：
+1. 创建 workflows/ 目录
+2. 将现有的 process 内容移至 workflows/main.md
+3. 将 SKILL.md 重写为带有 intake + routing 的 router
+4. 在继续之前验证结构是否有效
 
-## Step 5: Create the Workflow File
+## 步骤 5：创建 Workflow 文件
 
-Create `workflows/{workflow-name}.md`:
+创建 `workflows/{workflow-name}.md`：
 
 ```markdown
-# Workflow: {Workflow Name}
+# Workflow：{Workflow 名称}
 
 <required_reading>
-**Read these reference files NOW:**
+**立即阅读这些参考文件：**
 1. references/{relevant-file}.md
 </required_reading>
 
 <process>
-## Step 1: {First Step}
-[What to do]
+## 步骤 1：{第一步}
+[要做什么]
 
-## Step 2: {Second Step}
-[What to do]
+## 步骤 2：{第二步}
+[要做什么]
 
-## Step 3: {Third Step}
-[What to do]
+## 步骤 3：{第三步}
+[要做什么]
 </process>
 
 <success_criteria>
-This workflow is complete when:
-- [ ] Criterion 1
-- [ ] Criterion 2
-- [ ] Criterion 3
+此 workflow 在以下情况下完成：
+- [ ] 标准 1
+- [ ] 标准 2
+- [ ] 标准 3
 </success_criteria>
 ```
 
-## Step 6: Update SKILL.md
+## 步骤 6：更新 SKILL.md
 
-Add the new workflow to:
+将新 workflow 添加到：
 
-1. **Intake question** - Add new option
-2. **Routing table** - Map option to workflow file
-3. **Workflows index** - Add to the list
+1. **Intake 问题** - 添加新选项
+2. **Routing 表** - 将选项映射到 workflow 文件
+3. **Workflows 索引** - 添加到列表
 
-## Step 7: Create References (if needed)
+## 步骤 7：创建 Reference（如果需要）
 
-If the workflow needs domain knowledge that doesn't exist:
-1. Create `references/{reference-name}.md`
-2. Add to reference_index in SKILL.md
-3. Reference it in the workflow's required_reading
+如果 workflow 需要不存在的领域知识：
+1. 创建 `references/{reference-name}.md`
+2. 添加到 SKILL.md 的 reference_index
+3. 在 workflow 的 required_reading 中引用它
 
-## Step 8: Test
+## 步骤 8：测试
 
-Invoke the skill:
-- Does the new option appear in intake?
-- Does selecting it route to the correct workflow?
-- Does the workflow load the right references?
-- Does the workflow execute correctly?
+调用 skill：
+- 新选项是否出现在 intake 中？
+- 选择它是否路由到正确的 workflow？
+- workflow 是否加载正确的 reference？
+- workflow 是否正确执行？
 
-Report results to user.
+向用户报告结果。
 </process>
 
 <success_criteria>
-Workflow addition is complete when:
-- [ ] Skill upgraded to router pattern (if needed)
-- [ ] Workflow file created with required_reading, process, success_criteria
-- [ ] SKILL.md intake updated with new option
-- [ ] SKILL.md routing updated
-- [ ] SKILL.md workflows_index updated
-- [ ] Any needed references created
-- [ ] Tested and working
+Workflow 添加在以下情况下完成：
+- [ ] Skill 升级到 router 模式（如果需要）
+- [ ] 使用 required_reading、process、success_criteria 创建了 workflow 文件
+- [ ] SKILL.md intake 已更新新选项
+- [ ] SKILL.md routing 已更新
+- [ ] SKILL.md workflows_index 已更新
+- [ ] 任何需要的 reference 已创建
+- [ ] 测试并工作
 </success_criteria>

@@ -1,96 +1,96 @@
-# Workflow: Add a Reference to Existing Skill
+# Workflow：向现有 Skill 添加 Reference
 
 <required_reading>
-**Read these reference files NOW:**
+**立即阅读这些参考文件：**
 1. references/recommended-structure.md
 2. references/skill-structure.md
 </required_reading>
 
 <process>
-## Step 1: Select the Skill
+## 步骤 1：选择 Skill
 
 ```bash
 ls ~/.claude/skills/
 ```
 
-Present numbered list, ask: "Which skill needs a new reference?"
+显示编号列表，询问："哪个 skill 需要新的 reference？"
 
-## Step 2: Analyze Current Structure
+## 步骤 2：分析当前结构
 
 ```bash
 cat ~/.claude/skills/{skill-name}/SKILL.md
 ls ~/.claude/skills/{skill-name}/references/ 2>/dev/null
 ```
 
-Determine:
-- **Has references/ folder?** → Good, can add directly
-- **Simple skill?** → May need to create references/ first
-- **What references exist?** → Understand the knowledge landscape
+确定：
+- **有 references/ 文件夹？** → 好，可以直接添加
+- **简单的 skill？** → 可能需要先创建 references/
+- **存在哪些 reference？** → 了解知识格局
 
-Report current references to user.
+向用户报告当前的 reference。
 
-## Step 3: Gather Reference Requirements
+## 步骤 3：收集 Reference 需求
 
-Ask:
-- What knowledge should this reference contain?
-- Which workflows will use it?
-- Is this reusable across workflows or specific to one?
+询问：
+- 这个 reference 应包含什么知识？
+- 哪些 workflow 会使用它？
+- 这是跨 workflow 可重用的还是特定于一个的？
 
-**If specific to one workflow** → Consider putting it inline in that workflow instead.
+**如果特定于一个 workflow** → 考虑将其内联在该 workflow 中。
 
-## Step 4: Create the Reference File
+## 步骤 4：创建 Reference 文件
 
-Create `references/{reference-name}.md`:
+创建 `references/{reference-name}.md`：
 
-Use semantic XML tags to structure the content:
+使用语义 XML 标签来构建内容：
 ```xml
 <overview>
-Brief description of what this reference covers
+此 reference 涵盖内容的简要描述
 </overview>
 
 <patterns>
-## Common Patterns
-[Reusable patterns, examples, code snippets]
+## 常见模式
+[可重用的模式、示例、代码片段]
 </patterns>
 
 <guidelines>
-## Guidelines
-[Best practices, rules, constraints]
+## 指南
+[最佳实践、规则、约束]
 </guidelines>
 
 <examples>
-## Examples
-[Concrete examples with explanation]
+## 示例
+[带有解释的具体示例]
 </examples>
 ```
 
-## Step 5: Update SKILL.md
+## 步骤 5：更新 SKILL.md
 
-Add the new reference to `<reference_index>`:
+将新 reference 添加到 `<reference_index>`：
 ```markdown
-**Category:** existing.md, new-reference.md
+**类别：** existing.md, new-reference.md
 ```
 
-## Step 6: Update Workflows That Need It
+## 步骤 6：更新需要它的 Workflow
 
-For each workflow that should use this reference:
+对于应该使用此 reference 的每个 workflow：
 
-1. Read the workflow file
-2. Add to its `<required_reading>` section
-3. Verify the workflow still makes sense with this addition
+1. 读取 workflow 文件
+2. 添加到其 `<required_reading>` 部分
+3. 验证添加后 workflow 仍然合理
 
-## Step 7: Verify
+## 步骤 7：验证
 
-- [ ] Reference file exists and is well-structured
-- [ ] Reference is in SKILL.md reference_index
-- [ ] Relevant workflows have it in required_reading
-- [ ] No broken references
+- [ ] Reference 文件存在且结构良好
+- [ ] Reference 在 SKILL.md 的 reference_index 中
+- [ ] 相关 workflow 在 required_reading 中有它
+- [ ] 没有断开的引用
 </process>
 
 <success_criteria>
-Reference addition is complete when:
-- [ ] Reference file created with useful content
-- [ ] Added to reference_index in SKILL.md
-- [ ] Relevant workflows updated to read it
-- [ ] Content is reusable (not workflow-specific)
+Reference 添加在以下情况下完成：
+- [ ] 使用有用内容创建了 reference 文件
+- [ ] 已添加到 SKILL.md 的 reference_index
+- [ ] 相关 workflow 已更新为读取它
+- [ ] 内容是可重用的（不特定于 workflow）
 </success_criteria>
