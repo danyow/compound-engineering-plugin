@@ -1,109 +1,108 @@
 ---
 name: agent-native-architecture
-description: Build applications where agents are first-class citizens. Use this skill when designing autonomous agents, creating MCP tools, implementing self-modifying systems, or building apps where features are outcomes achieved by agents operating in a loop.
+description: 构建将 Agent 视为一等公民的应用程序。当设计自主 Agent、创建 MCP 工具、实现自我修改系统，或构建功能由 Agent 在循环中实现的应用时使用此 Skill。
 ---
 
 <why_now>
-## Why Now
+## 为什么是现在
 
-Software agents work reliably now. Claude Code demonstrated that an LLM with access to bash and file tools, operating in a loop until an objective is achieved, can accomplish complex multi-step tasks autonomously.
+软件 Agent 现在可以可靠地工作了。Claude Code 证明了一个具有 bash 和文件工具访问权限的 LLM，在循环中运行直到达成目标，可以自主完成复杂的多步骤任务。
 
-The surprising discovery: **a really good coding agent is actually a really good general-purpose agent.** The same architecture that lets Claude Code refactor a codebase can let an agent organize your files, manage your reading list, or automate your workflows.
+令人惊讶的发现：**一个真正优秀的编码 Agent 实际上就是一个真正优秀的通用 Agent。**让 Claude Code 重构代码库的同一架构，也可以让 Agent 组织你的文件、管理你的阅读列表或自动化你的工作流程。
 
-The Claude Code SDK makes this accessible. You can build applications where features aren't code you write—they're outcomes you describe, achieved by an agent with tools, operating in a loop until the outcome is reached.
+Claude Code SDK 使这一切变得可及。你可以构建这样的应用程序：功能不是你编写的代码——而是你描述的结果，由一个拥有工具的 Agent 在循环中运行直到达成结果。
 
-This opens up a new field: software that works the way Claude Code works, applied to categories far beyond coding.
+这开启了一个新领域：以 Claude Code 工作方式运行的软件，应用于远超编码的各种类别。
 </why_now>
 
 <core_principles>
-## Core Principles
+## 核心原则
 
-### 1. Parity
+### 1. 对等性（Parity）
 
-**Whatever the user can do through the UI, the agent should be able to achieve through tools.**
+**用户通过 UI 能做的任何事情，Agent 都应该能够通过工具实现。**
 
-This is the foundational principle. Without it, nothing else matters.
+这是基础原则。没有它，其他一切都无关紧要。
 
-Imagine you build a notes app with a beautiful interface for creating, organizing, and tagging notes. A user asks the agent: "Create a note summarizing my meeting and tag it as urgent."
+想象你构建了一个笔记应用，有一个漂亮的界面用于创建、组织和标记笔记。用户向 Agent 询问："创建一条总结我的会议的笔记，并标记为紧急。"
 
-If you built UI for creating notes but no agent capability to do the same, the agent is stuck. It might apologize or ask clarifying questions, but it can't help—even though the action is trivial for a human using the interface.
+如果你构建了创建笔记的 UI 但没有相应的 Agent 能力，Agent 就卡住了。它可能会道歉或询问澄清问题，但无法提供帮助——即使对于使用界面的人来说这个操作很简单。
 
-**The fix:** Ensure the agent has tools (or combinations of tools) that can accomplish anything the UI can do.
+**解决方案：**确保 Agent 拥有工具（或工具组合）可以完成 UI 能做的任何事情。
 
-This isn't about creating a 1:1 mapping of UI buttons to tools. It's about ensuring the agent can **achieve the same outcomes**. Sometimes that's a single tool (`create_note`). Sometimes it's composing primitives (`write_file` to a notes directory with proper formatting).
+这不是要创建 UI 按钮到工具的 1:1 映射。而是要确保 Agent 能够**实现相同的结果**。有时是单个工具（`create_note`）。有时是组合原语（用适当的格式 `write_file` 到笔记目录）。
 
-**The discipline:** When adding any UI capability, ask: can the agent achieve this outcome? If not, add the necessary tools or primitives.
+**规范：**在添加任何 UI 功能时，问：Agent 能实现这个结果吗？如果不能，添加必要的工具或原语。
 
-A capability map helps:
+能力映射表很有帮助：
 
-| User Action | How Agent Achieves It |
+| 用户操作 | Agent 如何实现 |
 |-------------|----------------------|
-| Create a note | `write_file` to notes directory, or `create_note` tool |
-| Tag a note as urgent | `update_file` metadata, or `tag_note` tool |
-| Search notes | `search_files` or `search_notes` tool |
-| Delete a note | `delete_file` or `delete_note` tool |
+| 创建笔记 | `write_file` 到笔记目录，或 `create_note` 工具 |
+| 将笔记标记为紧急 | `update_file` 元数据，或 `tag_note` 工具 |
+| 搜索笔记 | `search_files` 或 `search_notes` 工具 |
+| 删除笔记 | `delete_file` 或 `delete_note` 工具 |
 
-**The test:** Pick any action a user can take in your UI. Describe it to the agent. Can it accomplish the outcome?
+**测试：**选择用户可以在 UI 中执行的任何操作。向 Agent 描述它。它能完成这个结果吗？
 
 ---
 
-### 2. Granularity
+### 2. 粒度（Granularity）
 
-**Prefer atomic primitives. Features are outcomes achieved by an agent operating in a loop.**
+**优先使用原子原语。功能是 Agent 在循环中实现的结果。**
 
-A tool is a primitive capability: read a file, write a file, run a bash command, store a record, send a notification.
+工具是原始能力：读取文件、写入文件、运行 bash 命令、存储记录、发送通知。
 
-A **feature** is not a function you write. It's an outcome you describe in a prompt, achieved by an agent that has tools and operates in a loop until the outcome is reached.
+**功能**不是你编写的函数。它是你在 prompt 中描述的结果，由拥有工具的 Agent 在循环中运行直到达成结果。
 
-**Less granular (limits the agent):**
+**粒度较粗（限制 Agent）：**
 ```
 Tool: classify_and_organize_files(files)
-→ You wrote the decision logic
-→ Agent executes your code
-→ To change behavior, you refactor
+→ 你编写了决策逻辑
+→ Agent 执行你的代码
+→ 要改变行为，你需要重构
 ```
 
-**More granular (empowers the agent):**
+**粒度较细（赋能 Agent）：**
 ```
 Tools: read_file, write_file, move_file, list_directory, bash
-Prompt: "Organize the user's downloads folder. Analyze each file,
-        determine appropriate locations based on content and recency,
-        and move them there."
-Agent: Operates in a loop—reads files, makes judgments, moves things,
-       checks results—until the folder is organized.
-→ Agent makes the decisions
-→ To change behavior, you edit the prompt
+Prompt: "整理用户的下载文件夹。分析每个文件，
+        根据内容和最近使用情况确定适当的位置，
+        然后移动它们。"
+Agent: 在循环中运行——读取文件、做出判断、移动文件、
+       检查结果——直到文件夹被整理好。
+→ Agent 做出决策
+→ 要改变行为，你编辑 prompt
 ```
 
-**The key shift:** The agent is pursuing an outcome with judgment, not executing a choreographed sequence. It might encounter unexpected file types, adjust its approach, or ask clarifying questions. The loop continues until the outcome is achieved.
+**关键转变：**Agent 正在凭借判断力追求结果，而不是执行编排好的序列。它可能遇到意外的文件类型、调整方法或询问澄清问题。循环继续直到达成结果。
 
-The more atomic your tools, the more flexibly the agent can use them. If you bundle decision logic into tools, you've moved judgment back into code.
+你的工具越原子化，Agent 使用它们就越灵活。如果你将决策逻辑捆绑到工具中，你就把判断力移回了代码。
 
-**The test:** To change how a feature behaves, do you edit prose or refactor code?
+**测试：**要改变功能的行为，你是编辑文本还是重构代码？
 
 ---
 
-### 3. Composability
+### 3. 可组合性（Composability）
 
-**With atomic tools and parity, you can create new features just by writing new prompts.**
+**有了原子工具和对等性，你可以仅通过编写新 prompt 来创建新功能。**
 
-This is the payoff of the first two principles. When your tools are atomic and the agent can do anything users can do, new features are just new prompts.
+这是前两个原则的回报。当你的工具是原子化的，并且 Agent 可以做用户能做的任何事情时，新功能就只是新 prompt。
 
-Want a "weekly review" feature that summarizes activity and suggests priorities? That's a prompt:
+想要一个"每周回顾"功能来总结活动并建议优先事项？那就是一个 prompt：
 
 ```
-"Review files modified this week. Summarize key changes. Based on
-incomplete items and approaching deadlines, suggest three priorities
-for next week."
+"回顾本周修改的文件。总结关键变化。基于
+未完成的项目和即将到来的截止日期，建议下周的三个优先事项。"
 ```
 
-The agent uses `list_files`, `read_file`, and its judgment to accomplish this. You didn't write weekly-review code. You described an outcome, and the agent operates in a loop until it's achieved.
+Agent 使用 `list_files`、`read_file` 及其判断力来完成这个任务。你没有编写每周回顾代码。你描述了一个结果，Agent 在循环中运行直到实现它。
 
-**This works for developers and users.** You can ship new features by adding prompts. Users can customize behavior by modifying prompts or creating their own. "When I say 'file this,' always move it to my Action folder and tag it urgent" becomes a user-level prompt that extends the application.
+**这对开发者和用户都有效。**你可以通过添加 prompt 来发布新功能。用户可以通过修改 prompt 或创建自己的 prompt 来自定义行为。"当我说'归档这个'时，总是将它移动到我的行动文件夹并标记为紧急"成为了扩展应用程序的用户级 prompt。
 
-**The constraint:** This only works if tools are atomic enough to be composed in ways you didn't anticipate, and if the agent has parity with users. If tools encode too much logic, or the agent can't access key capabilities, composition breaks down.
+**约束：**这仅在工具足够原子化以便以你未预料的方式组合，并且 Agent 与用户具有对等性时才有效。如果工具编码了过多逻辑，或者 Agent 无法访问关键能力，组合就会崩溃。
 
-**The test:** Can you add a new feature by writing a new prompt section, without adding new code?
+**测试：**你能通过编写新的 prompt 部分来添加新功能，而无需添加新代码吗？
 
 ---
 
