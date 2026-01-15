@@ -56,79 +56,79 @@ description: 用于审查或编辑文案以确保符合 Every 风格指南。提
 - 数字格式（数字 vs. 拼写）
 - 链接格式和描述
 
-### Step 4: Output Results
+### 第四步：输出结果
 
-Present findings using this structure:
+使用以下结构呈现发现：
 
 ```
-DOCUMENT REVIEW SUMMARY
+文档审查摘要
 =====================
-Document Type: [type]
-Word Count: [approximate]
-Overall Assessment: [brief overview]
+文档类型：[类型]
+字数：[大约]
+总体评估：[简要概述]
 
-ERRORS FOUND: [total number]
+发现错误数：[总数]
 
-DETAILED CORRECTIONS
+详细修正
 ===================
 
-[For each error found:]
+[对于每个发现的错误：]
 
-**Location**: [Paragraph #, Sentence #]
-**Issue Type**: [Grammar/Punctuation/Mechanics/Style Guide]
-**Original**: "[exact text with error]"
-**Correction**: "[corrected text]"
-**Rule Reference**: [Specific style guide rule violated]
-**Explanation**: [Brief explanation of why this is an error]
+**位置**：[段落 #，句子 #]
+**问题类型**：[语法/标点/格式/风格指南]
+**原文**："[有错误的确切文本]"
+**修正**："[修正后的文本]"
+**规则参考**：[违反的具体风格指南规则]
+**说明**：[为什么这是错误的简要说明]
 
 ---
 
-RECURRING ISSUES
+重复出现的问题
 ===============
-[List patterns of errors that appear multiple times]
+[列出多次出现的错误模式]
 
-STYLE GUIDE COMPLIANCE CHECKLIST
+风格指南合规性检查清单
 ==============================
-✓ [Rule followed correctly]
-✗ [Rule violated - with count of violations]
+✓ [正确遵循的规则]
+✗ [违反的规则 - 附违规次数]
 
-FINAL RECOMMENDATIONS
+最终建议
 ===================
-[2-3 actionable suggestions for improving the draft]
+[2-3个可操作的改进草稿建议]
 ```
 
-## Style Guide Reference
+## 风格指南参考
 
-The complete Every style guide is included in [EVERY_WRITE_STYLE.md](./references/EVERY_WRITE_STYLE.md). Key areas to focus on:
+完整的 Every 风格指南包含在 [EVERY_WRITE_STYLE.md](./references/EVERY_WRITE_STYLE.md) 中。需要关注的关键领域：
 
-- **Quick Rules**: Title case for headlines, sentence case elsewhere
-- **Tone**: Active voice, avoid overused words (actually, very, just), be specific
-- **Numbers**: Spell out one through nine; use numerals for 10+
-- **Punctuation**: Oxford commas, em dashes without spaces, proper quotation mark usage
-- **Capitalization**: Lowercase job titles, company as singular (it), teams as plural (they)
-- **Emphasis**: Italics only (no bold for emphasis)
-- **Links**: 2-4 words, don't say "click here"
+- **快速规则**：标题使用 Title Case，其他地方使用 Sentence case
+- **语气**：主动语态，避免过度使用的词（actually、very、just），要具体
+- **数字**：一到九拼写出来；10以上使用数字
+- **标点**：Oxford 逗号，破折号两侧不加空格，正确使用引号
+- **大写**：职位小写，公司用单数（it），团队用复数（they）
+- **强调**：仅使用斜体（不用粗体强调）
+- **链接**：2-4个词，不要说"点击这里"
 
-## Key Principles
+## 关键原则
 
-- **Be specific**: Always quote the exact text with the error
-- **Reference rules**: Cite the specific style guide rule for each correction
-- **Maintain voice**: Preserve the author's voice while correcting errors
-- **Prioritize clarity**: Focus on changes that improve readability
-- **Be constructive**: Frame feedback to help writers improve
-- **Flag ambiguous cases**: When style guide doesn't address an issue, explain options and recommend the clearest choice
+- **要具体**：始终引用有错误的确切文本
+- **参考规则**：为每个修正引用具体的风格指南规则
+- **保持语态**：在纠正错误的同时保留作者的语态
+- **优先考虑清晰度**：关注能提高可读性的改变
+- **要有建设性**：以帮助作者改进的方式提出反馈
+- **标记模糊情况**：当风格指南没有涉及某个问题时，解释选项并推荐最清晰的选择
 
-## Common Areas to Focus On
+## 需要关注的常见领域
 
-Based on Every's style guide, pay special attention to:
+根据 Every 的风格指南，特别注意：
 
-- Punctuation (comma usage, semicolons, apostrophes, quotation marks)
-- Capitalization (proper nouns, titles, sentence starts)
-- Numbers (when to spell out vs. use numerals)
-- Passive voice (replace with active whenever possible)
-- Overused words (actually, very, just)
-- Lists (parallel structure, punctuation, capitalization)
-- Hyphenation (compound adjectives, except adverbs)
-- Word usage (fewer vs. less, they vs. them)
-- Company references (singular "it", teams as plural "they")
-- Job title capitalization
+- 标点（逗号使用、分号、撇号、引号）
+- 大写（专有名词、标题、句子开头）
+- 数字（何时拼写 vs. 使用数字）
+- 被动语态（尽可能替换为主动语态）
+- 过度使用的词（actually、very、just）
+- 列表（平行结构、标点、大写）
+- 连字符（复合形容词，副词除外）
+- 词语使用（fewer vs. less、they vs. them）
+- 公司引用（单数"it"，团队复数"they"）
+- 职位大写
