@@ -1,10 +1,10 @@
-# DSPy.rb Testing, Optimization & Observability
+# DSPy.rb 测试、优化与可观测性
 
-## Testing
+## 测试
 
-DSPy.rb enables standard RSpec testing patterns for LLM logic, making your AI applications testable and maintainable.
+DSPy.rb 为 LLM 逻辑启用标准的 RSpec 测试模式，使您的 AI 应用可测试和可维护。
 
-### Basic Testing Setup
+### 基本测试设置
 
 ```ruby
 require 'rspec'
@@ -32,14 +32,14 @@ RSpec.describe EmailClassifier do
 end
 ```
 
-### Mocking LLM Responses
+### 模拟 LLM 响应
 
-Test your modules without making actual API calls:
+无需进行实际 API 调用即可测试您的模块:
 
 ```ruby
 RSpec.describe MyModule do
   it 'handles mock responses correctly' do
-    # Create a mock predictor that returns predetermined results
+    # 创建一个返回预定结果的模拟预测器
     mock_predictor = instance_double(DSPy::Predict)
     allow(mock_predictor).to receive(:forward).and_return({
       category: 'Technical',
@@ -47,7 +47,7 @@ RSpec.describe MyModule do
       confidence: 0.95
     })
 
-    # Inject mock into your module
+    # 将模拟注入到您的模块中
     module_instance = MyModule.new
     module_instance.instance_variable_set(:@predictor, mock_predictor)
 
@@ -57,34 +57,34 @@ RSpec.describe MyModule do
 end
 ```
 
-### Testing Type Safety
+### 测试类型安全
 
-Verify that signatures enforce type constraints:
+验证签名强制执行类型约束:
 
 ```ruby
 RSpec.describe EmailClassificationSignature do
   it 'validates output types' do
     predictor = DSPy::Predict.new(EmailClassificationSignature)
 
-    # This should work
+    # 这应该可以工作
     result = predictor.forward(
       email_subject: 'Test',
       email_body: 'Test body'
     )
     expect(result[:category]).to be_a(String)
 
-    # Test that invalid types are caught
+    # 测试无效类型被捕获
     expect {
-      # Simulate LLM returning invalid type
+      # 模拟 LLM 返回无效类型
       predictor.send(:validate_output, { category: 123 })
     }.to raise_error(DSPy::ValidationError)
   end
 end
 ```
 
-### Testing Edge Cases
+### 测试边缘情况
 
-Always test boundary conditions and error scenarios:
+始终测试边界条件和错误场景:
 
 ```ruby
 RSpec.describe EmailClassifier do
@@ -94,7 +94,7 @@ RSpec.describe EmailClassifier do
       email_subject: '',
       email_body: ''
     )
-    # Define expected behavior for edge case
+    # 定义边缘情况的预期行为
     expect(result[:category]).to eq('General')
   end
 
@@ -122,9 +122,9 @@ RSpec.describe EmailClassifier do
 end
 ```
 
-### Integration Testing
+### 集成测试
 
-Test complete workflows end-to-end:
+端到端测试完整工作流:
 
 ```ruby
 RSpec.describe EmailProcessingPipeline do
@@ -136,7 +136,7 @@ RSpec.describe EmailProcessingPipeline do
       email_body: 'How do I update my payment method?'
     )
 
-    # Verify the complete pipeline output
+    # 验证完整的管道输出
     expect(result[:classification]).to eq('Billing')
     expect(result[:priority]).to eq('Medium')
     expect(result[:suggested_response]).to include('payment')
@@ -145,9 +145,9 @@ RSpec.describe EmailProcessingPipeline do
 end
 ```
 
-### VCR for Deterministic Tests
+### 使用 VCR 进行确定性测试
 
-Use VCR to record and replay API responses:
+使用 VCR 记录和重放 API 响应:
 
 ```ruby
 require 'vcr'
@@ -173,18 +173,18 @@ RSpec.describe EmailClassifier do
 end
 ```
 
-## Optimization
+## 优化
 
-DSPy.rb provides powerful optimization capabilities to automatically improve your prompts and modules.
+DSPy.rb 提供强大的优化功能来自动改进您的提示词和模块。
 
-### MIPROv2 Optimization
+### MIPROv2 优化
 
-MIPROv2 is an advanced multi-prompt optimization technique that uses bootstrap sampling, instruction generation, and Bayesian optimization.
+MIPROv2 是一种高级多提示优化技术，使用 bootstrap 采样、指令生成和贝叶斯优化。
 
 ```ruby
 require 'dspy/mipro'
 
-# Define your module to optimize
+# 定义要优化的模块
 class EmailClassifier < DSPy::Module
   def initialize
     super
@@ -196,7 +196,7 @@ class EmailClassifier < DSPy::Module
   end
 end
 
-# Prepare training data
+# 准备训练数据
 training_examples = [
   {
     input: { email_subject: "Can't log in", email_body: "Password reset not working" },
@@ -206,15 +206,15 @@ training_examples = [
     input: { email_subject: "Billing question", email_body: "How much does premium cost?" },
     expected_output: { category: 'Billing', priority: 'Medium' }
   },
-  # Add more examples...
+  # 添加更多示例...
 ]
 
-# Define evaluation metric
+# 定义评估指标
 def accuracy_metric(example, prediction)
   (example[:expected_output][:category] == prediction[:category]) ? 1.0 : 0.0
 end
 
-# Run optimization
+# 运行优化
 optimizer = DSPy::MIPROv2.new(
   metric: method(:accuracy_metric),
   num_candidates: 10,
@@ -226,64 +226,64 @@ optimized_module = optimizer.compile(
   trainset: training_examples
 )
 
-# Use optimized module
+# 使用优化后的模块
 result = optimized_module.forward(
   email_subject: "New email",
   email_body: "New email content"
 )
 ```
 
-### Bootstrap Few-Shot Learning
+### Bootstrap Few-Shot 学习
 
-Automatically generate few-shot examples from your training data:
+从您的训练数据自动生成 few-shot 示例:
 
 ```ruby
 require 'dspy/teleprompt'
 
-# Create a teleprompter for few-shot optimization
+# 创建用于 few-shot 优化的 teleprompter
 teleprompter = DSPy::BootstrapFewShot.new(
   metric: method(:accuracy_metric),
   max_bootstrapped_demos: 5,
   max_labeled_demos: 3
 )
 
-# Compile the optimized module
+# 编译优化后的模块
 optimized = teleprompter.compile(
   MyModule.new,
   trainset: training_examples
 )
 ```
 
-### Custom Optimization Metrics
+### 自定义优化指标
 
-Define custom metrics for your specific use case:
+为您的特定用例定义自定义指标:
 
 ```ruby
 def custom_metric(example, prediction)
   score = 0.0
 
-  # Category accuracy (60% weight)
+  # 类别准确性 (60% 权重)
   score += 0.6 if example[:expected_output][:category] == prediction[:category]
 
-  # Priority accuracy (40% weight)
+  # 优先级准确性 (40% 权重)
   score += 0.4 if example[:expected_output][:priority] == prediction[:priority]
 
   score
 end
 
-# Use in optimization
+# 在优化中使用
 optimizer = DSPy::MIPROv2.new(
   metric: method(:custom_metric),
   num_candidates: 10
 )
 ```
 
-### A/B Testing Different Approaches
+### A/B 测试不同方法
 
-Compare different module implementations:
+比较不同的模块实现:
 
 ```ruby
-# Approach A: ChainOfThought
+# 方法 A: ChainOfThought
 class ApproachA < DSPy::Module
   def initialize
     super
@@ -295,7 +295,7 @@ class ApproachA < DSPy::Module
   end
 end
 
-# Approach B: ReAct with tools
+# 方法 B: 带工具的 ReAct
 class ApproachB < DSPy::Module
   def initialize
     super
@@ -310,7 +310,7 @@ class ApproachB < DSPy::Module
   end
 end
 
-# Evaluate both approaches
+# 评估两种方法
 def evaluate_approach(approach_class, test_set)
   approach = approach_class.new
   scores = test_set.map do |example|
@@ -327,38 +327,38 @@ puts "Approach A accuracy: #{approach_a_score}"
 puts "Approach B accuracy: #{approach_b_score}"
 ```
 
-## Observability
+## 可观测性
 
-Track your LLM application's performance, token usage, and behavior in production.
+跟踪 LLM 应用在生产中的性能、token 使用和行为。
 
-### OpenTelemetry Integration
+### OpenTelemetry 集成
 
-DSPy.rb automatically integrates with OpenTelemetry when configured:
+配置后，DSPy.rb 会自动与 OpenTelemetry 集成:
 
 ```ruby
 require 'opentelemetry/sdk'
 require 'dspy'
 
-# Configure OpenTelemetry
+# 配置 OpenTelemetry
 OpenTelemetry::SDK.configure do |c|
   c.service_name = 'my-dspy-app'
-  c.use_all # Use all available instrumentation
+  c.use_all # 使用所有可用的监测工具
 end
 
-# DSPy automatically creates traces for predictions
+# DSPy 自动为预测创建追踪
 predictor = DSPy::Predict.new(MySignature)
 result = predictor.forward(input: 'data')
-# Traces are automatically sent to your OpenTelemetry collector
+# 追踪自动发送到您的 OpenTelemetry 收集器
 ```
 
-### Langfuse Integration
+### Langfuse 集成
 
-Track detailed LLM execution traces with Langfuse:
+使用 Langfuse 跟踪详细的 LLM 执行追踪:
 
 ```ruby
 require 'dspy/langfuse'
 
-# Configure Langfuse
+# 配置 Langfuse
 DSPy.configure do |c|
   c.lm = DSPy::LM.new('openai/gpt-4o-mini', api_key: ENV['OPENAI_API_KEY'])
   c.langfuse = {
@@ -368,15 +368,15 @@ DSPy.configure do |c|
   }
 end
 
-# All predictions are automatically traced
+# 所有预测都会自动追踪
 predictor = DSPy::Predict.new(MySignature)
 result = predictor.forward(input: 'data')
-# View detailed traces in Langfuse dashboard
+# 在 Langfuse 仪表板中查看详细追踪
 ```
 
-### Manual Token Tracking
+### 手动 Token 跟踪
 
-Track token usage without external services:
+无需外部服务即可跟踪 token 使用:
 
 ```ruby
 class TokenTracker
@@ -390,7 +390,7 @@ class TokenTracker
     result = predictor.forward(input)
     duration = Time.now - start_time
 
-    # Get token usage from response metadata
+    # 从响应元数据获取 token 使用
     tokens = result.metadata[:usage][:total_tokens] rescue 0
     @total_tokens += tokens
     @request_count += 1
@@ -402,16 +402,16 @@ class TokenTracker
   end
 end
 
-# Usage
+# 使用
 tracker = TokenTracker.new
 predictor = DSPy::Predict.new(MySignature)
 
 result = tracker.track_prediction(predictor, { input: 'data' })
 ```
 
-### Custom Logging
+### 自定义日志
 
-Add detailed logging to your modules:
+向您的模块添加详细日志:
 
 ```ruby
 class EmailClassifier < DSPy::Module
@@ -442,9 +442,9 @@ class EmailClassifier < DSPy::Module
 end
 ```
 
-### Performance Monitoring
+### 性能监控
 
-Monitor latency and performance metrics:
+监控延迟和性能指标:
 
 ```ruby
 class PerformanceMonitor
@@ -491,7 +491,7 @@ class PerformanceMonitor
   end
 end
 
-# Usage
+# 使用
 monitor = PerformanceMonitor.new
 predictor = DSPy::Predict.new(MySignature)
 
@@ -500,9 +500,9 @@ result = monitor.monitor_request do
 end
 ```
 
-### Error Rate Tracking
+### 错误率跟踪
 
-Monitor and alert on error rates:
+监控错误率并发出警报:
 
 ```ruby
 class ErrorRateMonitor
@@ -532,42 +532,42 @@ class ErrorRateMonitor
   def alert_if_needed(error_rate)
     if error_rate > @alert_threshold
       puts "⚠️  ALERT: Error rate #{(error_rate * 100).round(2)}% exceeds threshold!"
-      # Send notification, page oncall, etc.
+      # 发送通知、呼叫待命人员等
     end
   end
 end
 ```
 
-## Best Practices
+## 最佳实践
 
-### 1. Start with Tests
+### 1. 从测试开始
 
-Write tests before optimizing:
+在优化之前编写测试:
 
 ```ruby
-# Define test cases first
+# 首先定义测试用例
 test_cases = [
   { input: {...}, expected: {...} },
-  # More test cases...
+  # 更多测试用例...
 ]
 
-# Ensure baseline functionality
+# 确保基线功能
 test_cases.each do |tc|
   result = module.forward(tc[:input])
   assert result[:category] == tc[:expected][:category]
 end
 
-# Then optimize
+# 然后优化
 optimized = optimizer.compile(module, trainset: test_cases)
 ```
 
-### 2. Use Meaningful Metrics
+### 2. 使用有意义的指标
 
-Define metrics that align with business goals:
+定义与业务目标一致的指标:
 
 ```ruby
 def business_aligned_metric(example, prediction)
-  # High-priority errors are more costly
+  # 高优先级错误成本更高
   if example[:expected_output][:priority] == 'High'
     return prediction[:priority] == 'High' ? 1.0 : 0.0
   else
@@ -576,9 +576,9 @@ def business_aligned_metric(example, prediction)
 end
 ```
 
-### 3. Monitor in Production
+### 3. 在生产中监控
 
-Always track production performance:
+始终跟踪生产性能:
 
 ```ruby
 class ProductionModule < DSPy::Module
@@ -602,9 +602,9 @@ class ProductionModule < DSPy::Module
 end
 ```
 
-### 4. Version Your Modules
+### 4. 版本化您的模块
 
-Track which version of your module is deployed:
+跟踪部署的模块版本:
 
 ```ruby
 class EmailClassifierV2 < DSPy::Module

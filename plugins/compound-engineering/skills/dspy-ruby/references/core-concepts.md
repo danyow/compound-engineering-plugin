@@ -1,52 +1,52 @@
-# DSPy.rb Core Concepts
+# DSPy.rb 核心概念
 
-## Philosophy
+## 理念
 
-DSPy.rb enables developers to **program LLMs, not prompt them**. Instead of manually crafting prompts, define application requirements through code using type-safe, composable modules.
+DSPy.rb 使开发者能够**编程 LLM，而不是提示它们**。不需要手动编写提示词，而是通过使用类型安全、可组合的模块通过代码定义应用需求。
 
-## Signatures
+## 签名 (Signatures)
 
-Signatures define type-safe input/output contracts for LLM operations. They specify what data goes in and what data comes out, with runtime type checking.
+签名为 LLM 操作定义类型安全的输入/输出契约。它们指定输入的数据和输出的数据，并进行运行时类型检查。
 
-### Basic Signature Structure
+### 基本签名结构
 
 ```ruby
 class TaskSignature < DSPy::Signature
-  description "Brief description of what this signature does"
+  description "此签名功能的简要描述"
 
   input do
-    const :field_name, String, desc: "Description of this input field"
-    const :another_field, Integer, desc: "Another input field"
+    const :field_name, String, desc: "此输入字段的描述"
+    const :another_field, Integer, desc: "另一个输入字段"
   end
 
   output do
-    const :result_field, String, desc: "Description of the output"
-    const :confidence, Float, desc: "Confidence score (0.0-1.0)"
+    const :result_field, String, desc: "输出的描述"
+    const :confidence, Float, desc: "置信度分数 (0.0-1.0)"
   end
 end
 ```
 
-### Type Safety
+### 类型安全
 
-Signatures support Sorbet types including:
-- `String` - Text data
-- `Integer`, `Float` - Numeric data
-- `T::Boolean` - Boolean values
-- `T::Array[Type]` - Arrays of specific types
-- Custom enums and classes
+签名支持 Sorbet 类型，包括:
+- `String` - 文本数据
+- `Integer`, `Float` - 数值数据
+- `T::Boolean` - 布尔值
+- `T::Array[Type]` - 特定类型的数组
+- 自定义枚举和类
 
-### Field Descriptions
+### 字段描述
 
-Always provide clear field descriptions using the `desc:` parameter. These descriptions:
-- Guide the LLM on expected input/output format
-- Serve as documentation for developers
-- Improve prediction accuracy
+始终使用 `desc:` 参数提供清晰的字段描述。这些描述:
+- 指导 LLM 了解预期的输入/输出格式
+- 作为开发者的文档
+- 提高预测准确性
 
-## Modules
+## 模块 (Modules)
 
-Modules are composable building blocks that use signatures to perform LLM operations. They can be chained together to create complex workflows.
+模块是使用签名执行 LLM 操作的可组合构建块。它们可以链接在一起创建复杂的工作流。
 
-### Basic Module Structure
+### 基本模块结构
 
 ```ruby
 class MyModule < DSPy::Module
@@ -61,9 +61,9 @@ class MyModule < DSPy::Module
 end
 ```
 
-### Module Composition
+### 模块组合
 
-Modules can call other modules to create pipelines:
+模块可以调用其他模块来创建管道:
 
 ```ruby
 class ComplexWorkflow < DSPy::Module
@@ -81,27 +81,27 @@ class ComplexWorkflow < DSPy::Module
 end
 ```
 
-## Predictors
+## 预测器 (Predictors)
 
-Predictors are the core execution engines that take signatures and perform LLM inference. DSPy.rb provides several predictor types.
+预测器是接受签名并执行 LLM 推理的核心执行引擎。DSPy.rb 提供多种预测器类型。
 
 ### Predict
 
-Basic LLM inference with type-safe inputs and outputs.
+具有类型安全输入和输出的基本 LLM 推理。
 
 ```ruby
 predictor = DSPy::Predict.new(TaskSignature)
 result = predictor.forward(field_name: "value", another_field: 42)
-# Returns: { result_field: "...", confidence: 0.85 }
+# 返回: { result_field: "...", confidence: 0.85 }
 ```
 
 ### ChainOfThought
 
-Automatically adds a reasoning field to the output, improving accuracy for complex tasks.
+自动向输出添加推理字段，提高复杂任务的准确性。
 
 ```ruby
 class EmailClassificationSignature < DSPy::Signature
-  description "Classify customer support emails"
+  description "分类客户支持邮件"
 
   input do
     const :email_subject, String
@@ -109,8 +109,8 @@ class EmailClassificationSignature < DSPy::Signature
   end
 
   output do
-    const :category, String  # "Technical", "Billing", or "General"
-    const :priority, String  # "High", "Medium", or "Low"
+    const :category, String  # "Technical", "Billing", 或 "General"
+    const :priority, String  # "High", "Medium", 或 "Low"
   end
 end
 
@@ -119,7 +119,7 @@ result = predictor.forward(
   email_subject: "Can't log in to my account",
   email_body: "I've been trying to access my account for hours..."
 )
-# Returns: {
+# 返回: {
 #   reasoning: "This appears to be a technical issue...",
 #   category: "Technical",
 #   priority: "High"
@@ -128,12 +128,12 @@ result = predictor.forward(
 
 ### ReAct
 
-Tool-using agents with iterative reasoning. Enables autonomous problem-solving by allowing the LLM to use external tools.
+具有迭代推理的工具使用代理。通过允许 LLM 使用外部工具来实现自主问题解决。
 
 ```ruby
 class SearchTool < DSPy::Tool
   def call(query:)
-    # Perform search and return results
+    # 执行搜索并返回结果
     { results: search_database(query) }
   end
 end
@@ -147,21 +147,21 @@ predictor = DSPy::ReAct.new(
 
 ### CodeAct
 
-Dynamic code generation for solving problems programmatically. Requires the optional `dspy-code_act` gem.
+动态代码生成以编程方式解决问题。需要可选的 `dspy-code_act` gem。
 
 ```ruby
 predictor = DSPy::CodeAct.new(TaskSignature)
 result = predictor.forward(task: "Calculate the factorial of 5")
-# The LLM generates and executes Ruby code to solve the task
+# LLM 生成并执行 Ruby 代码来解决任务
 ```
 
-## Multimodal Support
+## 多模态支持
 
-DSPy.rb supports vision capabilities across compatible models using the unified `DSPy::Image` interface.
+DSPy.rb 使用统一的 `DSPy::Image` 接口支持兼容模型的视觉能力。
 
 ```ruby
 class VisionSignature < DSPy::Signature
-  description "Describe what's in an image"
+  description "描述图像中的内容"
 
   input do
     const :image, DSPy::Image
@@ -180,52 +180,52 @@ result = predictor.forward(
 )
 ```
 
-### Image Input Methods
+### 图像输入方法
 
 ```ruby
-# From file path
+# 从文件路径
 DSPy::Image.from_file("path/to/image.jpg")
 
-# From URL (OpenAI only)
+# 从 URL (仅 OpenAI)
 DSPy::Image.from_url("https://example.com/image.jpg")
 
-# From base64-encoded data
+# 从 base64 编码数据
 DSPy::Image.from_base64(base64_string, mime_type: "image/jpeg")
 ```
 
-## Best Practices
+## 最佳实践
 
-### 1. Clear Signature Descriptions
+### 1. 清晰的签名描述
 
-Always provide clear, specific descriptions for signatures and fields:
+始终为签名和字段提供清晰、具体的描述:
 
 ```ruby
-# Good
-description "Classify customer support emails into Technical, Billing, or General categories"
+# 好的
+description "将客户支持邮件分类为技术、账单或常规类别"
 
-# Avoid
-description "Classify emails"
+# 避免
+description "分类邮件"
 ```
 
-### 2. Type Safety
+### 2. 类型安全
 
-Use specific types rather than generic String when possible:
+尽可能使用具体类型而不是通用的 String:
 
 ```ruby
-# Good - Use enums for constrained outputs
+# 好的 - 对受约束的输出使用枚举
 output do
   const :category, T.enum(["Technical", "Billing", "General"])
 end
 
-# Less ideal - Generic string
+# 不太理想 - 通用字符串
 output do
   const :category, String, desc: "Must be Technical, Billing, or General"
 end
 ```
 
-### 3. Composable Architecture
+### 3. 可组合架构
 
-Build complex workflows from simple, reusable modules:
+从简单、可重用的模块构建复杂工作流:
 
 ```ruby
 class EmailPipeline < DSPy::Module
@@ -244,22 +244,22 @@ class EmailPipeline < DSPy::Module
 end
 ```
 
-### 4. Error Handling
+### 4. 错误处理
 
-Always handle potential type validation errors:
+始终处理潜在的类型验证错误:
 
 ```ruby
 begin
   result = predictor.forward(input_data)
 rescue DSPy::ValidationError => e
-  # Handle validation error
+  # 处理验证错误
   logger.error "Invalid output from LLM: #{e.message}"
 end
 ```
 
-## Limitations
+## 限制
 
-Current constraints to be aware of:
-- No streaming support (single-request processing only)
-- Limited multimodal support through Ollama for local deployments
-- Vision capabilities vary by provider (see providers.md for compatibility matrix)
+需要注意的当前约束:
+- 不支持流式传输 (仅单请求处理)
+- 通过 Ollama 进行本地部署的多模态支持有限
+- 视觉能力因提供商而异 (参见 providers.md 中的兼容性矩阵)

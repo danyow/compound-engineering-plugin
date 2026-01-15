@@ -1,93 +1,93 @@
 ---
-module: [Module name or "CORA" for system-wide]
+module: [模块名称或系统级使用 "CORA"]
 date: [YYYY-MM-DD]
 problem_type: [build_error|test_failure|runtime_error|performance_issue|database_issue|security_issue|ui_bug|integration_issue|logic_error]
 component: [rails_model|rails_controller|rails_view|service_object|background_job|database|frontend_stimulus|hotwire_turbo|email_processing|brief_system|assistant|authentication|payments]
 symptoms:
-  - [Observable symptom 1 - specific error message or behavior]
-  - [Observable symptom 2 - what user actually saw/experienced]
+  - [可观察症状 1 - 具体的错误消息或行为]
+  - [可观察症状 2 - 用户实际看到/经历的情况]
 root_cause: [missing_association|missing_include|missing_index|wrong_api|scope_issue|thread_violation|async_timing|memory_leak|config_error|logic_error|test_isolation|missing_validation|missing_permission]
-rails_version: [7.1.2 - optional]
+rails_version: [7.1.2 - 可选]
 resolution_type: [code_fix|migration|config_change|test_fix|dependency_update|environment_setup]
 severity: [critical|high|medium|low]
 tags: [keyword1, keyword2, keyword3]
 ---
 
-# Troubleshooting: [Clear Problem Title]
+# 故障排查：[清晰的问题标题]
 
-## Problem
-[1-2 sentence clear description of the issue and what the user experienced]
+## 问题描述
+[用 1-2 句话清楚描述问题以及用户遇到的情况]
 
-## Environment
-- Module: [Name or "CORA system"]
-- Rails Version: [e.g., 7.1.2]
-- Affected Component: [e.g., "Email Processing model", "Brief System service", "Authentication controller"]
-- Date: [YYYY-MM-DD when this was solved]
+## 环境信息
+- 模块：[名称或 "CORA system"]
+- Rails 版本：[例如 7.1.2]
+- 受影响的组件：[例如 "Email Processing model"、"Brief System service"、"Authentication controller"]
+- 日期：[问题解决的日期 YYYY-MM-DD]
 
-## Symptoms
-- [Observable symptom 1 - what the user saw/experienced]
-- [Observable symptom 2 - error messages, visual issues, unexpected behavior]
-- [Continue as needed - be specific]
+## 症状表现
+- [可观察症状 1 - 用户看到/经历的情况]
+- [可观察症状 2 - 错误消息、视觉问题、意外行为]
+- [根据需要继续补充 - 尽可能具体]
 
-## What Didn't Work
+## 无效的尝试
 
-**Attempted Solution 1:** [Description of what was tried]
-- **Why it failed:** [Technical reason this didn't solve the problem]
+**尝试方案 1：**[描述尝试的内容]
+- **失败原因：**[该方案未能解决问题的技术原因]
 
-**Attempted Solution 2:** [Description of second attempt]
-- **Why it failed:** [Technical reason]
+**尝试方案 2：**[描述第二次尝试]
+- **失败原因：**[技术原因]
 
-[Continue for all significant attempts that DIDN'T work]
+[继续列出所有未成功的重要尝试]
 
-[If nothing else was attempted first, write:]
-**Direct solution:** The problem was identified and fixed on the first attempt.
+[如果没有其他尝试，写：]
+**直接解决：**问题在第一次尝试时就被识别并修复了。
 
-## Solution
+## 解决方案
 
-[The actual fix that worked - provide specific details]
+[实际有效的修复方法 - 提供具体细节]
 
-**Code changes** (if applicable):
+**代码更改**（如适用）：
 ```ruby
-# Before (broken):
-[Show the problematic code]
+# 修复前（有问题）：
+[展示有问题的代码]
 
-# After (fixed):
-[Show the corrected code with explanation]
+# 修复后（已修复）：
+[展示修正后的代码并附上说明]
 ```
 
-**Database migration** (if applicable):
+**数据库迁移**（如适用）：
 ```ruby
-# Migration change:
-[Show what was changed in the migration]
+# 迁移变更：
+[展示迁移中的更改内容]
 ```
 
-**Commands run** (if applicable):
+**执行的命令**（如适用）：
 ```bash
-# Steps taken to fix:
-[Commands or actions]
+# 修复步骤：
+[命令或操作]
 ```
 
-## Why This Works
+## 原理说明
 
-[Technical explanation of:]
-1. What was the ROOT CAUSE of the problem?
-2. Why does the solution address this root cause?
-3. What was the underlying issue (API misuse, configuration error, Rails version issue, etc.)?
+[技术解释：]
+1. 问题的根本原因是什么？
+2. 为什么该解决方案能够解决根本原因？
+3. 底层问题是什么（API 误用、配置错误、Rails 版本问题等）？
 
-[Be detailed enough that future developers understand the "why", not just the "what"]
+[提供足够详细的说明，让未来的开发者理解"为什么"，而不仅仅是"是什么"]
 
-## Prevention
+## 预防措施
 
-[How to avoid this problem in future CORA development:]
-- [Specific coding practice, check, or pattern to follow]
-- [What to watch out for]
-- [How to catch this early]
+[如何在未来的 CORA 开发中避免此问题：]
+- [具体的编码实践、检查或需要遵循的模式]
+- [需要注意的事项]
+- [如何及早发现此问题]
 
-## Related Issues
+## 相关问题
 
-[If any similar problems exist in docs/solutions/, link to them:]
-- See also: [another-related-issue.md](../category/another-related-issue.md)
-- Similar to: [related-problem.md](../category/related-problem.md)
+[如果 docs/solutions/ 中存在类似问题，链接到它们：]
+- 另见：[another-related-issue.md](../category/another-related-issue.md)
+- 类似问题：[related-problem.md](../category/related-problem.md)
 
-[If no related issues, write:]
-No related issues documented yet.
+[如果没有相关问题，写：]
+暂无相关问题文档。

@@ -1,9 +1,9 @@
-# Architecture - DHH Rails Style
+# 架构 - DHH Rails 风格
 
 <routing>
-## Routing
+## 路由
 
-Everything maps to CRUD. Nested resources for related actions:
+一切都映射到 CRUD。相关操作使用嵌套资源：
 
 ```ruby
 Rails.application.routes.draw do
@@ -19,40 +19,40 @@ Rails.application.routes.draw do
 end
 ```
 
-**Verb-to-noun conversion:**
-| Action | Resource |
+**动词到名词的转换：**
+| 操作 | 资源 |
 |--------|----------|
-| close a card | `card.closure` |
-| watch a board | `board.watching` |
-| mark as golden | `card.goldness` |
-| archive a card | `card.archival` |
+| 关闭卡片 | `card.closure` |
+| 关注看板 | `board.watching` |
+| 标记为重要 | `card.goldness` |
+| 归档卡片 | `card.archival` |
 
-**Shallow nesting** - avoid deep URLs:
+**浅嵌套** - 避免深层 URL：
 ```ruby
 resources :boards do
-  resources :cards, shallow: true  # /boards/:id/cards, but /cards/:id
+  resources :cards, shallow: true  # /boards/:id/cards，但 /cards/:id
 end
 ```
 
-**Singular resources** for one-per-parent:
+**单数资源** - 每个父级一个：
 ```ruby
-resource :closure   # not resources
+resource :closure   # 不是 resources
 resource :goldness
 ```
 
-**Resolve for URL generation:**
+**Resolve 用于 URL 生成：**
 ```ruby
 # config/routes.rb
 resolve("Comment") { |comment| [comment.card, anchor: dom_id(comment)] }
 
-# Now url_for(@comment) works correctly
+# 现在 url_for(@comment) 可以正确工作
 ```
 </routing>
 
 <multi_tenancy>
-## Multi-Tenancy (Path-Based)
+## 多租户（基于路径）
 
-**Middleware extracts tenant** from URL prefix:
+**中间件从 URL 前缀提取租户：**
 
 ```ruby
 # lib/tenant_extractor.rb
@@ -72,16 +72,16 @@ class TenantExtractor
 end
 ```
 
-**Cookie scoping** per tenant:
+**Cookie 按租户限定作用域：**
 ```ruby
-# Cookies scoped to tenant path
+# Cookie 限定到租户路径
 cookies.signed[:session_id] = {
   value: session.id,
   path: "/#{Current.account.id}"
 }
 ```
 
-**Background job context** - serialize tenant:
+**后台任务上下文** - 序列化租户：
 ```ruby
 class ApplicationJob < ActiveJob::Base
   around_perform do |job, block|
@@ -90,7 +90,7 @@ class ApplicationJob < ActiveJob::Base
 end
 ```
 
-**Recurring jobs** must iterate all tenants:
+**定期任务**必须遍历所有租户：
 ```ruby
 class DailyDigestJob < ApplicationJob
   def perform
@@ -103,20 +103,20 @@ class DailyDigestJob < ApplicationJob
 end
 ```
 
-**Controller security** - always scope through tenant:
+**控制器安全** - 始终通过租户限定范围：
 ```ruby
-# Good - scoped through user's accessible records
+# 好的做法 - 通过用户可访问的记录限定范围
 @card = Current.user.accessible_cards.find(params[:id])
 
-# Avoid - direct lookup
+# 避免 - 直接查找
 @card = Card.find(params[:id])
 ```
 </multi_tenancy>
 
 <authentication>
-## Authentication
+## 身份认证
 
-Custom passwordless magic link auth (~150 lines total):
+自定义无密码魔法链接认证（总共约150行）：
 
 ```ruby
 # app/models/session.rb
@@ -141,13 +141,13 @@ class MagicLink < ApplicationRecord
 end
 ```
 
-**Why not Devise:**
-- ~150 lines vs massive dependency
-- No password storage liability
-- Simpler UX for users
-- Full control over flow
+**为什么不用 Devise：**
+- 约150行代码 vs 庞大的依赖
+- 无密码存储责任
+- 用户体验更简单
+- 完全控制流程
 
-**Bearer token** for APIs:
+**Bearer token** 用于 API：
 ```ruby
 module Authentication
   extend ActiveSupport::Concern
@@ -171,9 +171,9 @@ end
 </authentication>
 
 <background_jobs>
-## Background Jobs
+## 后台任务
 
-Jobs are shallow wrappers calling model methods:
+任务是调用模型方法的浅包装：
 
 ```ruby
 class NotifyWatchersJob < ApplicationJob
@@ -183,9 +183,9 @@ class NotifyWatchersJob < ApplicationJob
 end
 ```
 
-**Naming convention:**
-- `_later` suffix for async: `card.notify_watchers_later`
-- `_now` suffix for immediate: `card.notify_watchers_now`
+**命名约定：**
+- `_later` 后缀表示异步：`card.notify_watchers_later`
+- `_now` 后缀表示立即执行：`card.notify_watchers_now`
 
 ```ruby
 module Watchable
@@ -205,40 +205,40 @@ module Watchable
 end
 ```
 
-**Database-backed** with Solid Queue:
-- No Redis required
-- Same transactional guarantees as your data
-- Simpler infrastructure
+**基于数据库**的 Solid Queue：
+- 无需 Redis
+- 与数据相同的事务保证
+- 更简单的基础设施
 
-**Transaction safety:**
+**事务安全：**
 ```ruby
 # config/application.rb
 config.active_job.enqueue_after_transaction_commit = true
 ```
 
-**Error handling** by type:
+**按类型处理错误：**
 ```ruby
 class DeliveryJob < ApplicationJob
-  # Transient errors - retry with backoff
+  # 临时错误 - 使用退避重试
   retry_on Net::OpenTimeout, Net::ReadTimeout,
            Resolv::ResolvError,
            wait: :polynomially_longer
 
-  # Permanent errors - log and discard
+  # 永久错误 - 记录并丢弃
   discard_on Net::SMTPSyntaxError do |job, error|
     Sentry.capture_exception(error, level: :info)
   end
 end
 ```
 
-**Batch processing** with continuable:
+**批处理**使用 continuable：
 ```ruby
 class ProcessCardsJob < ApplicationJob
   include ActiveJob::Continuable
 
   def perform
     Card.in_batches.each_record do |card|
-      checkpoint!  # Resume from here if interrupted
+      checkpoint!  # 如果中断，从这里恢复
       process(card)
     end
   end
@@ -247,9 +247,9 @@ end
 </background_jobs>
 
 <database_patterns>
-## Database Patterns
+## 数据库模式
 
-**UUIDs as primary keys** (time-sortable UUIDv7):
+**UUID 作为主键**（可按时间排序的 UUIDv7）：
 ```ruby
 # migration
 create_table :cards, id: :uuid do |t|
@@ -257,42 +257,42 @@ create_table :cards, id: :uuid do |t|
 end
 ```
 
-Benefits: No ID enumeration, distributed-friendly, client-side generation.
+优势：无 ID 枚举、分布式友好、客户端生成。
 
-**State as records** (not booleans):
+**状态作为记录**（而非布尔值）：
 ```ruby
-# Instead of closed: boolean
+# 而不是 closed: boolean
 class Card::Closure < ApplicationRecord
   belongs_to :card
   belongs_to :creator, class_name: "User"
 end
 
-# Queries become joins
-Card.joins(:closure)          # closed
-Card.where.missing(:closure)  # open
+# 查询变成连接
+Card.joins(:closure)          # 已关闭
+Card.where.missing(:closure)  # 未关闭
 ```
 
-**Hard deletes** - no soft delete:
+**硬删除** - 无软删除：
 ```ruby
-# Just destroy
+# 直接销毁
 card.destroy!
 
-# Use events for history
+# 使用事件记录历史
 card.record_event(:deleted, by: Current.user)
 ```
 
-Simplifies queries, uses event logs for auditing.
+简化查询，使用事件日志进行审计。
 
-**Counter caches** for performance:
+**计数器缓存**提升性能：
 ```ruby
 class Comment < ApplicationRecord
   belongs_to :card, counter_cache: true
 end
 
-# card.comments_count available without query
+# card.comments_count 无需查询即可使用
 ```
 
-**Account scoping** on every table:
+**账户范围**应用于每个表：
 ```ruby
 class Card < ApplicationRecord
   belongs_to :account
@@ -304,7 +304,7 @@ end
 <current_attributes>
 ## Current Attributes
 
-Use `Current` for request-scoped state:
+使用 `Current` 存储请求范围的状态：
 
 ```ruby
 # app/models/current.rb
@@ -320,7 +320,7 @@ class Current < ActiveSupport::CurrentAttributes
 end
 ```
 
-Set in controller:
+在控制器中设置：
 ```ruby
 class ApplicationController < ActionController::Base
   before_action :set_current_request
@@ -334,7 +334,7 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-Use throughout app:
+在整个应用中使用：
 ```ruby
 class Card < ApplicationRecord
   belongs_to :creator, default: -> { Current.user }
@@ -343,21 +343,21 @@ end
 </current_attributes>
 
 <caching>
-## Caching
+## 缓存
 
-**HTTP caching** with ETags:
+**HTTP 缓存**使用 ETag：
 ```ruby
 fresh_when etag: [@card, Current.user.timezone]
 ```
 
-**Fragment caching:**
+**片段缓存：**
 ```erb
 <% cache card do %>
   <%= render card %>
 <% end %>
 ```
 
-**Russian doll caching:**
+**俄罗斯套娃缓存：**
 ```erb
 <% cache @board do %>
   <% @board.cards.each do |card| %>
@@ -368,30 +368,30 @@ fresh_when etag: [@card, Current.user.timezone]
 <% end %>
 ```
 
-**Cache invalidation** via `touch: true`:
+**缓存失效**通过 `touch: true`：
 ```ruby
 class Card < ApplicationRecord
   belongs_to :board, touch: true
 end
 ```
 
-**Solid Cache** - database-backed:
-- No Redis required
-- Consistent with application data
-- Simpler infrastructure
+**Solid Cache** - 基于数据库：
+- 无需 Redis
+- 与应用数据一致
+- 更简单的基础设施
 </caching>
 
 <configuration>
-## Configuration
+## 配置
 
-**ENV.fetch with defaults:**
+**ENV.fetch 带默认值：**
 ```ruby
 # config/application.rb
 config.active_job.queue_adapter = ENV.fetch("QUEUE_ADAPTER", "solid_queue").to_sym
 config.cache_store = ENV.fetch("CACHE_STORE", "solid_cache").to_sym
 ```
 
-**Multiple databases:**
+**多数据库：**
 ```yaml
 # config/database.yml
 production:
@@ -408,12 +408,12 @@ production:
     migrations_paths: db/cache_migrate
 ```
 
-**Switch between SQLite and MySQL via ENV:**
+**通过 ENV 在 SQLite 和 MySQL 之间切换：**
 ```ruby
 adapter = ENV.fetch("DATABASE_ADAPTER", "sqlite3")
 ```
 
-**CSP extensible via ENV:**
+**CSP 通过 ENV 扩展：**
 ```ruby
 config.content_security_policy do |policy|
   policy.default_src :self
@@ -423,9 +423,9 @@ end
 </configuration>
 
 <testing>
-## Testing
+## 测试
 
-**Minitest**, not RSpec:
+**Minitest**，而非 RSpec：
 ```ruby
 class CardTest < ActiveSupport::TestCase
   test "closing a card creates a closure" do
@@ -439,7 +439,7 @@ class CardTest < ActiveSupport::TestCase
 end
 ```
 
-**Fixtures** instead of factories:
+**Fixture** 而非工厂：
 ```yaml
 # test/fixtures/cards.yml
 one:
@@ -453,7 +453,7 @@ two:
   creator: bob
 ```
 
-**Integration tests** for controllers:
+**集成测试**用于控制器：
 ```ruby
 class CardsControllerTest < ActionDispatch::IntegrationTest
   test "closing a card" do
@@ -468,15 +468,15 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
 end
 ```
 
-**Tests ship with features** - same commit, not TDD-first but together.
+**测试与功能一起交付** - 同一提交，不是先 TDD 而是一起。
 
-**Regression tests for security fixes** - always.
+**安全修复的回归测试** - 始终必要。
 </testing>
 
 <events>
-## Event Tracking
+## 事件追踪
 
-Events are the single source of truth:
+事件是唯一的真相来源：
 
 ```ruby
 class Event < ApplicationRecord
@@ -506,13 +506,13 @@ module Eventable
 end
 ```
 
-**Webhooks driven by events** - events are the canonical source.
+**Webhook 由事件驱动** - 事件是规范来源。
 </events>
 
 <email_patterns>
-## Email Patterns
+## 邮件模式
 
-**Multi-tenant URL helpers:**
+**多租户 URL 辅助方法：**
 ```ruby
 class ApplicationMailer < ActionMailer::Base
   def default_url_options
@@ -525,7 +525,7 @@ class ApplicationMailer < ActionMailer::Base
 end
 ```
 
-**Timezone-aware delivery:**
+**时区感知的邮件发送：**
 ```ruby
 class NotificationMailer < ApplicationMailer
   def daily_digest(user)
@@ -538,13 +538,13 @@ class NotificationMailer < ApplicationMailer
 end
 ```
 
-**Batch delivery:**
+**批量发送：**
 ```ruby
 emails = users.map { |user| NotificationMailer.digest(user) }
 ActiveJob.perform_all_later(emails.map(&:deliver_later))
 ```
 
-**One-click unsubscribe (RFC 8058):**
+**一键取消订阅（RFC 8058）：**
 ```ruby
 class ApplicationMailer < ActionMailer::Base
   after_action :set_unsubscribe_headers
@@ -559,27 +559,27 @@ end
 </email_patterns>
 
 <security_patterns>
-## Security Patterns
+## 安全模式
 
-**XSS prevention** - escape in helpers:
+**XSS 防护** - 在辅助方法中转义：
 ```ruby
 def formatted_content(text)
-  # Escape first, then mark safe
+  # 先转义，然后标记为安全
   simple_format(h(text)).html_safe
 end
 ```
 
-**SSRF protection:**
+**SSRF 防护：**
 ```ruby
-# Resolve DNS once, pin the IP
+# 解析 DNS 一次，固定 IP
 def fetch_safely(url)
   uri = URI.parse(url)
   ip = Resolv.getaddress(uri.host)
 
-  # Block private networks
+  # 阻止私有网络
   raise "Private IP" if private_ip?(ip)
 
-  # Use pinned IP for request
+  # 使用固定 IP 进行请求
   Net::HTTP.start(uri.host, uri.port, ipaddr: ip) { |http| ... }
 end
 
@@ -589,7 +589,7 @@ def private_ip?(ip)
 end
 ```
 
-**Content Security Policy:**
+**内容安全策略：**
 ```ruby
 # config/initializers/content_security_policy.rb
 Rails.application.configure do
@@ -604,7 +604,7 @@ Rails.application.configure do
 end
 ```
 
-**ActionText sanitization:**
+**ActionText 清理：**
 ```ruby
 # config/initializers/action_text.rb
 Rails.application.config.after_initialize do
@@ -616,9 +616,9 @@ end
 </security_patterns>
 
 <active_storage>
-## Active Storage Patterns
+## Active Storage 模式
 
-**Variant preprocessing:**
+**变体预处理：**
 ```ruby
 class User < ApplicationRecord
   has_one_attached :avatar do |attachable|
@@ -628,13 +628,13 @@ class User < ApplicationRecord
 end
 ```
 
-**Direct upload expiry** - extend for slow connections:
+**直接上传过期时间** - 为慢速连接延长：
 ```ruby
 # config/initializers/active_storage.rb
 Rails.application.config.active_storage.service_urls_expire_in = 48.hours
 ```
 
-**Avatar optimization** - redirect to blob:
+**头像优化** - 重定向到 blob：
 ```ruby
 def show
   expires_in 1.year, public: true
@@ -642,7 +642,7 @@ def show
 end
 ```
 
-**Mirror service** for migrations:
+**镜像服务**用于迁移：
 ```yaml
 # config/storage.yml
 production:

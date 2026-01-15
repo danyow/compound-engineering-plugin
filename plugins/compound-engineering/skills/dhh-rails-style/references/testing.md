@@ -1,25 +1,25 @@
-# Testing - DHH Rails Style
+# 测试 - DHH Rails 风格
 
-## Core Philosophy
+## 核心哲学
 
-"Minitest with fixtures - simple, fast, deterministic." The approach prioritizes pragmatism over convention.
+"Minitest 配合 fixture - 简单、快速、确定性。"这种方法优先考虑实用性而非约定。
 
-## Why Minitest Over RSpec
+## 为什么选择 Minitest 而非 RSpec
 
-- **Simpler**: Less DSL magic, plain Ruby assertions
-- **Ships with Rails**: No additional dependencies
-- **Faster boot times**: Less overhead
-- **Plain Ruby**: No specialized syntax to learn
+- **更简单**：更少的 DSL 魔法，纯 Ruby 断言
+- **随 Rails 一起发布**：无需额外依赖
+- **更快的启动时间**：更少的开销
+- **纯 Ruby**：无需学习专门的语法
 
-## Fixtures as Test Data
+## Fixture 作为测试数据
 
-Rather than factories, fixtures provide preloaded data:
-- Loaded once, reused across tests
-- No runtime object creation overhead
-- Explicit relationship visibility
-- Deterministic IDs for easier debugging
+相比工厂，fixture 提供预加载的数据：
+- 加载一次，在测试中重用
+- 无运行时对象创建开销
+- 明确的关系可见性
+- 确定性的 ID，便于调试
 
-### Fixture Structure
+### Fixture 结构
 ```yaml
 # test/fixtures/users.yml
 david:
@@ -45,18 +45,18 @@ greeting:
   creator: david
 ```
 
-### Using Fixtures in Tests
+### 在测试中使用 Fixture
 ```ruby
 test "sending a message" do
   user = users(:david)
   room = rooms(:watercooler)
 
-  # Test with fixture data
+  # 使用 fixture 数据进行测试
 end
 ```
 
-### Dynamic Fixture Values
-ERB enables time-sensitive data:
+### 动态 Fixture 值
+ERB 支持时间敏感的数据：
 ```yaml
 recent_card:
   title: Recent Card
@@ -67,10 +67,10 @@ old_card:
   created_at: <%= 1.month.ago %>
 ```
 
-## Test Organization
+## 测试组织
 
-### Unit Tests
-Verify business logic using setup blocks and standard assertions:
+### 单元测试
+使用 setup 块和标准断言验证业务逻辑：
 
 ```ruby
 class CardTest < ActiveSupport::TestCase
@@ -100,8 +100,8 @@ class CardTest < ActiveSupport::TestCase
 end
 ```
 
-### Integration Tests
-Test full request/response cycles:
+### 集成测试
+测试完整的请求/响应周期：
 
 ```ruby
 class CardsControllerTest < ActionDispatch::IntegrationTest
@@ -131,36 +131,36 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
 end
 ```
 
-### System Tests
-Browser-based tests using Capybara:
+### 系统测试
+使用 Capybara 的基于浏览器的测试：
 
 ```ruby
 class MessagesTest < ApplicationSystemTestCase
-  test "sending a message" do
+  test "发送消息" do
     sign_in users(:david)
     visit room_path(rooms(:watercooler))
 
-    fill_in "Message", with: "Hello, world!"
-    click_button "Send"
+    fill_in "消息", with: "你好，世界！"
+    click_button "发送"
 
-    assert_text "Hello, world!"
+    assert_text "你好，世界！"
   end
 
-  test "editing own message" do
+  test "编辑自己的消息" do
     sign_in users(:david)
     visit room_path(rooms(:watercooler))
 
     within "#message_#{messages(:greeting).id}" do
-      click_on "Edit"
+      click_on "编辑"
     end
 
-    fill_in "Message", with: "Updated message"
-    click_button "Save"
+    fill_in "消息", with: "更新后的消息"
+    click_button "保存"
 
-    assert_text "Updated message"
+    assert_text "更新后的消息"
   end
 
-  test "drag and drop card to new column" do
+  test "拖放卡片到新列" do
     sign_in users(:david)
     visit board_path(boards(:main))
 
@@ -189,8 +189,8 @@ test "card expires after 30 days" do
 end
 ```
 
-### External API Testing with VCR
-Record and replay HTTP interactions:
+### 使用 VCR 进行外部 API 测试
+记录和重放 HTTP 交互：
 
 ```ruby
 test "fetches user data from API" do
@@ -202,8 +202,8 @@ test "fetches user data from API" do
 end
 ```
 
-### Background Job Testing
-Assert job enqueueing and email delivery:
+### 后台任务测试
+断言任务入队和邮件发送：
 
 ```ruby
 test "closing card enqueues notification job" do
@@ -221,7 +221,7 @@ test "welcome email is sent on signup" do
 end
 ```
 
-### Testing Turbo Streams
+### 测试 Turbo Stream
 ```ruby
 test "message creation broadcasts to room" do
   room = rooms(:watercooler)
@@ -232,30 +232,30 @@ test "message creation broadcasts to room" do
 end
 ```
 
-## Testing Principles
+## 测试原则
 
-### 1. Test Observable Behavior
-Focus on what the code does, not how it does it:
+### 1. 测试可观察行为
+关注代码做什么，而不是如何做：
 
 ```ruby
-# ❌ Testing implementation
-test "calls notify method on each watcher" do
+# ❌ 测试实现
+test "对每个观察者调用 notify 方法" do
   card.expects(:notify).times(3)
   card.close
 end
 
-# ✅ Testing behavior
-test "watchers receive notifications when card closes" do
+# ✅ 测试行为
+test "关闭卡片时观察者收到通知" do
   assert_difference -> { Notification.count }, 3 do
     card.close
   end
 end
 ```
 
-### 2. Don't Mock Everything
+### 2. 不要过度 Mock
 
 ```ruby
-# ❌ Over-mocked test
+# ❌ 过度 mock 的测试
 test "sending message" do
   room = mock("room")
   user = mock("user")
@@ -267,42 +267,42 @@ test "sending message" do
   MessagesController.new.create
 end
 
-# ✅ Test the real thing
-test "sending message" do
+# ✅ 测试真实情况
+test "发送消息" do
   sign_in users(:david)
   post room_messages_url(rooms(:watercooler)),
-    params: { message: { body: "Hello" } }
+    params: { message: { body: "你好" } }
 
   assert_response :success
-  assert Message.exists?(body: "Hello")
+  assert Message.exists?(body: "你好")
 end
 ```
 
-### 3. Tests Ship with Features
-Same commit, not TDD-first but together. Neither before (strict TDD) nor after (deferred testing).
+### 3. 测试与功能一起交付
+同一提交，不是先 TDD 也不是后补测试。
 
-### 4. Security Fixes Always Include Regression Tests
-Every security fix must include a test that would have caught the vulnerability.
+### 4. 安全修复始终包含回归测试
+每个安全修复都必须包含一个能捕获该漏洞的测试。
 
-### 5. Integration Tests Validate Complete Workflows
-Don't just test individual pieces - test that they work together.
+### 5. 集成测试验证完整工作流
+不要只测试单个部分 - 测试它们如何协同工作。
 
-## File Organization
+## 文件组织
 
 ```
 test/
-├── controllers/         # Integration tests for controllers
-├── fixtures/           # YAML fixtures for all models
-├── helpers/            # Helper method tests
-├── integration/        # API integration tests
-├── jobs/               # Background job tests
-├── mailers/            # Mailer tests
-├── models/             # Unit tests for models
-├── system/             # Browser-based system tests
-└── test_helper.rb      # Test configuration
+├── controllers/         # 控制器的集成测试
+├── fixtures/           # 所有模型的 YAML fixture
+├── helpers/            # 辅助方法测试
+├── integration/        # API 集成测试
+├── jobs/               # 后台任务测试
+├── mailers/            # 邮件测试
+├── models/             # 模型的单元测试
+├── system/             # 基于浏览器的系统测试
+└── test_helper.rb      # 测试配置
 ```
 
-## Test Helper Setup
+## Test Helper 设置
 
 ```ruby
 # test/test_helper.rb
@@ -325,7 +325,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 end
 ```
 
-## Sign In Helper
+## 登录辅助方法
 
 ```ruby
 # test/support/sign_in_helper.rb

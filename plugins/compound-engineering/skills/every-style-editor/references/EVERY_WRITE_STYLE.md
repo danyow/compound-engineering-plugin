@@ -1,529 +1,529 @@
-# Every Style Guide
+# Every 风格指南
 
-## Quick-and-dirty Every style guide
+## Every 快速风格指南
 
-Always use the following style guide, go though the items one by one and suggest edits.
+始终使用以下风格指南，逐项检查并提出编辑建议。
 
-- **Title case** for headlines, **sentence case** for everything else.
-- Refer to **companies as singular** ("it" instead of "they" or "them") and teams or people within companies as plural ("they").
-- Don't overuse "**actually**," "**very**," or "**just**" (they can almost always be deleted).
-- When linking to another source, **hyperlink** between 2-4 words.
-- You can generally **cut adverbs**.
-- Watch out for **passive voice**—use active whenever possible.
-- Spell out **numbers** one through nine. Spell out a number if it is the first word of a sentence, unless it's a year. Use numerals for numbers 10 and greater.
-- You may use _italics_ for emphasis, but never **bold** or underline.
-- **Image credits** in captions are italicized, like this: _Source: X/Name_ (if Twitter), _Source: Website name._
-- Don't capitalize **job titles**.
-- **Colons** determine capitalization rules. When a colon introduces an independent clause, the first word of that clause should be capitalized. When a colon introduces a dependent clause, the first word of the clause should not be capitalized.
-- Use an **Oxford comma** for serialization (x, y, and z).
-- Use a comma to separate **independent clauses** but not dependent clauses.
-- Do not use a space after an **ellipsis**.
-- Use an **em dash** (—) to set off a parenthetical statement. Do not put spaces around an em dash. Generally, don't use em dashes more than twice in a paragraph.
-- Use **hyphens** in compound adjectives, with the exception of adverbs (i.e., words ending in "ly"). Example: fine-tuned vs. finely tuned.
-- **Italicize titles** of books, newspapers, periodicals, movies, TV shows, and video games. Do not italicize "the" before _New York Times_ or "magazine" after _New York_.
-- Identify people by their full names on first mention, last name thereafter. In newsletter and social media communications, use first names rather than last names.
-- **Percentages** always use numerals, and spell out percent: 7 percent.
-- **Numbers over three digits** take a comma: 1,000.
-- Punctuation goes outside of a **parentheses** unless the text in parentheses is a full sentence, or there's a question or exclamation within the parenthetical.
-- Place periods and commas inside **quotation marks**.
-- Quotes within quotations should be placed in **single quotation marks** (' ').
-- If the text preceding a quote **introduces the quote**, include a comma before the quote. If the text before the quote leads directly into the quote, don't include a comma. Capitalize the first letter in the quote when it's a full sentence or when following "said," "says," or other introductory language.
-- Rather than "above" or "below," use terms like **"earlier," "later," "previously,"** etc.
-- Rather than "over" or "under," use **"more" or "less"/"fewer"** when referring to numbers or quantities.
-- Try to avoid slashes (like and/or), and use **hyphens** instead when needed.
-- **Avoid starting sentences with "This,"** and be specific with what you're referring to.
-- **Avoid starting sentences with "We have" or "We get,"** and instead, say directly what is happening.
-- **Avoid cliches or jargon.**
-- **Write out "times"** when referring to more powerful software: "two times faster." You can write "10x" in reference to the common trope.
-- Use a **dollar sign** instead of writing out "dollars": $1 billion.
-- **Identify most people** by company and/or job title: Stripe's Patrick McKenzie. (Exception: Mark Zuckerberg)
+- 标题使用**标题大小写**（Title case），其他内容使用**句子大小写**（sentence case）。
+- 将**公司视为单数**（使用"it"而不是"they"或"them"），将公司内的团队或人员视为复数（使用"they"）。
+- 不要过度使用"**actually**"、"**very**"或"**just**"（几乎总是可以删除）。
+- 链接到其他来源时，在 2-4 个词之间添加**超链接**。
+- 通常可以**删除副词**。
+- 注意**被动语态**——尽可能使用主动语态。
+- **数字** 1 到 9 用文字拼写。如果数字是句子的第一个词也要拼写，除非是年份。10 及以上的数字使用阿拉伯数字。
+- 可以使用 _斜体_ 来强调，但永远不要使用**粗体**或下划线。
+- 图片说明中的**图片来源**使用斜体，格式如：_Source: X/Name_（如果是 Twitter），_Source: Website name._
+- 不要大写**职位名称**。
+- **冒号**决定大写规则。当冒号引入独立从句时，该从句的第一个词应大写。当冒号引入从属从句时，该从句的第一个词不应大写。
+- 使用**牛津逗号**进行序列化（x, y, and z）。
+- 使用逗号分隔**独立从句**，但不分隔从属从句。
+- 在**省略号**后不要使用空格。
+- 使用 **em dash**（—）来分隔插入语。em dash 周围不要加空格。通常，一段中不要使用超过两次 em dash。
+- 在复合形容词中使用**连字符**，但副词（即以"ly"结尾的词）除外。例如：fine-tuned vs. finely tuned。
+- 书籍、报纸、期刊、电影、电视节目和视频游戏的**标题使用斜体**。_New York Times_ 之前的"the"或 _New York_ 之后的"magazine"不使用斜体。
+- 首次提及时使用全名，之后使用姓氏。在新闻通讯和社交媒体通讯中，使用名字而不是姓氏。
+- **百分比**始终使用阿拉伯数字，并拼写出 percent：7 percent。
+- **三位数以上的数字**使用逗号：1,000。
+- 标点符号放在**括号**外面，除非括号中的文本是完整的句子，或括号内有问号或感叹号。
+- 将句点和逗号放在**引号**内。
+- 引号内的引用应放在**单引号**中（' '）。
+- 如果引用之前的文本**引入引用**，则在引用前加逗号。如果引用之前的文本直接引入引用，则不要加逗号。当引用是完整句子或跟在"said"、"says"或其他引导语之后时，引用的第一个字母应大写。
+- 不要使用"above"或"below"，而应使用**"earlier"、"later"、"previously"**等术语。
+- 在提及数字或数量时，不要使用"over"或"under"，而应使用**"more"或"less"/"fewer"**。
+- 尽量避免使用斜杠（如 and/or），需要时使用**连字符**代替。
+- **避免以"This"开头的句子**，要明确指出所指的内容。
+- **避免以"We have"或"We get"开头的句子**，应直接说明发生了什么。
+- **避免陈词滥调或行话。**
+- 在提及更强大的软件时**写出"times"**："two times faster"。可以写"10x"来指代常见比喻。
+- 使用**美元符号**而不是写出"dollars"：$1 billion。
+- 通过公司和/或职位来**标识大多数人**：Stripe's Patrick McKenzie。（例外：Mark Zuckerberg）
 
-## Our grammar and mechanics
+## 语法和格式规范
 
-Every generally follows Merriam-Webster and the AP Stylebook.
+Every 通常遵循 Merriam-Webster 和 AP Stylebook。
 
-### Abbreviations and acronyms
+### 缩写和首字母缩略词
 
-#### First Usage Rule
+#### 首次使用规则
 
-If there's a chance a reader won't recognize an abbreviation or acronym, then spell it out the first time. When you write out an entity's full name the first time, include an abbreviation in brackets if you plan to use it again: United States Air Force (USAAF). If the abbreviation is more common than the long form, then just use the short form (CMS, DVD, FTP).
+如果读者可能不认识某个缩写或首字母缩略词，则首次使用时应拼写完整。首次写出实体的全名时，如果计划再次使用，请在括号中包含缩写：United States Air Force (USAAF)。如果缩写形式比完整形式更常见，则直接使用简短形式（CMS、DVD、FTP）。
 
-#### Common Abbreviations
+#### 常见缩写
 
-Abbreviate words, phrases, and titles that are almost always abbreviated in English: a.m., p.m., et al., i.e. and e.g. (both of which are followed by a comma), vs., etc.
+缩写在英语中几乎总是被缩写的词、短语和标题：a.m.、p.m.、et al.、i.e. 和 e.g.（两者后面都跟逗号）、vs.、etc.
 
-#### Established Acronyms
+#### 已确立的首字母缩略词
 
-Abbreviate firmly established shortened forms, acronyms, and similar abbreviations: AI, TV, UK, UN
+缩写已确立的简短形式、首字母缩略词和类似的缩写：AI、TV、UK、UN
 
-#### Punctuation in Abbreviations
+#### 缩写中的标点
 
-Set most abbreviations without points, though there are some exceptions: U.S.A., U.S., L.A., N.Y.C., D.C.
+大多数缩写不使用点，但有一些例外：U.S.A.、U.S.、L.A.、N.Y.C.、D.C.
 
-#### Plural Abbreviations
+#### 缩写的复数形式
 
-When forming plurals of abbreviations, add an s to those without points, an apostrophe and s to those with points: LLMs, TVs, Ph.D.'s, M.B.A.'s
+构成缩写的复数形式时，对于没有点的缩写加 s，对于有点的缩写加撇号和 s：LLMs、TVs、Ph.D.'s、M.B.A.'s
 
-#### Specific Abbreviations
+#### 特定缩写
 
-Specific abbreviations: LGBTQIA+
+特定缩写：LGBTQIA+
 
-#### Geography
+#### 地理
 
-Spell out cities and states in full. Include the state when referring to non-major cities or for specificity. Offset the state with commas: They were born in Paris, Texas, and moved to San Francisco in 1995.
+完整拼写城市和州名。在提及非主要城市或为了明确性时包含州名。用逗号分隔州名：They were born in Paris, Texas, and moved to San Francisco in 1995.
 
-#### Time Format
+#### 时间格式
 
-Spell out the day and the month, and separate them with a comma: Sunday, January 21
+拼写出日期和月份，并用逗号分隔：Sunday, January 21
 
-### Ampersands
+### 连接符号（&）
 
-#### Usage Rule
+#### 使用规则
 
-Avoid using them unless they're part of a proper noun or company name. Write out "and" instead. In the event of a joint byline, the same rule applies: She interned for the law firm of Wilson Sonsini Goodrich & Rosati. By Dan Shipper and Evan Armstrong
+避免使用，除非它们是专有名词或公司名称的一部分。应该写出"and"。在联合署名的情况下，同样适用此规则：She interned for the law firm of Wilson Sonsini Goodrich & Rosati. By Dan Shipper and Evan Armstrong
 
-### Bold, italics, underline
+### 粗体、斜体、下划线
 
-#### Emphasis Guidelines
+#### 强调指南
 
-Italics may be used in rare cases for emphasis, especially if doing so will increase clarity. Bold and underline should not be used for emphasis: Hosting a meeting with all 20 team members *seemed* like a good idea, but the conversation quickly got out of hand.
+在极少数情况下可以使用斜体来强调，特别是如果这样做会提高清晰度。不应使用粗体和下划线来强调：Hosting a meeting with all 20 team members *seemed* like a good idea, but the conversation quickly got out of hand.
 
-### Buttons
+### 按钮
 
-#### Button Text
+#### 按钮文本
 
-Use the sentence case in CTA buttons: Register for the course
+CTA 按钮使用句子大小写：Register for the course
 
-### Bylines
+### 署名
 
-#### Guest Author Biography
+#### 客座作者简介
 
-Pieces written by guest authors include a biography for the author at the bottom of the piece. If a piece was previously published, cite and link to the original source. Use italics: *Leo Polovets is a general partner at [Humba Ventures](https://humbaventures.com/), an early-stage deep tech fund in the Susa Ventures fund family. Before cofounding Susa and Humba, Leo spent 10 years as a software engineer. Previously, he was the second engineering hire at LinkedIn, among other roles. This piece was originally published [in his newsletter](https://www.codingvc.com/p/betting-on-deep-tech).*
+由客座作者撰写的文章在底部包含作者简介。如果文章之前已发表，请引用并链接到原始来源。使用斜体：*Leo Polovets is a general partner at [Humba Ventures](https://humbaventures.com/), an early-stage deep tech fund in the Susa Ventures fund family. Before cofounding Susa and Humba, Leo spent 10 years as a software engineer. Previously, he was the second engineering hire at LinkedIn, among other roles. This piece was originally published [in his newsletter](https://www.codingvc.com/p/betting-on-deep-tech).*
 
-#### Guest Author Introduction
+#### 客座作者介绍
 
-Pieces written by guest authors also include an introduction from an Every staff member that identifies the author, their background, the subject of the piece, and why we recommend it. The introduction is signed by the staff member who wrote it. Use italics: *When I was coming up in tech, the conventional wisdom was that working at or investing in software companies was a great way to make money, while doing so with companies that took on scientific risk or produced hardware components were a wonderful way to lose every cent to your name. This has always struck me as, you know, wrong, which is why this piece by venture capitalist Leo Polovets resonated with me. He takes a data-driven approach to understanding how deep tech companies can produce superior financial returns. If you're on the fence with your career—perhaps facing temptation to do something relatively safe in B2B SaaS—take this piece as a rational encouragement to dream bigger. —[Evan](https://twitter.com/itsurboyevan)*
+由客座作者撰写的文章还包括 Every 员工撰写的介绍，介绍作者、其背景、文章主题以及我们推荐它的原因。介绍由撰写它的员工签名。使用斜体：*When I was coming up in tech, the conventional wisdom was that working at or investing in software companies was a great way to make money, while doing so with companies that took on scientific risk or produced hardware components were a wonderful way to lose every cent to your name. This has always struck me as, you know, wrong, which is why this piece by venture capitalist Leo Polovets resonated with me. He takes a data-driven approach to understanding how deep tech companies can produce superior financial returns. If you're on the fence with your career—perhaps facing temptation to do something relatively safe in B2B SaaS—take this piece as a rational encouragement to dream bigger. —[Evan](https://twitter.com/itsurboyevan)*
 
-### Capitalization
+### 大小写
 
-#### General Rule
+#### 一般规则
 
-Use common sense. When in doubt, don't capitalize. Do not capitalize these words: website, internet, online, email, web3, custom instructions
+使用常识。如有疑问，不要大写。不要大写这些词：website、internet、online、email、web3、custom instructions
 
-#### Job Titles
+#### 职位名称
 
-Do not capitalize job titles, whether on their own or preceding names, unless they're very unusual: He accepted the position of director of business operations. Director of business operations Lucas Crespo manages Every's ad sales. Lucas Crespo, director of business operations, manages Every's ad sales. Chief Happiness Officer
+不要大写职位名称，无论是单独使用还是在姓名之前，除非它们非常不寻常：He accepted the position of director of business operations. Director of business operations Lucas Crespo manages Every's ad sales. Lucas Crespo, director of business operations, manages Every's ad sales. Chief Happiness Officer
 
-#### Colons
+#### 冒号
 
-Colons (:) determine capitalization rules. When a colon introduces: An independent clause, the first word of that clause should be capitalized. A dependent clause, the first word of the clause should not be capitalized.
+冒号（:）决定大小写规则。当冒号引入：独立从句时，该从句的第一个词应大写。从属从句时，该从句的第一个词不应大写。
 
-#### Civic Titles
+#### 公职名称
 
-Capitalize civic titles only when they precede a name and function as a proper title: Secretary of State Antony Blinken. Lowercase such titles when they appear as a common noun: a senator (common noun), Senator Schumer (title preceding name), Chuck Schumer, senator from New York (common noun), New York senator Schumer (common noun used in apposition), the president, President Biden, former president Obama, the mayor, Mayor Adams, New York mayor Eric Adams
+仅当公职名称在姓名之前并用作正式头衔时才大写：Secretary of State Antony Blinken。当这些头衔作为普通名词出现时使用小写：a senator（普通名词）、Senator Schumer（姓名前的头衔）、Chuck Schumer, senator from New York（普通名词）、New York senator Schumer（用作同位语的普通名词）、the president、President Biden、former president Obama、the mayor、Mayor Adams、New York mayor Eric Adams
 
-#### Academia
+#### 学术
 
-Capitalize course titles mentioned in text, and don't enclose them in quotation marks: She took Computer Science and Maximize Your Mind With ChatGPT. Lowercase the names of academic disciplines: One job requirement is a master's in computer science.
+大写文本中提到的课程标题，不要用引号括起来：She took Computer Science and Maximize Your Mind With ChatGPT. 学科名称使用小写：One job requirement is a master's in computer science.
 
-#### Geography Names
+#### 地名
 
-Lowercase the initial the in place names and in the names of bands, bars, restaurants, hotels, products, and the like: the Netherlands, the Pixies, the Pentagon
+地名和乐队、酒吧、餐厅、酒店、产品等名称中的首字母 the 使用小写：the Netherlands、the Pixies、the Pentagon
 
-### Captions
+### 图片说明
 
-#### Caption Format
+#### 说明格式
 
-Capitalize the first word of a caption, and end with a period, whether or not the body of the caption is a full sentence.
+说明的第一个词大写，并以句点结尾，无论说明主体是否为完整句子。
 
-#### Identifying Names
+#### 标识名称
 
-When a caption consists of nothing but an identifying name, however, omit the end punctuation. If the identifying caption includes any language beyond just a name, though, use the final punctuation: Dan Shipper. Dan Shipper, Every CEO.
+当说明仅由标识名称组成时，省略结尾标点。但如果标识说明包含除名称之外的任何语言，则使用最终标点：Dan Shipper. Dan Shipper, Every CEO.
 
-#### Image Credits
+#### 图片来源
 
-When a caption includes an image credit, the credit should be formatted as DALL-E/Every illustration.
+当说明包含图片来源时，来源的格式应为 DALL-E/Every illustration。
 
-### Commas
+### 逗号
 
-#### Serial Comma
+#### 序列逗号
 
-Use the serial or Oxford comma before the conjunction in a series: x, y, and z
+在系列的连词之前使用序列逗号或牛津逗号：x, y, and z
 
-#### Independent vs Dependent Clauses
+#### 独立从句与从属从句
 
-Use a comma to separate independent clauses but not dependent clauses: He helped trouble-shoot an issue, and she wrote code. She signed up for Every and became a subscriber.
+使用逗号分隔独立从句，但不分隔从属从句：He helped trouble-shoot an issue, and she wrote code. She signed up for Every and became a subscriber.
 
-#### Restrictive Elements
+#### 限制性成分
 
-Set off nonrestrictive elements with commas; don't set off restrictive elements. The most frequent example is the that/which difference: The piece, which garnered 15,000 readers, is one of Every's most successful. The piece that garnered 15,000 readers is one of Every's most successful.
+用逗号分隔非限制性成分；不要分隔限制性成分。最常见的例子是 that/which 的区别：The piece, which garnered 15,000 readers, is one of Every's most successful. The piece that garnered 15,000 readers is one of Every's most successful.
 
-#### Too Usage
+#### Too 的使用
 
-Include a comma before "too" when used to mean "in addition." Don't use a comma when "too" refers to the subject of the sentence: I ate a bowl of ice cream. I had a cookie, too. You're a cat person? I am too.
+当"too"表示"另外"的意思时，在其前面加逗号。当"too"指句子主语时不使用逗号：I ate a bowl of ice cream. I had a cookie, too. You're a cat person? I am too.
 
-#### Names
+#### 姓名
 
-Don't include commas before "Jr." or "Sr.": Hank Aaron Jr.
+不要在"Jr."或"Sr."之前加逗号：Hank Aaron Jr.
 
-#### Repetition
+#### 重复
 
-Don't include commas before words repeated for emphasis: It's what makes you you.
+不要在为强调而重复的词之前加逗号：It's what makes you you.
 
-#### General Comma Usage
+#### 一般逗号使用
 
-Otherwise, follow common sense with commas. Read the sentence out loud. If you need to take a breath, use a comma.
+在其他情况下，逗号使用常识。大声朗读句子。如果你需要喘口气，就使用逗号。
 
-### Dates
+### 日期
 
-#### Date Formats
+#### 日期格式
 
-Write dates as follows: April 13, 2018, The 19th of April was a nice day, March 2020, Thanksgiving 2023, summer 1999, the years 1980–85
+日期按以下方式书写：April 13, 2018、The 19th of April was a nice day、March 2020、Thanksgiving 2023、summer 1999、the years 1980–85
 
-#### Decades
+#### 年代
 
-When referring to a decade, write out the full year numerically at first mention and abbreviate on the second: She was born in the 1980s. The '80s was a wild decade.
+提及某个年代时，首次提及完整年份数字，第二次使用缩写：She was born in the 1980s. The '80s was a wild decade.
 
-### Ellipses
+### 省略号
 
-#### Usage
+#### 使用
 
-Use ellipses (…) to show that you're omitting words or trailing off before the end of a thought. Don't use an ellipsis for emphasis or drama. Don't use ellipses in titles or headers, nor when you should be using a colon (a list is to follow). There is no space before an ellipsis, and one space after… like this.
+使用省略号（…）表示省略单词或在思想结束前停顿。不要使用省略号来强调或制造戏剧性。不要在标题或标头中使用省略号，也不要在应该使用冒号的地方使用（接下来是列表）。省略号前没有空格，后面有一个空格… like this.
 
-### Em dashes
+### Em dash
 
-#### Usage and Spacing
+#### 使用和间距
 
-Use an em dash ( — ) for a true break or to set off a parenthetical statement. Do not put spaces around them. Try not to use em dashes more than twice in a paragraph. Don't use hyphens in place of an em dash: It's an anxious time to be an independent bookseller—but a recent upswing in sales is cause for optimism.
+使用 em dash（—）表示真正的中断或分隔插入语。周围不要加空格。尽量不要在一段中使用超过两次 em dash。不要用连字符代替 em dash：It's an anxious time to be an independent bookseller—but a recent upswing in sales is cause for optimism.
 
 ### En dash
 
-#### Usage
+#### 使用
 
-Use them in compound adjectives, compound noun constructions, or when indicating spans or ranges: 5°C–10°C, from 10 a.m.–2 p.m., January 2019–November 2020, Texas–Mexico border, then–VP of engineering
+在复合形容词、复合名词结构或表示跨度或范围时使用：5°C–10°C、from 10 a.m.–2 p.m.、January 2019–November 2020、Texas–Mexico border、then–VP of engineering
 
-### Filenames
+### 文件名
 
-#### File Types
+#### 文件类型
 
-When referring to a file type, use the appropriate acronym in all caps: GIF, PDF
+提及文件类型时，使用全大写的适当首字母缩略词：GIF、PDF
 
-#### Specific Files
+#### 特定文件
 
-When referring to a specific file, specify the filename followed by a period and the file type, all lowercase: important-graph.jpg
+提及特定文件时，指定文件名后跟句点和文件类型，全部小写：important-graph.jpg
 
-### Headlines
+### 标题
 
-#### Title Case
+#### 标题大小写
 
-Use title case for headlines. Use sentence case for subtitles and subheadings. Capitalize important words — everything but articles, conjunctions (for, and, nor, but, or, yet, so), and prepositions under four letters — in headings. Capitalize the first word only in subtitles and subheadings.
+标题使用标题大小写。副标题和小标题使用句子大小写。标题中的重要单词大写——除了冠词、连词（for、and、nor、but、or、yet、so）和四个字母以下的介词——都要大写。副标题和小标题仅首字母大写。
 
-#### Prepositions
+#### 介词
 
-Capitalize short prepositions that form an integral part of a verb: Growing Up in China
+构成动词不可分割部分的短介词要大写：Growing Up in China
 
-#### Internal Punctuation
+#### 内部标点
 
-Capitalize all words following an internal punctuation mark: My Company Died — Learn From My Mistakes
+内部标点符号后的所有单词都要大写：My Company Died — Learn From My Mistakes
 
-#### First and Last Words
+#### 首尾单词
 
-The first and last words of a headline are capitalized, no matter their parts of speech. Don't use punctuation in a title unless it's a question or exclamatory sentence.
+标题的首尾单词都要大写，无论其词性如何。标题中不要使用标点，除非是疑问句或感叹句。
 
-#### Handwritten Letters
+#### 手写字母
 
-Headlines include one handwritten letter: The Secret [F]ather of Modern Computing
+标题包含一个手写字母：The Secret [F]ather of Modern Computing
 
-#### Subheadings
+#### 小标题
 
-In general, start with h2 heading size and go smaller as needed for subheads. Some things to keep in mind: make sure that the hed doesn't run on too long (or onto a second line), or look out of place on the page. If it does, go smaller. For interview questions, use h5 heading size.
+一般来说，从 h2 标题大小开始，根据需要为小标题选择更小的大小。需要注意的一些事项：确保标题不会太长（或换行到第二行），或在页面上看起来不协调。如果是这样，就选择更小的大小。对于访谈问题，使用 h5 标题大小。
 
-### Hyphens
+### 连字符
 
-#### Compound Adjectives
+#### 复合形容词
 
-Use hyphens in compound adjectives, with the exception of adverbs (words ending in "-ly" or modifying a verb). A compound adjective that contains another compound adjective calls for an en dash: first-time founder, state-of-the-art design, open-source project, Pulitzer Prize–winning novelist, newly released program
+在复合形容词中使用连字符，但副词（以"-ly"结尾的词或修饰动词的词）除外。包含另一个复合形容词的复合形容词需要使用 en dash：first-time founder、state-of-the-art design、open-source project、Pulitzer Prize–winning novelist、newly released program
 
-#### Post-Noun Usage
+#### 名词后使用
 
-Don't use hyphens when the compound adjective is placed after the noun it modifies or when the adjective is made up of nouns: The team is world class. video game console, The feature is first of its kind. toilet paper roll
+当复合形容词放在它所修饰的名词之后或当形容词由名词组成时，不要使用连字符：The team is world class. video game console、The feature is first of its kind. toilet paper roll
 
-#### Suspended Hyphens
+#### 悬挂连字符
 
-Use a suspended hyphen for multiple hyphenated compounds or words: NewYork- and San Francisco-based company, university-owned and -operated bookstore
+对于多个连字符复合词或单词使用悬挂连字符：NewYork- and San Francisco-based company、university-owned and -operated bookstore
 
-#### Percentages and Amounts
+#### 百分比和金额
 
-Hyphenation is usually unnecessary when expressing percentage, degree, or dollar amounts in figures: a 50 percent decline, $50 billion investment. But: a 50- to 60-percent decline, a $1-million-a-month burn rate
+以数字表示百分比、程度或美元金额时通常不需要连字符：a 50 percent decline、$50 billion investment。但是：a 50- to 60-percent decline、a $1-million-a-month burn rate
 
-#### Fractions
+#### 分数
 
-Use hyphens in fractions, no matter their part of speech: three-fourths of the team, a share of one-third, one-third the size, a three-fourths share, one-third slower
+分数使用连字符，无论其词性如何：three-fourths of the team、a share of one-third、one-third the size、a three-fourths share、one-third slower
 
-### Italics
+### 斜体
 
-#### Titles
+#### 标题
 
-Italicize titles of books, newspapers, periodicals, movies, TV shows, and video games, with the following rules: If a magazine title must be followed by "magazine" to distinguish it from other publications, do not italicize "magazine" unless it is formally included in the title: *New York* magazine vs. *The New York Times Magazine*. For magazine titles, italicize the article if it is a formal part of the title: *The New Yorker*. For newspapers, do not italicize the article: the *New York Times*
+书籍、报纸、期刊、电影、电视节目和视频游戏的标题使用斜体，遵循以下规则：如果杂志标题后必须跟"magazine"以区别于其他出版物，则不要将"magazine"斜体化，除非它正式包含在标题中：*New York* magazine vs. *The New York Times Magazine*。对于杂志标题，如果冠词是标题的正式部分，则将其斜体化：*The New Yorker*。对于报纸，不要将冠词斜体化：the *New York Times*
 
-#### Short Works
+#### 短作品
 
-Titles of short works (poems, songs, TV episodes, book chapters) take quotation marks.
+短作品（诗歌、歌曲、电视剧集、书籍章节）的标题使用引号。
 
-#### Punctuation After Italics
+#### 斜体后的标点
 
-Do not italicize punctuation that follows an italicized term: Stewart Brand published the first issue of his seminal magazine, the *Whole Earth Catalogue*, in 1968. Which earned more at the box office, *Barbie* or *Oppenheimer*?
+不要将斜体术语后面的标点斜体化：Stewart Brand published the first issue of his seminal magazine, the *Whole Earth Catalogue*, in 1968. Which earned more at the box office, *Barbie* or *Oppenheimer*?
 
-#### Websites
+#### 网站
 
-Italicize a website's title if it is also the name of a print newspaper or magazine. Otherwise, leave it unitalicized.
+如果网站标题也是印刷报纸或杂志的名称，则将其斜体化。否则，不使用斜体。
 
-### Linking
+### 链接
 
-#### Link Guidelines
+#### 链接指南
 
-Provide a link when referring to a website. Don't capitalize links or words within links, and don't say things like "Click here!" or "Click for more information." Write the sentence as you normally would, and link relevant keywords.
+提及网站时提供链接。不要大写链接或链接中的单词，不要说"点击这里！"或"点击以获取更多信息"之类的话。正常书写句子，并链接相关关键词。
 
-#### Link Text Length
+#### 链接文本长度
 
-Include only links you need and make the links as useful as possible. Keep the link text short, ideally two to four words. But not too short: Just one word can be difficult to click or tap on, especially if you're reading on a phone.
+仅包含所需的链接，并使链接尽可能有用。保持链接文本简短，理想情况下为 2 到 4 个单词。但也不要太短：只有一个单词可能难以点击或轻触，特别是在手机上阅读时。
 
-#### URL Format
+#### URL 格式
 
-URLs included in print should appear as is (i.e., not shortened by a URL shortener). The URL should be all lowercase, unless adding camel caps would increase readability. Don't include "www." or anything preceding it: You can read more on every.to. She's the founder of GetOutTheVoteNewYork.com.
+印刷品中的 URL 应按原样显示（即，不要通过 URL 缩短器缩短）。URL 应全部小写，除非添加驼峰大小写会提高可读性。不要包含"www."或其之前的任何内容：You can read more on every.to. She's the founder of GetOutTheVoteNewYork.com.
 
-### Lists
+### 列表
 
-#### Usage
+#### 使用
 
-Use lists to present groups of information. Only number lists when order is important (describing steps of a process).
+使用列表来呈现信息组。仅在顺序重要时（描述流程步骤）对列表编号。
 
-#### Numbering Format
+#### 编号格式
 
-Preferred format of lists is: 1., not 1)
+列表的首选格式是：1.，而不是 1)
 
-#### Punctuation in Lists
+#### 列表中的标点
 
-If one of the list items is a complete sentence, use punctuation on all of the items. Otherwise, don't use punctuation in lists: 1. Enter your email. 2. Input your credit card information.
+如果列表项中有一项是完整句子，则在所有项上使用标点。否则，列表中不要使用标点：1. Enter your email. 2. Input your credit card information.
 
-#### Numbered Lists
+#### 编号列表
 
-If the items are numbered, a period follows the numeral and each item begins with a capital letter.
+如果项目编号，数字后跟句点，每项以大写字母开头。
 
-#### Bulleted Lists
+#### 项目符号列表
 
-Don't use numbers when the list's order doesn't matter: Here are some chatbots that we created for the course: Hidden Premise Finder, Reflective Coach, Motivational Interviewing
+当列表顺序不重要时，不要使用数字：Here are some chatbots that we created for the course: Hidden Premise Finder, Reflective Coach, Motivational Interviewing
 
-### Naming
+### 命名
 
-#### Name References
+#### 姓名引用
 
-Identify people by their full names on first mention, last name thereafter. In newsletter and social media communications, use first names rather than last names.
+首次提及时使用全名，之后使用姓氏。在新闻通讯和社交媒体通讯中，使用名字而不是姓氏。
 
-#### Special Titles
+#### 特殊头衔
 
-By convention, the sitting U.S. president, active senior religious leaders, and living royalty should be referred to as Title (Last)Name: Pope Francis, John Paul II, King Charles, Elizabeth II, President Biden (but Donald Trump), Rishi Sunak, Dr. Jill Biden (not First Lady Biden), Mike Johnson (not Speaker Johnson or Congressman Johnson), Madonna, Andre the Giant
+按照惯例，现任美国总统、在任高级宗教领袖和在世皇室成员应称为 Title (Last)Name：Pope Francis、John Paul II、King Charles、Elizabeth II、President Biden（但 Donald Trump）、Rishi Sunak、Dr. Jill Biden（不是 First Lady Biden）、Mike Johnson（不是 Speaker Johnson 或 Congressman Johnson）、Madonna、Andre the Giant
 
-### Numbers
+### 数字
 
-#### Spelling Out Numbers
+#### 拼写数字
 
-Spell out one through nine and first through ninth, and spell out a number if it's the first word of a sentence. Use numerals below 10 only if decimal accuracy is required (5.6 miles) or for currency ($8), or when writing whole numbers greater than a million (4 million). Figures are also used when an abbreviation or symbol is used as the unit of measure: 75 mph, 15 km, 6'3", -40º Celsius
+拼写 1 到 9 和 first 到 ninth，如果数字是句子的第一个词也要拼写。仅当需要小数精度（5.6 miles）或货币（$8）或写大于一百万的整数（4 million）时，10 以下使用阿拉伯数字。当使用缩写或符号作为计量单位时，也使用数字：75 mph、15 km、6'3"、-40º Celsius
 
-#### Percentages
+#### 百分比
 
-Percentages always use numerals and spell out "percent": 7 percent
+百分比始终使用阿拉伯数字并拼写出"percent"：7 percent
 
-#### Ages
+#### 年龄
 
-Ages always use numerals: He had a 5-year-old daughter.
+年龄始终使用阿拉伯数字：He had a 5-year-old daughter.
 
 #### Bitcoin
 
-Write "bitcoin" for the generic currency but "bitcoins" for quantities of them: Since the company began accepting bitcoin, it has raked in over 1,000 bitcoins.
+通用货币写"bitcoin"，但数量写"bitcoins"：Since the company began accepting bitcoin, it has raked in over 1,000 bitcoins.
 
-#### Other Figure Usage
+#### 其他数字使用
 
-There are a few more exceptions. Use figures for the following: the 1990s or the '90s, 70 degrees, chapter 16
+还有一些例外。以下情况使用数字：the 1990s or the '90s、70 degrees、chapter 16
 
-#### Time of Day
+#### 一天中的时间
 
-Expressions of the time of day — even, half, and quarter hours, for example — may be spelled out. If you want to indicate the hour more specifically or to emphasize exactness, figures are used: ten o'clock, Eight-thirty, quarter past nine, 11:37 p.m., the 10:15 standup, Dan scheduled the meeting for 9:00 a.m. sharp.
+一天中的时间——整点、半点和刻钟，例如——可以拼写出来。如果你想更具体地表示小时或强调准确性，则使用数字：ten o'clock、Eight-thirty、quarter past nine、11:37 p.m.、the 10:15 standup、Dan scheduled the meeting for 9:00 a.m. sharp.
 
-#### Starting Sentences
+#### 句子开头
 
-Spell out any number that starts a sentence, unless it's a year. (Alternatively, revise the sentence so it doesn't start with a number.) Hyphens should be used in spelled-out numbers to join parts of a two-digit number: Twenty-five engineers joined the company in January. Ten thousand five hundred people signed up in a single day. 2020 was a tough year.
+拼写出以数字开头的任何句子，除非是年份。（或者，修改句子使其不以数字开头。）拼写出的数字应使用连字符连接两位数的各部分：Twenty-five engineers joined the company in January. Ten thousand five hundred people signed up in a single day. 2020 was a tough year.
 
-#### Commas in Numbers
+#### 数字中的逗号
 
-Except in years, use a comma to separate 000's: 1,440,434. Numbers over three digits take commas: 1,000
+除年份外，使用逗号分隔千位：1,440,434。三位数以上的数字使用逗号：1,000
 
-#### Charts and Tables
+#### 图表和表格
 
-Use figures for all numbers in charts and tables.
+图表和表格中的所有数字使用数字。
 
-#### Ratios
+#### 比率
 
-Ratios are spelled out without hyphens: one in five, or one in 20.
+比率拼写出来，不使用连字符：one in five、or one in 20.
 
-### Parentheses
+### 括号
 
-#### Usage
+#### 使用
 
-Use them only when the clause or phrase is non-essential, or when used for clarification or as an editorial aside: The investigation revealed groundbreaking information (though it has yet to be widely publicized). Please include the following information (if available)
+仅当从句或短语非必要时，或用于澄清或作为编辑旁注时使用：The investigation revealed groundbreaking information (though it has yet to be widely publicized). Please include the following information (if available)
 
-#### Punctuation Placement
+#### 标点位置
 
-Punctuation goes outside of the parentheses unless the text in parentheses is a full sentence, or there's a question or exclamation within the parenthetical: How many hours per week do your developers spend on maintenance (i.e., debugging, refactoring, modifying)? She wondered if the world was out to get her. (Don't we all?)
+标点符号放在括号外面，除非括号中的文本是完整句子，或括号内有问号或感叹号：How many hours per week do your developers spend on maintenance (i.e., debugging, refactoring, modifying)? She wondered if the world was out to get her. (Don't we all?)
 
-### Plurals
+### 复数
 
-#### Names Ending in S
+#### 以 S 结尾的姓名
 
-For singular names and words that end in s, add 's, not just an apostrophe: Leo Polovets's fund, Paris's bridges
+对于以 s 结尾的单数姓名和单词，加 's，而不仅仅是撇号：Leo Polovets's fund、Paris's bridges
 
-#### Entities Ending in S
+#### 以 S 结尾的实体
 
-For entities that end in s, add an 's as well: the New York Times's readers
+对于以 s 结尾的实体，也加 's：the New York Times's readers
 
-#### Plural Names
+#### 复数姓名
 
-For plural names and words, add just an apostrophe: the Williamses' farm, the Joneses' printer
+对于复数姓名和单词，只加撇号：the Williamses' farm、the Joneses' printer
 
-#### Plural Words Not Ending in S
+#### 不以 S 结尾的复数单词
 
-For plural words that don't end in s, treat them like singular nouns: men's, women's, children's
+对于不以 s 结尾的复数单词，将它们视为单数名词：men's、women's、children's
 
-#### Figures and Characters
+#### 数字和字符
 
-Use an apostrophe and s to form the plural of figures, lowercase characters, and symbols: two o's, two k's, and two e's in bookkeeper (but the three Rs; the five Ws), five @'s, a fleet of 747B's, stolen .22's
+使用撇号和 s 来形成数字、小写字符和符号的复数：two o's, two k's, and two e's in bookkeeper（但 the three Rs; the five Ws）、five @'s、a fleet of 747B's、stolen .22's
 
-#### Exceptions
+#### 例外
 
-There are some exceptions: the 2000s, a woman in her 20s, temperature in the 70s, a fleet of 747s
+有一些例外：the 2000s、a woman in her 20s、temperature in the 70s、a fleet of 747s
 
-### Pronouns
+### 代词
 
-#### Singular They
+#### 单数 They
 
-Use the singular "they" (not "he or she") when making a gender-neutral statement. Use "it" for companies and brands: If a team member is feeling burnt out, consider how you can help support them. The company released its new product on Monday.
+在做出性别中立陈述时使用单数"they"（而不是"he or she"）。对于公司和品牌使用"it"：If a team member is feeling burnt out, consider how you can help support them. The company released its new product on Monday.
 
-#### Pronoun References
+#### 代词引用
 
-Use the terms "he/him pronouns" and "she/her pronouns" when referring to a person's pronouns, not "male pronouns" and "female pronouns." Avoid the term "preferred pronouns."
+在指代某人的代词时，使用术语"he/him pronouns"和"she/her pronouns"，而不是"male pronouns"和"female pronouns"。避免使用术语"preferred pronouns"。
 
-### Proper nouns and names
+### 专有名词和名称
 
-#### Every Capitalization
+#### Every 的大小写
 
-"Every" is always capitalized. The only times Every appears in lowercase are in social media handles and URLs.
+"Every"始终大写。Every 出现小写的唯一情况是在社交媒体账号和 URL 中。
 
-#### Geography
+#### 地理
 
-Capitalize place names, but use lowercase for general directions or regions: the East (world and U.S.), the West (world and U.S.), the South, the North, Western United States, Southeast Asia, Northern Hemisphere, eastern Long Island, the Bay Area, Westerner, Easterner, Northerner, Southerner, the Midwest, Midwestern, Southwestern (referring to style of art), southwestern (all other uses), Western Europe, Eastern Europe, southern California, northern California, west Texas, east Tennessee, south Florida, the South of France, Continental Europe, Washington State
+地名大写，但一般方向或地区使用小写：the East（世界和美国）、the West（世界和美国）、the South、the North、Western United States、Southeast Asia、Northern Hemisphere、eastern Long Island、the Bay Area、Westerner、Easterner、Northerner、Southerner、the Midwest、Midwestern、Southwestern（指艺术风格）、southwestern（所有其他用法）、Western Europe、Eastern Europe、southern California、northern California、west Texas、east Tennessee、south Florida、the South of France、Continental Europe、Washington State
 
-#### Neighborhoods
+#### 街区
 
-Neighborhood nicknames are also capitalized: Midtown, Soho, Tribeca, the Tenderloin
+街区昵称也大写：Midtown、Soho、Tribeca、the Tenderloin
 
 #### Earth
 
-Capitalize Earth when writing about it as a planet ("Venus, Mars, and Earth"), but lowercase in phrases like "salt of the earth."
+将 Earth 写作行星时大写（"Venus, Mars, and Earth"），但在"salt of the earth"等短语中小写。
 
-#### Initials in Names
+#### 姓名中的首字母
 
-For proper names written with initials, use periods and no spaces: E.L. James, J.K. Simmons, J.Crew. But when the initials comprise the whole name, no periods are used (FDR, DFW).
+对于用首字母书写的专有名称，使用句点且不加空格：E.L. James、J.K. Simmons、J.Crew。但当首字母构成整个名称时，不使用句点（FDR、DFW）。
 
-### Punctuation
+### 标点
 
-#### Exclamation Points
+#### 感叹号
 
-Use exclamation points sparingly. Seriously! (Unless you're quoting someone.) Use emojis with discretion.
+谨慎使用感叹号。真的！（除非你在引用某人的话。）谨慎使用表情符号。
 
-### Quotation marks
+### 引号
 
-#### Basic Usage
+#### 基本使用
 
-Spoken text should be placed in double quotation marks (" "). Quotes within quotations should be placed in single quotation marks (' '): "He told me, 'That's a fantastic idea.'" "You may find it hard to prioritize the 'I got problems' meeting at first."
+口语文本应放在双引号（" "）中。引用内的引用应放在单引号（' '）中："He told me, 'That's a fantastic idea.'" "You may find it hard to prioritize the 'I got problems' meeting at first."
 
-#### Tense Usage
+#### 时态使用
 
-Use the present tense when the quote was spoken directly to the author. Use the past tense when the quote is a recollection or happened at a specific time in the past. Treat thoughts the same way: "That was a long day," she recalls. She remembers the frustrations of that day well. It began when her manager said, "I'm afraid we've got trouble." I thought, "What's next?"
+当引用是直接对作者说的，使用现在时。当引用是回忆或发生在过去的特定时间时，使用过去时。思想也同样处理："That was a long day," she recalls. She remembers the frustrations of that day well. It began when her manager said, "I'm afraid we've got trouble." I thought, "What's next?"
 
-#### Punctuation Placement
+#### 标点位置
 
-Place periods and commas inside quotation marks. If a question mark or exclamation mark is part of the quote, place it within the quotation marks. If the question or exclamation refers to the quote itself, place the punctuation outside of the quote: She asked, "Who else is taking the week of Christmas off?" Who said, "To thine own self be true"?
+将句点和逗号放在引号内。如果问号或感叹号是引用的一部分，则将其放在引号内。如果问题或感叹涉及引用本身，则将标点放在引号外：She asked, "Who else is taking the week of Christmas off?" Who said, "To thine own self be true"?
 
-#### Introducing Quotes
+#### 引入引用
 
-If the text preceding a quote introduces the quote, include a comma before the quote. If the text before the quote leads directly into the quote, don't include a comma. Capitalize the first letter in the quote when it's a full sentence or when following "said," "says," or other introductory language. Generally avoid using a colon to introduce a quote unless it's more than two sentences long: When doing strategic planning for the year, "it's important to carve out time to solicit everyone' feedback," she says. Every's mission is "to feed the minds and hearts of the people who build the internet," says Shipper. He recalls, "We had no choice but to start from scratch."
+如果引用之前的文本引入引用，则在引用前加逗号。如果引用之前的文本直接引入引用，则不要加逗号。当引用是完整句子或跟在"said"、"says"或其他引导语之后时，引用的第一个字母大写。通常避免使用冒号引入引用，除非它超过两句话：When doing strategic planning for the year, "it's important to carve out time to solicit everyone' feedback," she says. Every's mission is "to feed the minds and hearts of the people who build the internet," says Shipper. He recalls, "We had no choice but to start from scratch."
 
-#### Multi-Paragraph Quotes
+#### 多段引用
 
-When a quote continues across multiple paragraphs, the quote is left open at the end of each paragraph. A new open-quote mark is to start the next paragraph, only closing the quote when the full quote is finished: Guillermo has noticed developers at Vercel becoming more full stack. "I think it's an important asset to have. They can bring context, data, copywriting into their creations that otherwise would have required chatting with other people and crowdsourcing ideas. "The trend has been away from the implementation detail, which is the code, and toward the end goal, which is to deliver a great product or a great experience."
+当引用跨越多个段落时，每段末尾不关闭引用。新段落以新的开引号开始，只有在整个引用结束时才关闭引用：Guillermo has noticed developers at Vercel becoming more full stack. "I think it's an important asset to have. They can bring context, data, copywriting into their creations that otherwise would have required chatting with other people and crowdsourcing ideas. "The trend has been away from the implementation detail, which is the code, and toward the end goal, which is to deliver a great product or a great experience."
 
-#### Edited Text
+#### 编辑文本
 
-Use square brackets to indicate edited text in a quote. Keep text in square brackets to a minimum—use only when the edit would increase clarity and comprehension or add necessary context. If you need to place an entire sentence in square brackets, it's probably better to paraphrase: "It was difficult [to prioritize addressing tech debt] because we had so many features to work on."
+使用方括号表示引用中的编辑文本。将方括号中的文本保持在最低限度——仅在编辑会提高清晰度和理解力或添加必要上下文时使用。如果你需要将整个句子放在方括号中，最好改述："It was difficult [to prioritize addressing tech debt] because we had so many features to work on."
 
-#### Block Quotes
+#### 引用块
 
-Use block quotes when a quotation is more than four lines long. Introduce it with a colon, and include quotation marks.
+当引用超过四行时使用引用块。用冒号引入它，并包含引号。
 
-### References to other parts of the text
+### 引用文本其他部分
 
-#### Directional References
+#### 方向性引用
 
-Rather than "above" or "below," use terms like "earlier," "later," "previously," etc.: As I mentioned earlier,
+不要使用"above"或"below"，而应使用"earlier"、"later"、"previously"等术语：As I mentioned earlier,
 
-### Semicolons
+### 分号
 
-#### Usage Guidelines
+#### 使用指南
 
-Go easy on semicolons. When appropriate, use an em dash ( — ) instead, or simply start a new sentence. Never use a semicolon in site or email copy.
+谨慎使用分号。在适当的时候，改用 em dash（—），或者直接开始新句子。在网站或电子邮件文案中永远不要使用分号。
 
-### Slashes
+### 斜杠
 
-#### Usage
+#### 使用
 
-Try to avoid them, and minimize constructions like "and/or." Use hyphens instead when needed. However, slashes should always be used when referring to an individual's pronouns: We needed all of our designers and illustrators to sign the contract. She's an accomplished singer-songwriter. they/them pronouns, We had a team of 20 engineers and developers.
+尽量避免使用它们，并尽量减少"and/or"等结构。需要时使用连字符代替。但是，在指代个人代词时应始终使用斜杠：We needed all of our designers and illustrators to sign the contract. She's an accomplished singer-songwriter. they/them pronouns、We had a team of 20 engineers and developers.
 
-### Spelling
+### 拼写
 
-#### American Spelling
+#### 美式拼写
 
-Use American spellings (i.e., color, not colour).
+使用美式拼写（即 color，而不是 colour）。
 
-#### Unconventional Spellings
+#### 非常规拼写
 
-Do not follow unconventional or artistic spellings of names, products, and corporations: Questlove (not ?uestlove), Kesha (not Ke$ha), India Arie (not India.Arie), E.E. Cummings (not e e cummings), Kiss (not KISS), Adidas (not adidas), Yahoo (not Yahoo!)
+不要遵循名称、产品和公司的非常规或艺术拼写：Questlove（不是 ?uestlove）、Kesha（不是 Ke$ha）、India Arie（不是 India.Arie）、E.E. Cummings（不是 e e cummings）、Kiss（不是 KISS）、Adidas（不是 adidas）、Yahoo（不是 Yahoo!）
 
-#### Common Exceptions
+#### 常见例外
 
-The common exceptions are: ChatGPT, WhatsApp, iPod, iPhone, iMac, etc., TikTok, eBay, PayPal, BuzzFeed
+常见例外是：ChatGPT、WhatsApp、iPod、iPhone、iMac 等、TikTok、eBay、PayPal、BuzzFeed
 
-### Time zones
+### 时区
 
-#### Abbreviations
+#### 缩写
 
-Abbreviate time zones within the continental United States, and spell out the rest: Eastern Time (ET), Central Time (CT), Mountain Time (MT), Pacific Time (PT)
+缩写美国大陆内的时区，拼写其余部分：Eastern Time (ET)、Central Time (CT)、Mountain Time (MT)、Pacific Time (PT)
 
-### Usage
+### 用法
 
-#### Collective Nouns
+#### 集合名词
 
-Collective nouns can be construed as plural if you want to emphasize the individuals forming the group, but most often they should be treated as singular. Subsequent pronouns should agree with the verb tense chosen. The Every trivia squad is considered one of the league's strongest teams. But: The lucky trio are collecting their Amazon gift cards. The Grammys are coming to Los Angeles.
+如果你想强调组成群体的个体，集合名词可以理解为复数，但大多数情况下应将它们视为单数。随后的代词应与所选的动词时态一致。The Every trivia squad is considered one of the league's strongest teams. 但是：The lucky trio are collecting their Amazon gift cards. The Grammys are coming to Los Angeles.
 
-#### Fewer vs Less
+#### Fewer 与 Less
 
-Use "fewer" instead of "less" with nouns for countable objects and concepts. Don't use "over" or "under" when referring to numbers or quantities: Fewer than seven days remain until the quarter ends. In less than an hour, more than an inch of rain fell.
+对于可数对象和概念的名词使用"fewer"而不是"less"。在提及数字或数量时不要使用"over"或"under"：Fewer than seven days remain until the quarter ends. In less than an hour, more than an inch of rain fell.
 
-#### Overused Words
+#### 过度使用的词
 
-Don't overuse "actually," "very," or "just" (they can almost always be deleted).
+不要过度使用"actually"、"very"或"just"（它们几乎总是可以删除）。
 
-### Word and phrase bank
+### 词汇和短语库
 
-#### Standard Terms
+#### 标准术语
 
-add on (verb), add-on (noun, adjective), back end (noun), back-end (adjective), beta (lowercase unless it's part of a proper noun), cofounder, Covid-19, coworker, double-click, drop-down, e-commerce, front end (noun), front-end (adjective), geolocation, hashtag, homepage, large language model, login (noun, adjective), log in (verb), millennial, nonprofit, Online, open source, open-source software, opt in (verb), opt-in (noun, adjective), pop-up (noun, adjective), pop up (verb), signup (noun, adjective), sign up (verb), startup, sync, username, URL (always uppercase), web3, well-being, WiFi, workspace
+add on（动词）、add-on（名词、形容词）、back end（名词）、back-end（形容词）、beta（小写，除非它是专有名词的一部分）、cofounder、Covid-19、coworker、double-click、drop-down、e-commerce、front end（名词）、front-end（形容词）、geolocation、hashtag、homepage、large language model、login（名词、形容词）、log in（动词）、millennial、nonprofit、Online、open source、open-source software、opt in（动词）、opt-in（名词、形容词）、pop-up（名词、形容词）、pop up（动词）、signup（名词、形容词）、sign up（动词）、startup、sync、username、URL（始终大写）、web3、well-being、WiFi、workspace
