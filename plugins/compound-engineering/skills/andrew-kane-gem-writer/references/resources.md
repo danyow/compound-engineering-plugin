@@ -1,119 +1,119 @@
-# Andrew Kane Resources
+# Andrew Kane 资源
 
-## Primary Documentation
+## 主要文档
 
-- **Gem Patterns Article**: https://ankane.org/gem-patterns
-  - Kane's own documentation of patterns used across his gems
-  - Covers configuration, Rails integration, error handling
+- **Gem 模式文章**：https://ankane.org/gem-patterns
+  - Kane 自己编写的关于其 gem 中使用模式的文档
+  - 涵盖配置、Rails 集成、错误处理
 
-## Top Ruby Gems by Stars
+## 按 Star 数排序的顶级 Ruby Gem
 
-### Search & Data
+### 搜索与数据
 
-| Gem | Stars | Description | Source |
+| Gem | Stars | 描述 | 源码 |
 |-----|-------|-------------|--------|
-| **Searchkick** | 6.6k+ | Intelligent search for Rails | https://github.com/ankane/searchkick |
-| **Chartkick** | 6.4k+ | Beautiful charts in Ruby | https://github.com/ankane/chartkick |
-| **Groupdate** | 3.8k+ | Group by day, week, month | https://github.com/ankane/groupdate |
-| **Blazer** | 4.6k+ | SQL dashboard for Rails | https://github.com/ankane/blazer |
+| **Searchkick** | 6.6k+ | Rails 智能搜索 | https://github.com/ankane/searchkick |
+| **Chartkick** | 6.4k+ | Ruby 精美图表 | https://github.com/ankane/chartkick |
+| **Groupdate** | 3.8k+ | 按天、周、月分组 | https://github.com/ankane/groupdate |
+| **Blazer** | 4.6k+ | Rails SQL 仪表板 | https://github.com/ankane/blazer |
 
-### Database & Migrations
+### 数据库与迁移
 
-| Gem | Stars | Description | Source |
+| Gem | Stars | 描述 | 源码 |
 |-----|-------|-------------|--------|
-| **PgHero** | 8.2k+ | PostgreSQL insights | https://github.com/ankane/pghero |
-| **Strong Migrations** | 4.1k+ | Safe migration checks | https://github.com/ankane/strong_migrations |
-| **Dexter** | 1.8k+ | Auto index advisor | https://github.com/ankane/dexter |
-| **PgSync** | 1.5k+ | Sync Postgres data | https://github.com/ankane/pgsync |
+| **PgHero** | 8.2k+ | PostgreSQL 洞察 | https://github.com/ankane/pghero |
+| **Strong Migrations** | 4.1k+ | 安全迁移检查 | https://github.com/ankane/strong_migrations |
+| **Dexter** | 1.8k+ | 自动索引顾问 | https://github.com/ankane/dexter |
+| **PgSync** | 1.5k+ | 同步 Postgres 数据 | https://github.com/ankane/pgsync |
 
-### Security & Encryption
+### 安全与加密
 
-| Gem | Stars | Description | Source |
+| Gem | Stars | 描述 | 源码 |
 |-----|-------|-------------|--------|
-| **Lockbox** | 1.5k+ | Application-level encryption | https://github.com/ankane/lockbox |
-| **Blind Index** | 1.0k+ | Encrypted search | https://github.com/ankane/blind_index |
-| **Secure Headers** | — | Contributed patterns | Referenced in gems |
+| **Lockbox** | 1.5k+ | 应用级加密 | https://github.com/ankane/lockbox |
+| **Blind Index** | 1.0k+ | 加密搜索 | https://github.com/ankane/blind_index |
+| **Secure Headers** | — | 贡献的模式 | 在 gem 中引用 |
 
-### Analytics & ML
+### 分析与机器学习
 
-| Gem | Stars | Description | Source |
+| Gem | Stars | 描述 | 源码 |
 |-----|-------|-------------|--------|
-| **Ahoy** | 4.2k+ | Analytics for Rails | https://github.com/ankane/ahoy |
-| **Neighbor** | 1.1k+ | Vector search for Rails | https://github.com/ankane/neighbor |
-| **Rover** | 700+ | DataFrames for Ruby | https://github.com/ankane/rover |
-| **Tomoto** | 200+ | Topic modeling | https://github.com/ankane/tomoto-ruby |
+| **Ahoy** | 4.2k+ | Rails 分析 | https://github.com/ankane/ahoy |
+| **Neighbor** | 1.1k+ | Rails 向量搜索 | https://github.com/ankane/neighbor |
+| **Rover** | 700+ | Ruby DataFrame | https://github.com/ankane/rover |
+| **Tomoto** | 200+ | 主题建模 | https://github.com/ankane/tomoto-ruby |
 
-### Utilities
+### 工具
 
-| Gem | Stars | Description | Source |
+| Gem | Stars | 描述 | 源码 |
 |-----|-------|-------------|--------|
-| **Pretender** | 2.0k+ | Login as another user | https://github.com/ankane/pretender |
-| **Authtrail** | 900+ | Login activity tracking | https://github.com/ankane/authtrail |
-| **Notable** | 200+ | Track notable requests | https://github.com/ankane/notable |
-| **Logstop** | 200+ | Filter sensitive logs | https://github.com/ankane/logstop |
+| **Pretender** | 2.0k+ | 以其他用户身份登录 | https://github.com/ankane/pretender |
+| **Authtrail** | 900+ | 登录活动跟踪 | https://github.com/ankane/authtrail |
+| **Notable** | 200+ | 跟踪重要请求 | https://github.com/ankane/notable |
+| **Logstop** | 200+ | 过滤敏感日志 | https://github.com/ankane/logstop |
 
-## Key Source Files to Study
+## 需要学习的关键源文件
 
-### Entry Point Patterns
+### 入口点模式
 - https://github.com/ankane/searchkick/blob/master/lib/searchkick.rb
 - https://github.com/ankane/pghero/blob/master/lib/pghero.rb
 - https://github.com/ankane/strong_migrations/blob/master/lib/strong_migrations.rb
 - https://github.com/ankane/lockbox/blob/master/lib/lockbox.rb
 
-### Class Macro Implementations
+### 类宏实现
 - https://github.com/ankane/searchkick/blob/master/lib/searchkick/model.rb
 - https://github.com/ankane/lockbox/blob/master/lib/lockbox/model.rb
 - https://github.com/ankane/neighbor/blob/master/lib/neighbor/model.rb
 - https://github.com/ankane/blind_index/blob/master/lib/blind_index/model.rb
 
-### Rails Integration (Railtie/Engine)
+### Rails 集成（Railtie/Engine）
 - https://github.com/ankane/pghero/blob/master/lib/pghero/engine.rb
 - https://github.com/ankane/searchkick/blob/master/lib/searchkick/railtie.rb
 - https://github.com/ankane/ahoy/blob/master/lib/ahoy/engine.rb
 - https://github.com/ankane/blazer/blob/master/lib/blazer/engine.rb
 
-### Database Adapters
+### 数据库适配器
 - https://github.com/ankane/strong_migrations/tree/master/lib/strong_migrations/adapters
 - https://github.com/ankane/groupdate/tree/master/lib/groupdate/adapters
 - https://github.com/ankane/neighbor/tree/master/lib/neighbor
 
-### Error Messages (Template Pattern)
+### 错误消息（模板模式）
 - https://github.com/ankane/strong_migrations/blob/master/lib/strong_migrations/error_messages.rb
 
-### Gemspec Examples
+### Gemspec 示例
 - https://github.com/ankane/searchkick/blob/master/searchkick.gemspec
 - https://github.com/ankane/neighbor/blob/master/neighbor.gemspec
 - https://github.com/ankane/ahoy/blob/master/ahoy_matey.gemspec
 
-### Test Setups
+### 测试设置
 - https://github.com/ankane/searchkick/tree/master/test
 - https://github.com/ankane/lockbox/tree/master/test
 - https://github.com/ankane/strong_migrations/tree/master/test
 
-## GitHub Profile
+## GitHub 个人资料
 
-- **Profile**: https://github.com/ankane
-- **All Ruby Repos**: https://github.com/ankane?tab=repositories&q=&type=&language=ruby&sort=stargazers
-- **RubyGems Profile**: https://rubygems.org/profiles/ankane
+- **个人资料**：https://github.com/ankane
+- **所有 Ruby 仓库**：https://github.com/ankane?tab=repositories&q=&type=&language=ruby&sort=stargazers
+- **RubyGems 个人资料**：https://rubygems.org/profiles/ankane
 
-## Blog Posts & Articles
+## 博客文章与文章
 
-- **ankane.org**: https://ankane.org/
-- **Gem Patterns**: https://ankane.org/gem-patterns (essential reading)
-- **Postgres Performance**: https://ankane.org/introducing-pghero
-- **Search Tips**: https://ankane.org/search-rails
+- **ankane.org**：https://ankane.org/
+- **Gem 模式**：https://ankane.org/gem-patterns（必读）
+- **Postgres 性能**：https://ankane.org/introducing-pghero
+- **搜索技巧**：https://ankane.org/search-rails
 
-## Design Philosophy Summary
+## 设计哲学总结
 
-From studying 100+ gems, Kane's consistent principles:
+通过研究 100+ 个 gem，Kane 一致遵循的原则：
 
-1. **Zero dependencies when possible** - Each dep is a maintenance burden
-2. **ActiveSupport.on_load always** - Never require Rails gems directly
-3. **Class macro DSLs** - Single method configures everything
-4. **Explicit over magic** - No method_missing, define methods directly
-5. **Minitest only** - Simple, sufficient, no RSpec
-6. **Multi-version testing** - Support broad Rails/Ruby versions
-7. **Helpful errors** - Template-based messages with fix suggestions
-8. **Abstract adapters** - Clean multi-database support
-9. **Engine isolation** - isolate_namespace for mountable gems
-10. **Minimal documentation** - Code is self-documenting, README is examples
+1. **尽可能零依赖** - 每个依赖都是维护负担
+2. **始终使用 ActiveSupport.on_load** - 永不直接 require Rails gem
+3. **类宏 DSL** - 单个方法配置一切
+4. **显式优于魔法** - 不使用 method_missing，直接定义方法
+5. **仅使用 Minitest** - 简单、充分，不用 RSpec
+6. **多版本测试** - 支持广泛的 Rails/Ruby 版本
+7. **有用的错误** - 基于模板的消息，带有修复建议
+8. **抽象适配器** - 干净的多数据库支持
+9. **Engine 隔离** - 可挂载 gem 使用 isolate_namespace
+10. **最少文档** - 代码自解释，README 是示例

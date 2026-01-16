@@ -1,20 +1,20 @@
-# DSPy.rb LLM Providers
+# DSPy.rb LLM 提供商
 
-## Supported Providers
+## 支持的提供商
 
-DSPy.rb provides unified support across multiple LLM providers through adapter gems that automatically load when installed.
+DSPy.rb 通过自动加载的适配器 gem 提供对多个 LLM 提供商的统一支持。
 
-### Provider Overview
+### 提供商概览
 
 - **OpenAI**: GPT-4, GPT-4o, GPT-4o-mini, GPT-3.5-turbo
-- **Anthropic**: Claude 3 family (Sonnet, Opus, Haiku), Claude 3.5 Sonnet
-- **Google Gemini**: Gemini 1.5 Pro, Gemini 1.5 Flash, other versions
-- **Ollama**: Local model support via OpenAI compatibility layer
-- **OpenRouter**: Unified multi-provider API for 200+ models
+- **Anthropic**: Claude 3 系列 (Sonnet, Opus, Haiku), Claude 3.5 Sonnet
+- **Google Gemini**: Gemini 1.5 Pro, Gemini 1.5 Flash, 其他版本
+- **Ollama**: 通过 OpenAI 兼容层支持本地模型
+- **OpenRouter**: 统一的多提供商 API，支持 200+ 模型
 
-## Configuration
+## 配置
 
-### Basic Setup
+### 基础设置
 
 ```ruby
 require 'dspy'
@@ -24,16 +24,16 @@ DSPy.configure do |c|
 end
 ```
 
-### OpenAI Configuration
+### OpenAI 配置
 
-**Required gem**: `dspy-openai`
+**所需 gem**: `dspy-openai`
 
 ```ruby
 DSPy.configure do |c|
-  # GPT-4o Mini (recommended for development)
+  # GPT-4o Mini (推荐用于开发)
   c.lm = DSPy::LM.new('openai/gpt-4o-mini', api_key: ENV['OPENAI_API_KEY'])
 
-  # GPT-4o (more capable)
+  # GPT-4o (更强大)
   c.lm = DSPy::LM.new('openai/gpt-4o', api_key: ENV['OPENAI_API_KEY'])
 
   # GPT-4 Turbo
@@ -41,124 +41,124 @@ DSPy.configure do |c|
 end
 ```
 
-**Environment variable**: `OPENAI_API_KEY`
+**环境变量**: `OPENAI_API_KEY`
 
-### Anthropic Configuration
+### Anthropic 配置
 
-**Required gem**: `dspy-anthropic`
+**所需 gem**: `dspy-anthropic`
 
 ```ruby
 DSPy.configure do |c|
-  # Claude 3.5 Sonnet (latest, most capable)
+  # Claude 3.5 Sonnet (最新，最强大)
   c.lm = DSPy::LM.new('anthropic/claude-3-5-sonnet-20241022',
     api_key: ENV['ANTHROPIC_API_KEY'])
 
-  # Claude 3 Opus (most capable in Claude 3 family)
+  # Claude 3 Opus (Claude 3 系列中最强大)
   c.lm = DSPy::LM.new('anthropic/claude-3-opus-20240229',
     api_key: ENV['ANTHROPIC_API_KEY'])
 
-  # Claude 3 Sonnet (balanced)
+  # Claude 3 Sonnet (均衡)
   c.lm = DSPy::LM.new('anthropic/claude-3-sonnet-20240229',
     api_key: ENV['ANTHROPIC_API_KEY'])
 
-  # Claude 3 Haiku (fast, cost-effective)
+  # Claude 3 Haiku (快速，性价比高)
   c.lm = DSPy::LM.new('anthropic/claude-3-haiku-20240307',
     api_key: ENV['ANTHROPIC_API_KEY'])
 end
 ```
 
-**Environment variable**: `ANTHROPIC_API_KEY`
+**环境变量**: `ANTHROPIC_API_KEY`
 
-### Google Gemini Configuration
+### Google Gemini 配置
 
-**Required gem**: `dspy-gemini`
+**所需 gem**: `dspy-gemini`
 
 ```ruby
 DSPy.configure do |c|
-  # Gemini 1.5 Pro (most capable)
+  # Gemini 1.5 Pro (最强大)
   c.lm = DSPy::LM.new('gemini/gemini-1.5-pro',
     api_key: ENV['GOOGLE_API_KEY'])
 
-  # Gemini 1.5 Flash (faster, cost-effective)
+  # Gemini 1.5 Flash (更快，性价比高)
   c.lm = DSPy::LM.new('gemini/gemini-1.5-flash',
     api_key: ENV['GOOGLE_API_KEY'])
 end
 ```
 
-**Environment variable**: `GOOGLE_API_KEY` or `GEMINI_API_KEY`
+**环境变量**: `GOOGLE_API_KEY` 或 `GEMINI_API_KEY`
 
-### Ollama Configuration
+### Ollama 配置
 
-**Required gem**: None (uses OpenAI compatibility layer)
+**所需 gem**: 无 (使用 OpenAI 兼容层)
 
 ```ruby
 DSPy.configure do |c|
-  # Local Ollama instance
+  # 本地 Ollama 实例
   c.lm = DSPy::LM.new('ollama/llama3.1',
     base_url: 'http://localhost:11434')
 
-  # Other Ollama models
+  # 其他 Ollama 模型
   c.lm = DSPy::LM.new('ollama/mistral')
   c.lm = DSPy::LM.new('ollama/codellama')
 end
 ```
 
-**Note**: Ensure Ollama is running locally: `ollama serve`
+**注意**: 确保 Ollama 在本地运行: `ollama serve`
 
-### OpenRouter Configuration
+### OpenRouter 配置
 
-**Required gem**: `dspy-openai` (uses OpenAI adapter)
+**所需 gem**: `dspy-openai` (使用 OpenAI 适配器)
 
 ```ruby
 DSPy.configure do |c|
-  # Access 200+ models through OpenRouter
+  # 通过 OpenRouter 访问 200+ 模型
   c.lm = DSPy::LM.new('openrouter/anthropic/claude-3.5-sonnet',
     api_key: ENV['OPENROUTER_API_KEY'],
     base_url: 'https://openrouter.ai/api/v1')
 
-  # Other examples
+  # 其他示例
   c.lm = DSPy::LM.new('openrouter/google/gemini-pro')
   c.lm = DSPy::LM.new('openrouter/meta-llama/llama-3.1-70b-instruct')
 end
 ```
 
-**Environment variable**: `OPENROUTER_API_KEY`
+**环境变量**: `OPENROUTER_API_KEY`
 
-## Provider Compatibility Matrix
+## 提供商兼容性矩阵
 
-### Feature Support
+### 功能支持
 
-| Feature | OpenAI | Anthropic | Gemini | Ollama |
+| 功能 | OpenAI | Anthropic | Gemini | Ollama |
 |---------|--------|-----------|--------|--------|
-| Structured Output | ✅ | ✅ | ✅ | ✅ |
-| Vision (Images) | ✅ | ✅ | ✅ | ⚠️ Limited |
-| Image URLs | ✅ | ❌ | ❌ | ❌ |
-| Tool Calling | ✅ | ✅ | ✅ | Varies |
-| Streaming | ❌ | ❌ | ❌ | ❌ |
-| Function Calling | ✅ | ✅ | ✅ | Varies |
+| 结构化输出 | ✅ | ✅ | ✅ | ✅ |
+| 视觉 (图像) | ✅ | ✅ | ✅ | ⚠️ 有限 |
+| 图像 URL | ✅ | ❌ | ❌ | ❌ |
+| 工具调用 | ✅ | ✅ | ✅ | 因模型而异 |
+| 流式传输 | ❌ | ❌ | ❌ | ❌ |
+| 函数调用 | ✅ | ✅ | ✅ | 因模型而异 |
 
-**Legend**: ✅ Full support | ⚠️ Partial support | ❌ Not supported
+**图例**: ✅ 完全支持 | ⚠️ 部分支持 | ❌ 不支持
 
-### Vision Capabilities
+### 视觉能力
 
-**Image URLs**: Only OpenAI supports direct URL references. For other providers, load images as base64 or from files.
+**图像 URL**: 只有 OpenAI 支持直接 URL 引用。对于其他提供商，请以 base64 或从文件加载图像。
 
 ```ruby
-# OpenAI - supports URLs
+# OpenAI - 支持 URL
 DSPy::Image.from_url("https://example.com/image.jpg")
 
-# Anthropic, Gemini - use file or base64
+# Anthropic, Gemini - 使用文件或 base64
 DSPy::Image.from_file("path/to/image.jpg")
 DSPy::Image.from_base64(base64_data, mime_type: "image/jpeg")
 ```
 
-**Ollama**: Limited multimodal functionality. Check specific model capabilities.
+**Ollama**: 多模态功能有限。请检查特定模型的能力。
 
-## Advanced Configuration
+## 高级配置
 
-### Custom Parameters
+### 自定义参数
 
-Pass provider-specific parameters during configuration:
+在配置时传递提供商特定的参数:
 
 ```ruby
 DSPy.configure do |c|
@@ -171,19 +171,19 @@ DSPy.configure do |c|
 end
 ```
 
-### Multiple Providers
+### 多提供商
 
-Use different models for different tasks:
+为不同的任务使用不同的模型:
 
 ```ruby
-# Fast model for simple tasks
+# 简单任务使用快速模型
 fast_lm = DSPy::LM.new('openai/gpt-4o-mini', api_key: ENV['OPENAI_API_KEY'])
 
-# Powerful model for complex tasks
+# 复杂任务使用强大模型
 powerful_lm = DSPy::LM.new('anthropic/claude-3-5-sonnet-20241022',
   api_key: ENV['ANTHROPIC_API_KEY'])
 
-# Use different models in different modules
+# 在不同模块中使用不同模型
 class SimpleClassifier < DSPy::Module
   def initialize
     super
@@ -201,46 +201,46 @@ class ComplexAnalyzer < DSPy::Module
 end
 ```
 
-### Per-Request Configuration
+### 按请求配置
 
-Override configuration for specific predictions:
+为特定预测覆盖配置:
 
 ```ruby
 predictor = DSPy::Predict.new(MySignature)
 
-# Use default configuration
+# 使用默认配置
 result1 = predictor.forward(input: "data")
 
-# Override temperature for this request
+# 为此请求覆盖 temperature
 result2 = predictor.forward(
   input: "data",
-  config: { temperature: 0.2 }  # More deterministic
+  config: { temperature: 0.2 }  # 更确定性
 )
 ```
 
-## Cost Optimization
+## 成本优化
 
-### Model Selection Strategy
+### 模型选择策略
 
-1. **Development**: Use cheaper, faster models (gpt-4o-mini, claude-3-haiku, gemini-1.5-flash)
-2. **Production Simple Tasks**: Continue with cheaper models if quality is sufficient
-3. **Production Complex Tasks**: Upgrade to more capable models (gpt-4o, claude-3.5-sonnet, gemini-1.5-pro)
-4. **Local Development**: Use Ollama for privacy and zero API costs
+1. **开发**: 使用更便宜、更快的模型 (gpt-4o-mini, claude-3-haiku, gemini-1.5-flash)
+2. **生产简单任务**: 如果质量足够，继续使用更便宜的模型
+3. **生产复杂任务**: 升级到更强大的模型 (gpt-4o, claude-3.5-sonnet, gemini-1.5-pro)
+4. **本地开发**: 使用 Ollama 以保护隐私和零 API 成本
 
-### Example Cost-Conscious Setup
+### 成本优化设置示例
 
 ```ruby
-# Development environment
+# 开发环境
 if Rails.env.development?
   DSPy.configure do |c|
-    c.lm = DSPy::LM.new('ollama/llama3.1')  # Free, local
+    c.lm = DSPy::LM.new('ollama/llama3.1')  # 免费，本地
   end
 elsif Rails.env.test?
   DSPy.configure do |c|
-    c.lm = DSPy::LM.new('openai/gpt-4o-mini',  # Cheap for testing
+    c.lm = DSPy::LM.new('openai/gpt-4o-mini',  # 测试便宜
       api_key: ENV['OPENAI_API_KEY'])
   end
-else  # production
+else  # 生产
   DSPy.configure do |c|
     c.lm = DSPy::LM.new('anthropic/claude-3-5-sonnet-20241022',
       api_key: ENV['ANTHROPIC_API_KEY'])
@@ -248,62 +248,62 @@ else  # production
 end
 ```
 
-## Provider-Specific Best Practices
+## 提供商特定最佳实践
 
 ### OpenAI
 
-- Use `gpt-4o-mini` for development and simple tasks
-- Use `gpt-4o` for production complex tasks
-- Best vision support including URL loading
-- Excellent function calling capabilities
+- 开发和简单任务使用 `gpt-4o-mini`
+- 生产复杂任务使用 `gpt-4o`
+- 最佳视觉支持，包括 URL 加载
+- 出色的函数调用能力
 
 ### Anthropic
 
-- Claude 3.5 Sonnet is currently the most capable model
-- Excellent for complex reasoning and analysis
-- Strong safety features and helpful outputs
-- Requires base64 for images (no URL support)
+- Claude 3.5 Sonnet 是目前最强大的模型
+- 适合复杂推理和分析
+- 强大的安全功能和有用的输出
+- 图像需要 base64 (不支持 URL)
 
 ### Google Gemini
 
-- Gemini 1.5 Pro for complex tasks, Flash for speed
-- Strong multimodal capabilities
-- Good balance of cost and performance
-- Requires base64 for images
+- 复杂任务使用 Gemini 1.5 Pro，速度使用 Flash
+- 强大的多模态能力
+- 成本和性能的良好平衡
+- 图像需要 base64
 
 ### Ollama
 
-- Best for privacy-sensitive applications
-- Zero API costs
-- Requires local hardware resources
-- Limited multimodal support depending on model
-- Good for development and testing
+- 最适合隐私敏感应用
+- 零 API 成本
+- 需要本地硬件资源
+- 多模态支持有限，取决于模型
+- 适合开发和测试
 
-## Troubleshooting
+## 故障排除
 
-### API Key Issues
+### API 密钥问题
 
 ```ruby
-# Verify API key is set
+# 验证 API 密钥已设置
 if ENV['OPENAI_API_KEY'].nil?
   raise "OPENAI_API_KEY environment variable not set"
 end
 
-# Test connection
+# 测试连接
 begin
   DSPy.configure { |c| c.lm = DSPy::LM.new('openai/gpt-4o-mini',
     api_key: ENV['OPENAI_API_KEY']) }
   predictor = DSPy::Predict.new(TestSignature)
   predictor.forward(test: "data")
-  puts "✅ Connection successful"
+  puts "✅ 连接成功"
 rescue => e
-  puts "❌ Connection failed: #{e.message}"
+  puts "❌ 连接失败: #{e.message}"
 end
 ```
 
-### Rate Limiting
+### 速率限制
 
-Handle rate limits gracefully:
+优雅地处理速率限制:
 
 ```ruby
 def call_with_retry(predictor, input, max_retries: 3)
@@ -313,7 +313,7 @@ def call_with_retry(predictor, input, max_retries: 3)
   rescue RateLimitError => e
     retries += 1
     if retries < max_retries
-      sleep(2 ** retries)  # Exponential backoff
+      sleep(2 ** retries)  # 指数退避
       retry
     else
       raise
@@ -322,17 +322,17 @@ def call_with_retry(predictor, input, max_retries: 3)
 end
 ```
 
-### Model Not Found
+### 模型未找到
 
-Ensure the correct gem is installed:
+确保安装了正确的 gem:
 
 ```bash
-# For OpenAI
+# 对于 OpenAI
 gem install dspy-openai
 
-# For Anthropic
+# 对于 Anthropic
 gem install dspy-anthropic
 
-# For Gemini
+# 对于 Gemini
 gem install dspy-gemini
 ```

@@ -1,25 +1,25 @@
 ---
 name: release-docs
-description: Build and update the documentation site with current plugin components
-argument-hint: "[optional: --dry-run to preview changes without writing]"
+description: 使用当前插件组件构建和更新文档站点
+argument-hint: "[可选: --dry-run 预览更改而不写入]"
 ---
 
-# Release Documentation Command
+# 发布文档 Command
 
-You are a documentation generator for the compound-engineering plugin. Your job is to ensure the documentation site at `plugins/compound-engineering/docs/` is always up-to-date with the actual plugin components.
+你是 compound-engineering 插件的文档生成器。你的任务是确保 `plugins/compound-engineering/docs/` 目录中的文档站点始终与实际插件组件保持同步。
 
-## Overview
+## 概述
 
-The documentation site is a static HTML/CSS/JS site based on the Evil Martians LaunchKit template. It needs to be regenerated whenever:
+文档站点是基于 Evil Martians LaunchKit 模板的静态 HTML/CSS/JS 站点。在以下情况下需要重新生成：
 
-- Agents are added, removed, or modified
-- Commands are added, removed, or modified
-- Skills are added, removed, or modified
-- MCP servers are added, removed, or modified
+- 添加、删除或修改 Agent
+- 添加、删除或修改 Command
+- 添加、删除或修改 Skill
+- 添加、删除或修改 MCP server
 
-## Step 1: Inventory Current Components
+## 步骤 1: 清点当前组件
 
-First, count and list all current components:
+首先，统计并列出所有当前组件：
 
 ```bash
 # Count agents
@@ -35,34 +35,34 @@ ls -d plugins/compound-engineering/skills/*/ 2>/dev/null | wc -l
 ls -d plugins/compound-engineering/mcp-servers/*/ 2>/dev/null | wc -l
 ```
 
-Read all component files to get their metadata:
+读取所有组件文件以获取元数据：
 
-### Agents
-For each agent file in `plugins/compound-engineering/agents/*.md`:
-- Extract the frontmatter (name, description)
-- Note the category (Review, Research, Workflow, Design, Docs)
-- Get key responsibilities from the content
+### Agent
+对于 `plugins/compound-engineering/agents/*.md` 中的每个 agent 文件：
+- 提取 frontmatter（name, description）
+- 记录类别（Review, Research, Workflow, Design, Docs）
+- 从内容中获取关键职责
 
-### Commands
-For each command file in `plugins/compound-engineering/commands/*.md`:
-- Extract the frontmatter (name, description, argument-hint)
-- Categorize as Workflow or Utility command
+### Command
+对于 `plugins/compound-engineering/commands/*.md` 中的每个 command 文件：
+- 提取 frontmatter（name, description, argument-hint）
+- 分类为 Workflow 或 Utility command
 
-### Skills
-For each skill directory in `plugins/compound-engineering/skills/*/`:
-- Read the SKILL.md file for frontmatter (name, description)
-- Note any scripts or supporting files
+### Skill
+对于 `plugins/compound-engineering/skills/*/` 中的每个 skill 目录：
+- 读取 SKILL.md 文件的 frontmatter（name, description）
+- 记录任何脚本或支持文件
 
-### MCP Servers
-For each MCP server in `plugins/compound-engineering/mcp-servers/*/`:
-- Read the configuration and README
-- List the tools provided
+### MCP Server
+对于 `plugins/compound-engineering/mcp-servers/*/` 中的每个 MCP server：
+- 读取配置和 README
+- 列出提供的工具
 
-## Step 2: Update Documentation Pages
+## 步骤 2: 更新文档页面
 
-### 2a. Update `docs/index.html`
+### 2a. 更新 `docs/index.html`
 
-Update the stats section with accurate counts:
+使用准确的计数更新统计部分：
 ```html
 <div class="stats-grid">
   <div class="stat-card">
@@ -73,65 +73,65 @@ Update the stats section with accurate counts:
 </div>
 ```
 
-Ensure the component summary sections list key components accurately.
+确保组件摘要部分准确列出关键组件。
 
-### 2b. Update `docs/pages/agents.html`
+### 2b. 更新 `docs/pages/agents.html`
 
-Regenerate the complete agents reference page:
-- Group agents by category (Review, Research, Workflow, Design, Docs)
-- Include for each agent:
-  - Name and description
-  - Key responsibilities (bullet list)
-  - Usage example: `claude agent [agent-name] "your message"`
-  - Use cases
+重新生成完整的 agent 参考页面：
+- 按类别分组 agent（Review, Research, Workflow, Design, Docs）
+- 每个 agent 包括：
+  - 名称和描述
+  - 关键职责（项目列表）
+  - 使用示例：`claude agent [agent-name] "your message"`
+  - 使用场景
 
-### 2c. Update `docs/pages/commands.html`
+### 2c. 更新 `docs/pages/commands.html`
 
-Regenerate the complete commands reference page:
-- Group commands by type (Workflow, Utility)
-- Include for each command:
-  - Name and description
-  - Arguments (if any)
-  - Process/workflow steps
-  - Example usage
+重新生成完整的 command 参考页面：
+- 按类型分组 command（Workflow, Utility）
+- 每个 command 包括：
+  - 名称和描述
+  - 参数（如有）
+  - 流程/工作流步骤
+  - 使用示例
 
-### 2d. Update `docs/pages/skills.html`
+### 2d. 更新 `docs/pages/skills.html`
 
-Regenerate the complete skills reference page:
-- Group skills by category (Development Tools, Content & Workflow, Image Generation)
-- Include for each skill:
-  - Name and description
-  - Usage: `claude skill [skill-name]`
-  - Features and capabilities
+重新生成完整的 skill 参考页面：
+- 按类别分组 skill（Development Tools, Content & Workflow, Image Generation）
+- 每个 skill 包括：
+  - 名称和描述
+  - 使用方式：`claude skill [skill-name]`
+  - 特性和功能
 
-### 2e. Update `docs/pages/mcp-servers.html`
+### 2e. 更新 `docs/pages/mcp-servers.html`
 
-Regenerate the MCP servers reference page:
-- For each server:
-  - Name and purpose
-  - Tools provided
-  - Configuration details
-  - Supported frameworks/services
+重新生成 MCP server 参考页面：
+- 每个 server：
+  - 名称和用途
+  - 提供的工具
+  - 配置详情
+  - 支持的框架/服务
 
-## Step 3: Update Metadata Files
+## 步骤 3: 更新元数据文件
 
-Ensure counts are consistent across:
+确保计数在以下位置保持一致：
 
 1. **`plugins/compound-engineering/.claude-plugin/plugin.json`**
-   - Update `description` with correct counts
-   - Update `components` object with counts
-   - Update `agents`, `commands` arrays with current items
+   - 使用正确的计数更新 `description`
+   - 使用计数更新 `components` 对象
+   - 使用当前项目更新 `agents`、`commands` 数组
 
 2. **`.claude-plugin/marketplace.json`**
-   - Update plugin `description` with correct counts
+   - 使用正确的计数更新插件 `description`
 
 3. **`plugins/compound-engineering/README.md`**
-   - Update intro paragraph with counts
-   - Update component lists
+   - 使用计数更新介绍段落
+   - 更新组件列表
 
-## Step 4: Validate
+## 步骤 4: 验证
 
-Run validation checks:
+运行验证检查：
 
 ```bash
 # Validate JSON files
@@ -146,66 +146,66 @@ echo "Commands in files: $(ls plugins/compound-engineering/commands/*.md | wc -l
 grep -o "[0-9]* slash commands" plugins/compound-engineering/docs/index.html
 ```
 
-## Step 5: Report Changes
+## 步骤 5: 报告更改
 
-Provide a summary of what was updated:
+提供更新内容的摘要：
 
 ```
-## Documentation Release Summary
+## 文档发布摘要
 
-### Component Counts
-- Agents: X (previously Y)
-- Commands: X (previously Y)
-- Skills: X (previously Y)
-- MCP Servers: X (previously Y)
+### 组件计数
+- Agent: X（之前为 Y）
+- Command: X（之前为 Y）
+- Skill: X（之前为 Y）
+- MCP Server: X（之前为 Y）
 
-### Files Updated
-- docs/index.html - Updated stats and component summaries
-- docs/pages/agents.html - Regenerated with X agents
-- docs/pages/commands.html - Regenerated with X commands
-- docs/pages/skills.html - Regenerated with X skills
-- docs/pages/mcp-servers.html - Regenerated with X servers
-- plugin.json - Updated counts and component lists
-- marketplace.json - Updated description
-- README.md - Updated component lists
+### 更新的文件
+- docs/index.html - 更新了统计和组件摘要
+- docs/pages/agents.html - 使用 X 个 agent 重新生成
+- docs/pages/commands.html - 使用 X 个 command 重新生成
+- docs/pages/skills.html - 使用 X 个 skill 重新生成
+- docs/pages/mcp-servers.html - 使用 X 个 server 重新生成
+- plugin.json - 更新了计数和组件列表
+- marketplace.json - 更新了描述
+- README.md - 更新了组件列表
 
-### New Components Added
-- [List any new agents/commands/skills]
+### 新增组件
+- [列出任何新的 agent/command/skill]
 
-### Components Removed
-- [List any removed agents/commands/skills]
+### 删除的组件
+- [列出任何删除的 agent/command/skill]
 ```
 
-## Dry Run Mode
+## 试运行模式
 
-If `--dry-run` is specified:
-- Perform all inventory and validation steps
-- Report what WOULD be updated
-- Do NOT write any files
-- Show diff previews of proposed changes
+如果指定了 `--dry-run`：
+- 执行所有清点和验证步骤
+- 报告将要更新的内容
+- 不写入任何文件
+- 显示建议更改的差异预览
 
-## Error Handling
+## 错误处理
 
-- If component files have invalid frontmatter, report the error and skip
-- If JSON validation fails, report and abort
-- Always maintain a valid state - don't partially update
+- 如果组件文件的 frontmatter 无效，报告错误并跳过
+- 如果 JSON 验证失败，报告并中止
+- 始终保持有效状态 - 不要部分更新
 
-## Post-Release
+## 发布后
 
-After successful release:
-1. Suggest updating CHANGELOG.md with documentation changes
-2. Remind to commit with message: `docs: Update documentation site to match plugin components`
-3. Remind to push changes
+成功发布后：
+1. 建议使用文档更改更新 CHANGELOG.md
+2. 提醒使用消息提交：`docs: Update documentation site to match plugin components`
+3. 提醒推送更改
 
-## Usage Examples
+## 使用示例
 
 ```bash
-# Full documentation release
+# 完整的文档发布
 claude /release-docs
 
-# Preview changes without writing
+# 预览更改而不写入
 claude /release-docs --dry-run
 
-# After adding new agents
+# 添加新 agent 后
 claude /release-docs
 ```

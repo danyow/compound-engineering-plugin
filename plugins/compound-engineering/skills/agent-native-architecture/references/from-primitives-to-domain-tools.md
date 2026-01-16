@@ -1,28 +1,28 @@
 <overview>
-Start with pure primitives: bash, file operations, basic storage. This proves the architecture works and reveals what the agent actually needs. As patterns emerge, add domain-specific tools deliberately. This document covers when and how to evolve from primitives to domain tools, and when to graduate to optimized code.
+从纯原始操作开始：bash、文件操作、基本存储。这证明了架构是否可行，并揭示了Agent实际需要什么。随着模式的出现，有意地添加领域特定的工具。本文档涵盖何时以及如何从原始操作演进到领域工具，以及何时升级到优化代码。
 </overview>
 
 <start_with_primitives>
-## Start with Pure Primitives
+## 从纯原始操作开始
 
-Begin every agent-native system with the most atomic tools possible:
+从最原子化的工具开始每个Agent原生系统：
 
 - `read_file` / `write_file` / `list_files`
-- `bash` (for everything else)
-- Basic storage (`store_item` / `get_item`)
-- HTTP requests (`fetch_url`)
+- `bash`（用于其他所有操作）
+- 基本存储（`store_item` / `get_item`）
+- HTTP请求（`fetch_url`）
 
-**Why start here:**
+**为什么从这里开始：**
 
-1. **Proves the architecture** - If it works with primitives, your prompts are doing their job
-2. **Reveals actual needs** - You'll discover what domain concepts matter
-3. **Maximum flexibility** - Agent can do anything, not just what you anticipated
-4. **Forces good prompts** - You can't lean on tool logic as a crutch
+1. **证明架构** - 如果它能与原始操作一起工作，你的prompt就在发挥作用
+2. **揭示实际需求** - 你会发现哪些领域概念很重要
+3. **最大灵活性** - Agent可以做任何事情，而不仅仅是你预期的事情
+4. **强制编写好的prompt** - 你不能把工具逻辑当作拐杖
 
-### Example: Starting Primitive
+### 示例：从原始操作开始
 
 ```typescript
-// Start with just these
+// 只从这些开始
 const tools = [
   tool("read_file", { path: z.string() }, ...),
   tool("write_file", { path: z.string(), content: z.string() }, ...),
@@ -30,73 +30,73 @@ const tools = [
   tool("bash", { command: z.string() }, ...),
 ];
 
-// Prompt handles the domain logic
+// Prompt处理领域逻辑
 const prompt = `
-When processing feedback:
-1. Read existing feedback from data/feedback.json
-2. Add the new feedback with your assessment of importance (1-5)
-3. Write the updated file
-4. If importance >= 4, create a notification file in data/alerts/
+处理反馈时：
+1. 从data/feedback.json读取现有反馈
+2. 添加新反馈并根据你的重要性评估（1-5）
+3. 写入更新的文件
+4. 如果重要性 >= 4，在data/alerts/中创建通知文件
 `;
 ```
 </start_with_primitives>
 
 <when_to_add_domain_tools>
-## When to Add Domain Tools
+## 何时添加领域工具
 
-As patterns emerge, you'll want to add domain-specific tools. This is good—but do it deliberately.
+随着模式的出现，你会想要添加领域特定的工具。这很好——但要有意为之。
 
-### Vocabulary Anchoring
+### 词汇锚定
 
-**Add a domain tool when:** The agent needs to understand domain concepts.
+**何时添加领域工具：** Agent需要理解领域概念时。
 
-A `create_note` tool teaches the agent what "note" means in your system better than "write a file to the notes directory with this format."
+`create_note`工具比"将文件写入笔记目录并采用这种格式"更好地教Agent"笔记"在你系统中的含义。
 
 ```typescript
-// Without domain tool - agent must infer structure
-await agent.chat("Create a note about the meeting");
-// Agent: writes to... notes/? documents/? what format?
+// 没有领域工具 - Agent必须推断结构
+await agent.chat("创建一个关于会议的笔记");
+// Agent：写入...笔记/?文档/?什么格式？
 
-// With domain tool - vocabulary is anchored
+// 有领域工具 - 词汇被锚定
 tool("create_note", {
   title: z.string(),
   content: z.string(),
   tags: z.array(z.string()).optional(),
 }, async ({ title, content, tags }) => {
-  // Tool enforces structure, agent understands "note"
+  // Tool强制执行结构，Agent理解"笔记"
 });
 ```
 
-### Guardrails
+### 护栏
 
-**Add a domain tool when:** Some operations need validation or constraints that shouldn't be left to agent judgment.
+**何时添加领域工具：** 某些操作需要不应该留给Agent判断的验证或约束。
 
 ```typescript
-// publish_to_feed might enforce format requirements or content policies
+// publish_to_feed可能强制执行格式要求或内容政策
 tool("publish_to_feed", {
   bookId: z.string(),
   content: z.string(),
-  headline: z.string().max(100),  // Enforce headline length
+  headline: z.string().max(100),  // 强制标题长度
 }, async ({ bookId, content, headline }) => {
-  // Validate content meets guidelines
+  // 验证内容符合指导原则
   if (containsProhibitedContent(content)) {
-    return { text: "Content doesn't meet guidelines", isError: true };
+    return { text: "内容不符合指导原则", isError: true };
   }
-  // Enforce proper structure
+  // 强制执行适当的结构
   await feedService.publish({ bookId, content, headline, publishedAt: new Date() });
 });
 ```
 
-### Efficiency
+### 效率
 
-**Add a domain tool when:** Common operations would take many primitive calls.
+**何时添加领域工具：** 常见操作会需要许多原始调用。
 
 ```typescript
-// Primitive approach: multiple calls
-await agent.chat("Get book details");
-// Agent: read library.json, parse, find book, read full_text.txt, read introduction.md...
+// 原始方法：多次调用
+await agent.chat("获取书籍详情");
+// Agent：读取library.json、解析、查找书籍、读取full_text.txt、读取introduction.md...
 
-// Domain tool: one call for common operation
+// 领域工具：一次调用常见操作
 tool("get_book_with_content", { bookId: z.string() }, async ({ bookId }) => {
   const book = await library.getBook(bookId);
   const fullText = await readFile(`Research/${bookId}/full_text.txt`);
@@ -107,253 +107,275 @@ tool("get_book_with_content", { bookId: z.string() }, async ({ bookId }) => {
 </when_to_add_domain_tools>
 
 <the_rule>
-## The Rule for Domain Tools
+## 领域工具的规则
 
-**Domain tools should represent one conceptual action from the user's perspective.**
+**领域工具应该代表用户角度的一个概念操作。**
 
-They can include mechanical validation, but **judgment about what to do or whether to do it belongs in the prompt**.
+它们可以包含机械验证，但**关于做什么或是否做的判断属于prompt中**。
 
-### Wrong: Bundles Judgment
+### 错误：捆绑判断
 
 ```typescript
-// WRONG - analyze_and_publish bundles judgment into the tool
+// 错误 - analyze_and_publish将判断捆绑到工具中
 tool("analyze_and_publish", async ({ input }) => {
-  const analysis = analyzeContent(input);      // Tool decides how to analyze
-  const shouldPublish = analysis.score > 0.7;  // Tool decides whether to publish
+  const analysis = analyzeContent(input);      // Tool决定如何分析
+  const shouldPublish = analysis.score > 0.7;  // Tool决定是否发布
   if (shouldPublish) {
-    await publish(analysis.summary);            // Tool decides what to publish
+    await publish(analysis.summary);            // Tool决定发布什么
   }
 });
 ```
 
-### Right: One Action, Agent Decides
+### 正确：一个操作，Agent决定
 
 ```typescript
-// RIGHT - separate tools, agent decides
-tool("analyze_content", { content: z.string() }, ...);  // Returns analysis
-tool("publish", { content: z.string() }, ...);          // Publishes what agent provides
+// 正确 - 分离的工具，Agent决定
+tool("analyze_content", { content: z.string() }, ...);  // 返回分析
+tool("publish", { content: z.string() }, ...);          // 发布Agent提供的内容
 
-// Prompt: "Analyze the content. If it's high quality, publish a summary."
-// Agent decides what "high quality" means and what summary to write.
+// Prompt："分析内容。如果质量很高，发布摘要。"
+// Agent决定"高质量"意味着什么以及写什么摘要。
 ```
 
-### The Test
+### 测试
 
-Ask: "Who is making the decision here?"
+问：谁在做决定？
 
-- If the answer is "the tool code" → you've encoded judgment, refactor
-- If the answer is "the agent based on the prompt" → good
+- 如果答案是"工具代码" → 你已经编码了判断，需要重构
+- 如果答案是"基于prompt的Agent" → 很好
 </the_rule>
 
 <keep_primitives_available>
-## Keep Primitives Available
+## 保持原始操作可用
 
-**Domain tools are shortcuts, not gates.**
+**领域工具是快捷方式，不是门卫。**
 
-Unless there's a specific reason to restrict access (security, data integrity), the agent should still be able to use underlying primitives for edge cases.
+除非有特定理由限制访问（安全、数据完整性），否则Agent仍然应该能够为边缘情况使用底层原始操作。
 
 ```typescript
-// Domain tool for common case
+// 常见情况的领域工具
 tool("create_note", { title, content }, ...);
 
-// But primitives still available for edge cases
+// 但原始操作仍然可用于边缘情况
 tool("read_file", { path }, ...);
 tool("write_file", { path, content }, ...);
 
-// Agent can use create_note normally, but for weird edge case:
-// "Create a note in a non-standard location with custom metadata"
-// → Agent uses write_file directly
+// Agent可以正常使用create_note，但对于奇怪的边缘情况：
+// "在非标准位置创建带有自定义元数据的笔记"
+// → Agent直接使用write_file
 ```
 
-### When to Gate
+### 何时限制
 
-Gating (making domain tool the only way) is appropriate for:
+限制（使领域工具成为唯一方式）适合于：
 
-- **Security:** User authentication, payment processing
-- **Data integrity:** Operations that must maintain invariants
-- **Audit requirements:** Actions that must be logged in specific ways
+- **安全：** 用户认证、支付处理
+- **数据完整性：** 必须维护不变量的操作
+- **审计要求：** 必须以特定方式记录的操作
 
-**The default is open.** When you do gate something, make it a conscious decision with a clear reason.
+**默认是开放的。** 当你确实限制某些东西时，要有明确的理由。
 </keep_primitives_available>
 
 <graduating_to_code>
-## Graduating to Code
+## 升级到代码
 
-Some operations will need to move from agent-orchestrated to optimized code for performance or reliability.
+某些操作将需要从Agent编排的转移到优化代码，以获得性能或可靠性。
 
-### The Progression
+### 进展
 
 ```
-Stage 1: Agent uses primitives in a loop
-         → Flexible, proves the concept
-         → Slow, potentially expensive
+阶段1：Agent在循环中使用原始操作
+       → 灵活，证明概念
+       → 缓慢，可能昂贵
 
-Stage 2: Add domain tools for common operations
-         → Faster, still agent-orchestrated
-         → Agent still decides when/whether to use
+阶段2：为常见操作添加领域工具
+       → 更快，仍由Agent编排
+       → Agent仍然决定何时/是否使用
 
-Stage 3: For hot paths, implement in optimized code
-         → Fast, deterministic
-         → Agent can still trigger, but execution is code
+阶段3：对于热路径，在优化代码中实现
+       → 快速、确定性
+       → Agent仍可以触发，但执行是代码
 ```
 
-### Example Progression
+### 示例进展
 
-**Stage 1: Pure primitives**
+**阶段1：纯原始操作**
 ```markdown
-Prompt: "When user asks for a summary, read all notes in /notes,
-        analyze them, and write a summary to /summaries/{date}.md"
+Prompt："当用户要求摘要时，读取/notes中的所有笔记，
+        分析它们，并将摘要写入/summaries/{date}.md"
 
-Agent: Calls read_file 20 times, reasons about content, writes summary
-Time: 30 seconds, 50k tokens
+Agent：调用read_file 20次，推断内容，编写摘要
+时间：30秒，50k tokens
 ```
 
-**Stage 2: Domain tool**
+**阶段2：领域工具**
 ```typescript
 tool("get_all_notes", {}, async () => {
   const notes = await readAllNotesFromDirectory();
   return { text: JSON.stringify(notes) };
 });
 
-// Agent still decides how to summarize, but retrieval is faster
-// Time: 10 seconds, 30k tokens
+// Agent仍然决定如何摘要，但检索更快
+// 时间：10秒，30k tokens
 ```
 
-**Stage 3: Optimized code**
+**阶段3：优化代码**
 ```typescript
 tool("generate_weekly_summary", {}, async () => {
-  // Entire operation in code for hot path
+  // 整个操作在热路径代码中
   const notes = await getNotes({ since: oneWeekAgo });
-  const summary = await generateSummary(notes);  // Could use cheaper model
+  const summary = await generateSummary(notes);  // 可能使用更便宜的模型
   await writeSummary(summary);
-  return { text: "Summary generated" };
+  return { text: "摘要已生成" };
 });
 
-// Agent just triggers it
-// Time: 2 seconds, 5k tokens
+// Agent只是触发它
+// 时间：2秒，5k tokens
 ```
 
-### The Caveat
+### 注意事项
 
-**Even when an operation graduates to code, the agent should be able to:**
+**即使操作升级到代码，Agent仍然应该能够：**
 
-1. Trigger the optimized operation itself
-2. Fall back to primitives for edge cases the optimized path doesn't handle
+1. 触发优化的操作本身
+2. 对于优化路径不处理的边缘情况回退到原始操作
 
-Graduation is about efficiency. **Parity still holds.** The agent doesn't lose capability when you optimize.
+升级是关于效率。**奇偶性仍然成立。** 当你优化时，Agent不会失去能力。
 </graduating_to_code>
 
 <decision_framework>
 ## Decision Framework
 
-### Should I Add a Domain Tool?
+### 应该添加领域工具吗？
 
-| Question | If Yes |
+| 问题 | 如果是 |
 |----------|--------|
-| Is the agent confused about what this concept means? | Add for vocabulary anchoring |
-| Does this operation need validation the agent shouldn't decide? | Add with guardrails |
-| Is this a common multi-step operation? | Add for efficiency |
-| Would changing behavior require code changes? | Keep as prompt instead |
+| Agent是否对这个概念的含义感到困惑？ | 为词汇锚定添加 |
+| 这个操作是否需要Agent不应该决定的验证？ | 添加护栏 |
+| 这是一个常见的多步操作吗？ | 为效率添加 |
+| 改变行为是否需要代码更改？ | 改为保持在prompt中 ||## 应该添加领域工具吗？
 
-### Should I Graduate to Code?
-
-| Question | If Yes |
+| 问题 | 如果是 |
 |----------|--------|
-| Is this operation called very frequently? | Consider graduating |
-| Does latency matter significantly? | Consider graduating |
-| Are token costs problematic? | Consider graduating |
-| Do you need deterministic behavior? | Graduate to code |
-| Does the operation need complex state management? | Graduate to code |
+| Agent是否对这个概念的含义感到困惑？ | 为词汇锚定添加 |
+| 这个操作是否需要Agent不应该决定的验证？ | 添加护栏 |
+| 这是一个常见的多步操作吗？ | 为效率添加 |
+| 改变行为是否需要代码更改？ | 改为保持在prompt中 |
 
-### Should I Gate Access?
+### 应该升级到代码吗？
 
-| Question | If Yes |
+| 问题 | 如果是 |
 |----------|--------|
-| Is there a security requirement? | Gate appropriately |
-| Must this operation maintain data integrity? | Gate appropriately |
-| Is there an audit/compliance requirement? | Gate appropriately |
-| Is it just "safer" with no specific risk? | Keep primitives available |
+| 这个操作是否被调用得非常频繁？ | 考虑升级 |
+| 延迟是否显著重要？ | 考虑升级 |
+| Token成本是否有问题？ | 考虑升级 |
+| 你是否需要确定性行为？ | 升级到代码 |
+| 这个操作是否需要复杂的状态管理？ | 升级到代码 ||### 应该升级到代码吗？
+
+| 问题 | 如果是 |
+|----------|--------|
+| 这个操作是否被调用得非常频繁？ | 考虑升级 |
+| 延迟是否显著重要？ | 考虑升级 |
+| Token成本是否有问题？ | 考虑升级 |
+| 你是否需要确定性行为？ | 升级到代码 |
+| 这个操作是否需要复杂的状态管理？ | 升级到代码 |
+
+### 应该限制访问吗？
+
+| 问题 | 如果是 |
+|----------|--------|
+| 是否有安全要求？ | 适当地限制 |
+| 这个操作是否必须保持数据完整性？ | 适当地限制 |
+| 是否有审计/合规要求？ | 适当地限制 |
+| 是否只是"更安全"没有特定风险？ | 保持原始操作可用 ||### 应该限制访问吗？
+
+| 问题 | 如果是 |
+|----------|--------|
+| 是否有安全要求？ | 适当地限制 |
+| 这个操作是否必须保持数据完整性？ | 适当地限制 |
+| 是否有审计/合规要求？ | 适当地限制 |
+| 是否只是"更安全"没有特定风险？ | 保持原始操作可用 |
 </decision_framework>
 
 <examples>
-## Examples
+## 示例
 
-### Feedback Processing Evolution
+### 反馈处理演变
 
-**Stage 1: Primitives only**
+**阶段1：仅原始操作**
 ```typescript
 tools: [read_file, write_file, bash]
-prompt: "Store feedback in data/feedback.json, notify if important"
-// Agent figures out JSON structure, importance criteria, notification method
+prompt: "将反馈存储在data/feedback.json，如果重要则通知"
+// Agent解决JSON结构、重要性标准、通知方法
 ```
 
-**Stage 2: Domain tools for vocabulary**
+**阶段2：词汇的领域工具**
 ```typescript
 tools: [
-  store_feedback,      // Anchors "feedback" concept with proper structure
-  send_notification,   // Anchors "notify" with correct channels
-  read_file,           // Still available for edge cases
+  store_feedback,      // 用适当的结构锚定"反馈"概念
+  send_notification,   // 用正确的渠道锚定"通知"
+  read_file,           // 仍然可用于边缘情况
   write_file,
 ]
-prompt: "Store feedback using store_feedback. Notify if importance >= 4."
-// Agent still decides importance, but vocabulary is anchored
+prompt: "使用store_feedback存储反馈。如果重要性 >= 4则通知。"
+// Agent仍然决定重要性，但词汇被锚定
 ```
 
-**Stage 3: Graduated hot path**
+**阶段3：升级的热路径**
 ```typescript
 tools: [
-  process_feedback_batch,  // Optimized for high-volume processing
-  store_feedback,          // For individual items
+  process_feedback_batch,  // 针对高容量处理优化
+  store_feedback,          // 用于单个项
   send_notification,
   read_file,
   write_file,
 ]
-// Batch processing is code, but agent can still use store_feedback for special cases
+// 批处理是代码，但Agent仍然可以为特殊情况使用store_feedback
 ```
 
-### When NOT to Add Domain Tools
+### 何时不添加领域工具
 
-**Don't add a domain tool just to make things "cleaner":**
+**不要只为了让事情"更清洁"而添加领域工具：**
 ```typescript
-// Unnecessary - agent can compose primitives
-tool("organize_files_by_date", ...)  // Just use move_file + judgment
+// 不必要 - Agent可以组合原始操作
+tool("organize_files_by_date", ...)  // 只需使用move_file + 判断
 
-// Unnecessary - puts decision in wrong place
-tool("decide_file_importance", ...)  // This is prompt territory
+// 不必要 - 把决定放在错误的地方
+tool("decide_file_importance", ...)  // 这是prompt领地
 ```
 
-**Don't add a domain tool if behavior might change:**
+**如果行为可能改变，不要添加领域工具：**
 ```typescript
-// Bad - locked into code
-tool("generate_standard_report", ...)  // What if report format evolves?
+// 不好 - 锁定在代码中
+tool("generate_standard_report", ...)  // 如果报告格式演变怎么办？
 
-// Better - keep in prompt
-prompt: "Generate a report covering X, Y, Z. Format for readability."
-// Can adjust format by editing prompt
+// 更好 - 保持在prompt中
+prompt: "生成涵盖X、Y、Z的报告。格式以提高可读性。"
+// 可以通过编辑prompt调整格式
 ```
 </examples>
 
 <checklist>
-## Checklist: Primitives to Domain Tools
+## 检查清单：原始操作到领域工具
 
-### Starting Out
-- [ ] Begin with pure primitives (read, write, list, bash)
-- [ ] Write behavior in prompts, not tool logic
-- [ ] Let patterns emerge from actual usage
+### 开始
+- [ ] 从纯原始操作开始（读、写、列表、bash）
+- [ ] 在prompt中编写行为，不是在工具逻辑中
+- [ ] 让模式从实际使用中出现
 
-### Adding Domain Tools
-- [ ] Clear reason: vocabulary anchoring, guardrails, or efficiency
-- [ ] Tool represents one conceptual action
-- [ ] Judgment stays in prompts, not tool code
-- [ ] Primitives remain available alongside domain tools
+### 添加领域工具
+- [ ] 清晰的理由：词汇锚定、护栏或效率
+- [ ] 工具代表一个概念操作
+- [ ] 判断保留在prompt中，不是工具代码
+- [ ] 原始操作与领域工具一起保持可用
 
-### Graduating to Code
-- [ ] Hot path identified (frequent, latency-sensitive, or expensive)
-- [ ] Optimized version doesn't remove agent capability
-- [ ] Fallback to primitives for edge cases still works
+### 升级到代码
+- [ ] 识别的热路径（频繁、延迟敏感或昂贵）
+- [ ] 优化版本不删除Agent能力
+- [ ] 为边缘情况的原始操作回退仍然有效
 
-### Gating Decisions
-- [ ] Specific reason for each gate (security, integrity, audit)
-- [ ] Default is open access
-- [ ] Gates are conscious decisions, not defaults
+### 限制决定
+- [ ] 每个限制的具体理由（安全、完整性、审计）
+- [ ] 默认是开放访问
+- [ ] 限制是有意识的决定，不是默认行为
 </checklist>

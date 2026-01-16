@@ -1,36 +1,36 @@
 <overview>
-When building skills that make API calls requiring credentials (API keys, tokens, secrets), follow this protocol to prevent credentials from appearing in chat.
+在构建需要凭证（API key、token、secret）的 API 调用的 skill 时，遵循此协议以防止凭证出现在聊天中。
 </overview>
 
 <the_problem>
-Raw curl commands with environment variables expose credentials:
+原始的 curl 命令会暴露环境变量中的凭证：
 
 ```bash
-# ❌ BAD - API key visible in chat
+# ❌ 错误 - API key 在聊天中可见
 curl -H "Authorization: Bearer $API_KEY" https://api.example.com/data
 ```
 
-When Claude executes this, the full command with expanded `$API_KEY` appears in the conversation.
+当 Claude 执行此命令时，展开 `$API_KEY` 后的完整命令会出现在对话中。
 </the_problem>
 
 <the_solution>
-Use `~/.claude/scripts/secure-api.sh` - a wrapper that loads credentials internally.
+使用 `~/.claude/scripts/secure-api.sh` - 一个在内部加载凭证的包装器。
 
 <for_supported_services>
 ```bash
-# ✅ GOOD - No credentials visible
+# ✅ 正确 - 凭证不可见
 ~/.claude/scripts/secure-api.sh <service> <operation> [args]
 
-# Examples:
+# 示例：
 ~/.claude/scripts/secure-api.sh facebook list-campaigns
 ~/.claude/scripts/secure-api.sh ghl search-contact "email@example.com"
 ```
 </for_supported_services>
 
 <adding_new_services>
-When building a new skill that requires API calls:
+当构建需要 API 调用的新 skill 时：
 
-1. **Add operations to the wrapper** (`~/.claude/scripts/secure-api.sh`):
+1. **将操作添加到包装器** (`~/.claude/scripts/secure-api.sh`)：
 
 ```bash
 case "$SERVICE" in
@@ -56,7 +56,7 @@ case "$SERVICE" in
 esac
 ```
 
-2. **Add profile support to the wrapper** (if service needs multiple accounts):
+2. **将配置文件支持添加到包装器**（如果服务需要多个账户）：
 
 ```bash
 # In secure-api.sh, add to profile remapping section:
@@ -67,7 +67,7 @@ yourservice)
     ;;
 ```
 
-3. **Add credential placeholders to `~/.claude/.env`** using profile naming:
+3. **使用配置文件命名将凭证占位符添加到 `~/.claude/.env`**：
 
 ```bash
 # Check if entries already exist
@@ -77,63 +77,63 @@ grep -q "YOURSERVICE_MAIN_API_KEY=" ~/.claude/.env 2>/dev/null || \
 echo "Added credential placeholders to ~/.claude/.env - user needs to fill them in"
 ```
 
-4. **Document profile workflow in your SKILL.md**:
+4. **在你的 SKILL.md 中记录配置文件工作流**：
 
 ```markdown
-## Profile Selection Workflow
+## 配置文件选择工作流
 
-**CRITICAL:** Always use profile selection to prevent using wrong account credentials.
+**关键：** 始终使用配置文件选择以防止使用错误的账户凭证。
 
-### When user requests YourService operation:
+### 当用户请求 YourService 操作时：
 
-1. **Check for saved profile:**
+1. **检查已保存的配置文件：**
    ```bash
    ~/.claude/scripts/profile-state get yourservice
    ```
 
-2. **If no profile saved, discover available profiles:**
+2. **如果没有保存的配置文件，发现可用的配置文件：**
    ```bash
    ~/.claude/scripts/list-profiles yourservice
    ```
 
-3. **If only ONE profile:** Use it automatically and announce:
+3. **如果只有一个配置文件：** 自动使用它并宣布：
    ```
-   "Using YourService profile 'main' to list items..."
-   ```
-
-4. **If MULTIPLE profiles:** Ask user which one:
-   ```
-   "Which YourService profile: main, clienta, or clientb?"
+   "使用 YourService 配置文件 'main' 列出项目..."
    ```
 
-5. **Save user's selection:**
+4. **如果有多个配置文件：** 询问用户使用哪一个：
+   ```
+   "使用哪个 YourService 配置文件：main、clienta 或 clientb？"
+   ```
+
+5. **保存用户的选择：**
    ```bash
    ~/.claude/scripts/profile-state set yourservice <selected_profile>
    ```
 
-6. **Always announce which profile before calling API:**
+6. **在调用 API 前始终宣布使用哪个配置文件：**
    ```
-   "Using YourService profile 'main' to list items..."
+   "使用 YourService 配置文件 'main' 列出项目..."
    ```
 
-7. **Make API call with profile:**
+7. **使用配置文件进行 API 调用：**
    ```bash
    ~/.claude/scripts/secure-api.sh yourservice:<profile> list-items
    ```
 
-## Secure API Calls
+## 安全的 API 调用
 
-All API calls use profile syntax:
+所有 API 调用使用配置文件语法：
 
 ```bash
 ~/.claude/scripts/secure-api.sh yourservice:<profile> <operation> [args]
 
-# Examples:
+# 示例：
 ~/.claude/scripts/secure-api.sh yourservice:main list-items
 ~/.claude/scripts/secure-api.sh yourservice:main get-item <ITEM_ID>
 ```
 
-**Profile persists for session:** Once selected, use same profile for subsequent operations unless user explicitly changes it.
+**配置文件在会话中持久：** 一旦选择，在后续操作中使用相同的配置文件，除非用户明确更改它。
 ```
 </adding_new_services>
 </the_solution>
@@ -157,7 +157,7 @@ curl -s -X POST \
     "https://api.example.com/items/$ITEM_ID"
 ```
 
-Usage:
+用法：
 ```bash
 echo '{"name":"value"}' | ~/.claude/scripts/secure-api.sh service create-item
 ```
@@ -175,9 +175,9 @@ curl -s -X POST \
 </pattern_guidelines>
 
 <credential_storage>
-**Location:** `~/.claude/.env` (global for all skills, accessible from any directory)
+**位置：** `~/.claude/.env`（对所有 skill 全局，可从任何目录访问）
 
-**Format:**
+**格式：**
 ```bash
 # Service credentials
 SERVICE_API_KEY=your-key-here
@@ -188,7 +188,7 @@ OTHER_API_TOKEN=token-here
 OTHER_BASE_URL=https://api.other.com
 ```
 
-**Loading in script:**
+**在脚本中加载：**
 ```bash
 set -a
 source ~/.claude/.env 2>/dev/null || { echo "Error: ~/.claude/.env not found" >&2; exit 1; }
@@ -197,30 +197,30 @@ set +a
 </credential_storage>
 
 <best_practices>
-1. **Never use raw curl with `$VARIABLE` in skill examples** - always use the wrapper
-2. **Add all operations to the wrapper** - don't make users figure out curl syntax
-3. **Auto-create credential placeholders** - add empty fields to `~/.claude/.env` immediately when creating the skill
-4. **Keep credentials in `~/.claude/.env`** - one central location, works everywhere
-5. **Document each operation** - show examples in SKILL.md
-6. **Handle errors gracefully** - check for missing env vars, show helpful error messages
+1. **永远不要在 skill 示例中使用带 `$VARIABLE` 的原始 curl** - 始终使用包装器
+2. **将所有操作添加到包装器** - 不要让用户弄清楚 curl 语法
+3. **自动创建凭证占位符** - 在创建 skill 时立即向 `~/.claude/.env` 添加空字段
+4. **将凭证保存在 `~/.claude/.env` 中** - 一个中心位置，处处可用
+5. **记录每个操作** - 在 SKILL.md 中展示示例
+6. **优雅地处理错误** - 检查缺失的环境变量，显示有用的错误消息
 </best_practices>
 
 <testing>
-Test the wrapper without exposing credentials:
+测试包装器而不暴露凭证：
 
 ```bash
-# This command appears in chat
+# 此命令会出现在聊天中
 ~/.claude/scripts/secure-api.sh facebook list-campaigns
 
-# But API keys never appear - they're loaded inside the script
+# 但 API key 永远不会出现 - 它们在脚本内部加载
 ```
 
-Verify credentials are loaded:
+验证凭证已加载：
 ```bash
-# Check .env exists
+# 检查 .env 是否存在
 ls -la ~/.claude/.env
 
-# Check specific variables (without showing values)
+# 检查特定变量（不显示值）
 grep -q "YOUR_API_KEY=" ~/.claude/.env && echo "API key configured" || echo "API key missing"
 ```
 </testing>

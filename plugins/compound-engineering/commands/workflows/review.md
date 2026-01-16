@@ -1,62 +1,62 @@
 ---
 name: workflows:review
-description: Perform exhaustive code reviews using multi-agent analysis, ultra-thinking, and worktrees
-argument-hint: "[PR number, GitHub URL, branch name, or latest]"
+description: 使用多Agent分析、超级思考和worktree执行全面的代码审查
+argument-hint: "[PR编号、GitHub URL、分支名称或latest]"
 ---
 
 # Review Command
 
-<command_purpose> Perform exhaustive code reviews using multi-agent analysis, ultra-thinking, and Git worktrees for deep local inspection. </command_purpose>
+<command_purpose> 使用多Agent分析、超级思考和Git worktree执行全面的代码审查，进行深入的本地检查。 </command_purpose>
 
-## Introduction
+## 介绍
 
-<role>Senior Code Review Architect with expertise in security, performance, architecture, and quality assurance</role>
+<role>资深代码审查架构师，具有安全、性能、架构和质量保证专业知识</role>
 
-## Prerequisites
+## 先决条件
 
 <requirements>
-- Git repository with GitHub CLI (`gh`) installed and authenticated
-- Clean main/master branch
-- Proper permissions to create worktrees and access the repository
-- For document reviews: Path to a markdown file or document
+- 安装并认证了GitHub CLI (`gh`) 的Git仓库
+- 干净的main/master分支
+- 创建worktree和访问仓库的适当权限
+- 对于文档审查：markdown文件或文档的路径
 </requirements>
 
-## Main Tasks
+## 主要任务
 
-### 1. Determine Review Target & Setup (ALWAYS FIRST)
+### 1. 确定审查目标并设置（始终首先执行）
 
 <review_target> #$ARGUMENTS </review_target>
 
 <thinking>
-First, I need to determine the review target type and set up the code for analysis.
+首先，我需要确定审查目标类型并设置代码进行分析。
 </thinking>
 
-#### Immediate Actions:
+#### 立即操作：
 
 <task_list>
 
-- [ ] Determine review type: PR number (numeric), GitHub URL, file path (.md), or empty (current branch)
-- [ ] Check current git branch
-- [ ] If ALREADY on the PR branch → proceed with analysis on current branch
-- [ ] If DIFFERENT branch → offer to use worktree: "Use git-worktree skill for isolated Call `skill: git-worktree` with branch name
-- [ ] Fetch PR metadata using `gh pr view --json` for title, body, files, linked issues
-- [ ] Set up language-specific analysis tools
-- [ ] Prepare security scanning environment
-- [ ] Make sure we are on the branch we are reviewing. Use gh pr checkout to switch to the branch or manually checkout the branch.
+- [ ] 确定审查类型：PR编号（数字）、GitHub URL、文件路径（.md）或为空（当前分支）
+- [ ] 检查当前git分支
+- [ ] 如果已经在PR分支上 → 在当前分支上继续分析
+- [ ] 如果在不同分支上 → 提供使用worktree："使用git-worktree skill进行隔离，调用 `skill: git-worktree` 并提供分支名称
+- [ ] 使用 `gh pr view --json` 获取PR元数据，包括标题、正文、文件、链接的issue
+- [ ] 设置特定语言的分析工具
+- [ ] 准备安全扫描环境
+- [ ] 确保我们在正在审查的分支上。使用gh pr checkout切换到分支或手动切换分支。
 
-Ensure that the code is ready for analysis (either in worktree or on current branch). ONLY then proceed to the next step.
+确保代码已准备好进行分析（在worktree中或在当前分支上）。只有这样才能继续下一步。
 
 </task_list>
 
-#### Parallel Agents to review the PR:
+#### 并行Agent审查PR：
 
 <parallel_tasks>
 
-Run ALL or most of these agents at the same time:
+同时运行所有或大部分这些Agent：
 
 1. Task kieran-rails-reviewer(PR content)
 2. Task dhh-rails-reviewer(PR title)
-3. If turbo is used: Task rails-turbo-expert(PR content)
+3. 如果使用turbo：Task rails-turbo-expert(PR content)
 4. Task git-history-analyzer(PR content)
 5. Task dependency-detective(PR content)
 6. Task pattern-recognition-specialist(PR content)
@@ -66,224 +66,224 @@ Run ALL or most of these agents at the same time:
 10. Task performance-oracle(PR content)
 11. Task devops-harmony-analyst(PR content)
 12. Task data-integrity-guardian(PR content)
-13. Task agent-native-reviewer(PR content) - Verify new features are agent-accessible
+13. Task agent-native-reviewer(PR content) - 验证新功能是否可被Agent访问
 
 </parallel_tasks>
 
-#### Conditional Agents (Run if applicable):
+#### 条件Agent（如果适用则运行）：
 
 <conditional_agents>
 
-These agents are run ONLY when the PR matches specific criteria. Check the PR files list to determine if they apply:
+这些Agent仅在PR符合特定条件时运行。检查PR文件列表以确定是否适用：
 
-**If PR contains database migrations (db/migrate/*.rb files) or data backfills:**
+**如果PR包含数据库迁移（db/migrate/*.rb文件）或数据回填：**
 
-14. Task data-migration-expert(PR content) - Validates ID mappings match production, checks for swapped values, verifies rollback safety
-15. Task deployment-verification-agent(PR content) - Creates Go/No-Go deployment checklist with SQL verification queries
+14. Task data-migration-expert(PR content) - 验证ID映射与生产环境匹配，检查交换的值，验证回滚安全性
+15. Task deployment-verification-agent(PR content) - 创建带有SQL验证查询的Go/No-Go部署检查清单
 
-**When to run migration agents:**
-- PR includes files matching `db/migrate/*.rb`
-- PR modifies columns that store IDs, enums, or mappings
-- PR includes data backfill scripts or rake tasks
-- PR changes how data is read/written (e.g., changing from FK to string column)
-- PR title/body mentions: migration, backfill, data transformation, ID mapping
+**何时运行迁移Agent：**
+- PR包含匹配 `db/migrate/*.rb` 的文件
+- PR修改存储ID、枚举或映射的列
+- PR包含数据回填脚本或rake任务
+- PR更改数据读取/写入方式（例如，从FK更改为字符串列）
+- PR标题/正文提及：migration、backfill、data transformation、ID mapping
 
-**What these agents check:**
-- `data-migration-expert`: Verifies hard-coded mappings match production reality (prevents swapped IDs), checks for orphaned associations, validates dual-write patterns
-- `deployment-verification-agent`: Produces executable pre/post-deploy checklists with SQL queries, rollback procedures, and monitoring plans
+**这些Agent检查什么：**
+- `data-migration-expert`：验证硬编码映射与生产环境实际情况匹配（防止ID交换），检查孤立关联，验证双写模式
+- `deployment-verification-agent`：生成可执行的部署前/后检查清单，包含SQL查询、回滚程序和监控计划
 
 </conditional_agents>
 
-### 4. Ultra-Thinking Deep Dive Phases
+### 4. 超级思考深入阶段
 
-<ultrathink_instruction> For each phase below, spend maximum cognitive effort. Think step by step. Consider all angles. Question assumptions. And bring all reviews in a synthesis to the user.</ultrathink_instruction>
+<ultrathink_instruction> 对于以下每个阶段，花费最大的认知努力。逐步思考。考虑所有角度。质疑假设。并将所有审查综合呈现给用户。</ultrathink_instruction>
 
 <deliverable>
-Complete system context map with component interactions
+完整的系统上下文映射与组件交互
 </deliverable>
 
-#### Phase 3: Stakeholder Perspective Analysis
+#### Phase 3: 利益相关者视角分析
 
-<thinking_prompt> ULTRA-THINK: Put yourself in each stakeholder's shoes. What matters to them? What are their pain points? </thinking_prompt>
+<thinking_prompt> 超级思考：站在每个利益相关者的立场上。什么对他们重要？他们的痛点是什么？ </thinking_prompt>
 
 <stakeholder_perspectives>
 
-1. **Developer Perspective** <questions>
+1. **开发者视角** <questions>
 
-   - How easy is this to understand and modify?
-   - Are the APIs intuitive?
-   - Is debugging straightforward?
-   - Can I test this easily? </questions>
+   - 理解和修改有多容易？
+   - API是否直观？
+   - 调试是否简单明了？
+   - 是否容易测试？ </questions>
 
-2. **Operations Perspective** <questions>
+2. **运维视角** <questions>
 
-   - How do I deploy this safely?
-   - What metrics and logs are available?
-   - How do I troubleshoot issues?
-   - What are the resource requirements? </questions>
+   - 如何安全地部署？
+   - 有哪些指标和日志可用？
+   - 如何排查问题？
+   - 资源需求是什么？ </questions>
 
-3. **End User Perspective** <questions>
+3. **最终用户视角** <questions>
 
-   - Is the feature intuitive?
-   - Are error messages helpful?
-   - Is performance acceptable?
-   - Does it solve my problem? </questions>
+   - 功能是否直观？
+   - 错误消息是否有帮助？
+   - 性能是否可接受？
+   - 是否解决了我的问题？ </questions>
 
-4. **Security Team Perspective** <questions>
+4. **安全团队视角** <questions>
 
-   - What's the attack surface?
-   - Are there compliance requirements?
-   - How is data protected?
-   - What are the audit capabilities? </questions>
+   - 攻击面是什么？
+   - 是否有合规要求？
+   - 数据如何受保护？
+   - 审计能力如何？ </questions>
 
-5. **Business Perspective** <questions>
-   - What's the ROI?
-   - Are there legal/compliance risks?
-   - How does this affect time-to-market?
-   - What's the total cost of ownership? </questions> </stakeholder_perspectives>
+5. **业务视角** <questions>
+   - ROI是多少？
+   - 是否存在法律/合规风险？
+   - 这如何影响上市时间？
+   - 总拥有成本是多少？ </questions> </stakeholder_perspectives>
 
-#### Phase 4: Scenario Exploration
+#### Phase 4: 场景探索
 
-<thinking_prompt> ULTRA-THINK: Explore edge cases and failure scenarios. What could go wrong? How does the system behave under stress? </thinking_prompt>
+<thinking_prompt> 超级思考：探索边界情况和失败场景。可能出什么问题？系统在压力下如何表现？ </thinking_prompt>
 
 <scenario_checklist>
 
-- [ ] **Happy Path**: Normal operation with valid inputs
-- [ ] **Invalid Inputs**: Null, empty, malformed data
-- [ ] **Boundary Conditions**: Min/max values, empty collections
-- [ ] **Concurrent Access**: Race conditions, deadlocks
-- [ ] **Scale Testing**: 10x, 100x, 1000x normal load
-- [ ] **Network Issues**: Timeouts, partial failures
-- [ ] **Resource Exhaustion**: Memory, disk, connections
-- [ ] **Security Attacks**: Injection, overflow, DoS
-- [ ] **Data Corruption**: Partial writes, inconsistency
-- [ ] **Cascading Failures**: Downstream service issues </scenario_checklist>
+- [ ] **正常路径**：使用有效输入的正常操作
+- [ ] **无效输入**：Null、空值、格式错误的数据
+- [ ] **边界条件**：最小/最大值、空集合
+- [ ] **并发访问**：竞态条件、死锁
+- [ ] **规模测试**：10倍、100倍、1000倍正常负载
+- [ ] **网络问题**：超时、部分失败
+- [ ] **资源耗尽**：内存、磁盘、连接
+- [ ] **安全攻击**：注入、溢出、DoS
+- [ ] **数据损坏**：部分写入、不一致性
+- [ ] **级联故障**：下游服务问题 </scenario_checklist>
 
-### 6. Multi-Angle Review Perspectives
+### 6. 多角度审查视角
 
-#### Technical Excellence Angle
+#### 技术卓越角度
 
-- Code craftsmanship evaluation
-- Engineering best practices
-- Technical documentation quality
-- Tooling and automation assessment
+- 代码工艺评估
+- 工程最佳实践
+- 技术文档质量
+- 工具和自动化评估
 
-#### Business Value Angle
+#### 业务价值角度
 
-- Feature completeness validation
-- Performance impact on users
-- Cost-benefit analysis
-- Time-to-market considerations
+- 功能完整性验证
+- 对用户的性能影响
+- 成本效益分析
+- 上市时间考虑
 
-#### Risk Management Angle
+#### 风险管理角度
 
-- Security risk assessment
-- Operational risk evaluation
-- Compliance risk verification
-- Technical debt accumulation
+- 安全风险评估
+- 运营风险评估
+- 合规风险验证
+- 技术债务累积
 
-#### Team Dynamics Angle
+#### 团队动态角度
 
-- Code review etiquette
-- Knowledge sharing effectiveness
-- Collaboration patterns
-- Mentoring opportunities
+- 代码审查礼仪
+- 知识共享有效性
+- 协作模式
+- 指导机会
 
-### 4. Simplification and Minimalism Review
+### 4. 简化和极简主义审查
 
-Run the Task code-simplicity-reviewer() to see if we can simplify the code.
+运行Task code-simplicity-reviewer()以查看我们是否可以简化代码。
 
-### 5. Findings Synthesis and Todo Creation Using file-todos Skill
+### 5. 使用file-todos Skill进行发现综合和Todo创建
 
-<critical_requirement> ALL findings MUST be stored in the todos/ directory using the file-todos skill. Create todo files immediately after synthesis - do NOT present findings for user approval first. Use the skill for structured todo management. </critical_requirement>
+<critical_requirement> 所有发现必须使用file-todos skill存储在todos/目录中。在综合后立即创建todo文件 - 不要先向用户呈现发现以获得批准。使用该skill进行结构化todo管理。 </critical_requirement>
 
-#### Step 1: Synthesize All Findings
+#### Step 1: 综合所有发现
 
 <thinking>
-Consolidate all agent reports into a categorized list of findings.
-Remove duplicates, prioritize by severity and impact.
+将所有Agent报告整合成分类的发现列表。
+删除重复项，按严重性和影响进行优先级排序。
 </thinking>
 
 <synthesis_tasks>
 
-- [ ] Collect findings from all parallel agents
-- [ ] Categorize by type: security, performance, architecture, quality, etc.
-- [ ] Assign severity levels: 🔴 CRITICAL (P1), 🟡 IMPORTANT (P2), 🔵 NICE-TO-HAVE (P3)
-- [ ] Remove duplicate or overlapping findings
-- [ ] Estimate effort for each finding (Small/Medium/Large)
+- [ ] 从所有并行Agent收集发现
+- [ ] 按类型分类：security、performance、architecture、quality等
+- [ ] 分配严重性级别：🔴 CRITICAL (P1)、🟡 IMPORTANT (P2)、🔵 NICE-TO-HAVE (P3)
+- [ ] 删除重复或重叠的发现
+- [ ] 估算每个发现的工作量（Small/Medium/Large）
 
 </synthesis_tasks>
 
-#### Step 2: Create Todo Files Using file-todos Skill
+#### Step 2: 使用file-todos Skill创建Todo文件
 
-<critical_instruction> Use the file-todos skill to create todo files for ALL findings immediately. Do NOT present findings one-by-one asking for user approval. Create all todo files in parallel using the skill, then summarize results to user. </critical_instruction>
+<critical_instruction> 使用file-todos skill立即为所有发现创建todo文件。不要逐一向用户呈现发现以征求批准。使用该skill并行创建所有todo文件，然后向用户总结结果。 </critical_instruction>
 
-**Implementation Options:**
+**实现选项：**
 
-**Option A: Direct File Creation (Fast)**
+**选项A：直接文件创建（快速）**
 
-- Create todo files directly using Write tool
-- All findings in parallel for speed
-- Use standard template from `.claude/skills/file-todos/assets/todo-template.md`
-- Follow naming convention: `{issue_id}-pending-{priority}-{description}.md`
+- 使用Write工具直接创建todo文件
+- 所有发现并行处理以提高速度
+- 使用来自 `.claude/skills/file-todos/assets/todo-template.md` 的标准模板
+- 遵循命名约定：`{issue_id}-pending-{priority}-{description}.md`
 
-**Option B: Sub-Agents in Parallel (Recommended for Scale)** For large PRs with 15+ findings, use sub-agents to create finding files in parallel:
+**选项B：并行子Agent（推荐用于大规模）** 对于有15个以上发现的大型PR，使用子Agent并行创建发现文件：
 
 ```bash
-# Launch multiple finding-creator agents in parallel
-Task() - Create todos for first finding
-Task() - Create todos for second finding
-Task() - Create todos for third finding
-etc. for each finding.
+# 并行启动多个发现创建器Agent
+Task() - 为第一个发现创建todo
+Task() - 为第二个发现创建todo
+Task() - 为第三个发现创建todo
+等等，为每个发现。
 ```
 
-Sub-agents can:
+子Agent可以：
 
-- Process multiple findings simultaneously
-- Write detailed todo files with all sections filled
-- Organize findings by severity
-- Create comprehensive Proposed Solutions
-- Add acceptance criteria and work logs
-- Complete much faster than sequential processing
+- 同时处理多个发现
+- 编写填写所有部分的详细todo文件
+- 按严重性组织发现
+- 创建全面的建议解决方案
+- 添加验收标准和工作日志
+- 比顺序处理快得多
 
-**Execution Strategy:**
+**执行策略：**
 
-1. Synthesize all findings into categories (P1/P2/P3)
-2. Group findings by severity
-3. Launch 3 parallel sub-agents (one per severity level)
-4. Each sub-agent creates its batch of todos using the file-todos skill
-5. Consolidate results and present summary
+1. 将所有发现综合到类别中（P1/P2/P3）
+2. 按严重性分组发现
+3. 启动3个并行子Agent（每个严重性级别一个）
+4. 每个子Agent使用file-todos skill创建其批次的todo
+5. 整合结果并呈现摘要
 
-**Process (Using file-todos Skill):**
+**流程（使用file-todos Skill）：**
 
-1. For each finding:
+1. 对于每个发现：
 
-   - Determine severity (P1/P2/P3)
-   - Write detailed Problem Statement and Findings
-   - Create 2-3 Proposed Solutions with pros/cons/effort/risk
-   - Estimate effort (Small/Medium/Large)
-   - Add acceptance criteria and work log
+   - 确定严重性（P1/P2/P3）
+   - 编写详细的问题陈述和发现
+   - 创建2-3个带有优缺点/工作量/风险的建议解决方案
+   - 估算工作量（Small/Medium/Large）
+   - 添加验收标准和工作日志
 
-2. Use file-todos skill for structured todo management:
+2. 使用file-todos skill进行结构化todo管理：
 
    ```bash
    skill: file-todos
    ```
 
-   The skill provides:
+   该skill提供：
 
-   - Template location: `.claude/skills/file-todos/assets/todo-template.md`
-   - Naming convention: `{issue_id}-{status}-{priority}-{description}.md`
-   - YAML frontmatter structure: status, priority, issue_id, tags, dependencies
-   - All required sections: Problem Statement, Findings, Solutions, etc.
+   - 模板位置：`.claude/skills/file-todos/assets/todo-template.md`
+   - 命名约定：`{issue_id}-{status}-{priority}-{description}.md`
+   - YAML frontmatter结构：status、priority、issue_id、tags、dependencies
+   - 所有必需部分：Problem Statement、Findings、Solutions等
 
-3. Create todo files in parallel:
+3. 并行创建todo文件：
 
    ```bash
    {next_id}-pending-{priority}-{description}.md
    ```
 
-4. Examples:
+4. 示例：
 
    ```
    001-pending-p1-path-traversal-vulnerability.md
@@ -292,223 +292,223 @@ Sub-agents can:
    004-pending-p3-unused-parameter.md
    ```
 
-5. Follow template structure from file-todos skill: `.claude/skills/file-todos/assets/todo-template.md`
+5. 遵循file-todos skill的模板结构：`.claude/skills/file-todos/assets/todo-template.md`
 
-**Todo File Structure (from template):**
+**Todo文件结构（来自模板）：**
 
-Each todo must include:
+每个todo必须包含：
 
-- **YAML frontmatter**: status, priority, issue_id, tags, dependencies
-- **Problem Statement**: What's broken/missing, why it matters
-- **Findings**: Discoveries from agents with evidence/location
-- **Proposed Solutions**: 2-3 options, each with pros/cons/effort/risk
-- **Recommended Action**: (Filled during triage, leave blank initially)
-- **Technical Details**: Affected files, components, database changes
-- **Acceptance Criteria**: Testable checklist items
-- **Work Log**: Dated record with actions and learnings
-- **Resources**: Links to PR, issues, documentation, similar patterns
+- **YAML frontmatter**：status、priority、issue_id、tags、dependencies
+- **Problem Statement**：什么被破坏/缺失，为什么重要
+- **Findings**：来自Agent的发现，带有证据/位置
+- **Proposed Solutions**：2-3个选项，每个都有优缺点/工作量/风险
+- **Recommended Action**：（在分类期间填写，最初留空）
+- **Technical Details**：受影响的文件、组件、数据库更改
+- **Acceptance Criteria**：可测试的检查清单项
+- **Work Log**：带有操作和学习的日期记录
+- **Resources**：PR链接、issue、文档、类似模式
 
-**File naming convention:**
+**文件命名约定：**
 
 ```
 {issue_id}-{status}-{priority}-{description}.md
 
-Examples:
+示例：
 - 001-pending-p1-security-vulnerability.md
 - 002-pending-p2-performance-optimization.md
 - 003-pending-p3-code-cleanup.md
 ```
 
-**Status values:**
+**状态值：**
 
-- `pending` - New findings, needs triage/decision
-- `ready` - Approved by manager, ready to work
-- `complete` - Work finished
+- `pending` - 新发现，需要分类/决策
+- `ready` - 经理批准，准备工作
+- `complete` - 工作完成
 
-**Priority values:**
+**优先级值：**
 
-- `p1` - Critical (blocks merge, security/data issues)
-- `p2` - Important (should fix, architectural/performance)
-- `p3` - Nice-to-have (enhancements, cleanup)
+- `p1` - 关键（阻止合并，安全/数据问题）
+- `p2` - 重要（应该修复，架构/性能）
+- `p3` - 锦上添花（增强、清理）
 
-**Tagging:** Always add `code-review` tag, plus: `security`, `performance`, `architecture`, `rails`, `quality`, etc.
+**标记：** 始终添加 `code-review` 标签，加上：`security`、`performance`、`architecture`、`rails`、`quality` 等。
 
-#### Step 3: Summary Report
+#### Step 3: 摘要报告
 
-After creating all todo files, present comprehensive summary:
+创建所有todo文件后，呈现全面摘要：
 
 ````markdown
-## ✅ Code Review Complete
+## ✅ 代码审查完成
 
-**Review Target:** PR #XXXX - [PR Title] **Branch:** [branch-name]
+**审查目标：** PR #XXXX - [PR标题] **分支：** [branch-name]
 
-### Findings Summary:
+### 发现摘要：
 
-- **Total Findings:** [X]
-- **🔴 CRITICAL (P1):** [count] - BLOCKS MERGE
-- **🟡 IMPORTANT (P2):** [count] - Should Fix
-- **🔵 NICE-TO-HAVE (P3):** [count] - Enhancements
+- **总发现数：** [X]
+- **🔴 CRITICAL (P1)：** [count] - 阻止合并
+- **🟡 IMPORTANT (P2)：** [count] - 应该修复
+- **🔵 NICE-TO-HAVE (P3)：** [count] - 增强
 
-### Created Todo Files:
+### 已创建的Todo文件：
 
-**P1 - Critical (BLOCKS MERGE):**
+**P1 - 关键（阻止合并）：**
 
 - `001-pending-p1-{finding}.md` - {description}
 - `002-pending-p1-{finding}.md` - {description}
 
-**P2 - Important:**
+**P2 - 重要：**
 
 - `003-pending-p2-{finding}.md` - {description}
 - `004-pending-p2-{finding}.md` - {description}
 
-**P3 - Nice-to-Have:**
+**P3 - 锦上添花：**
 
 - `005-pending-p3-{finding}.md` - {description}
 
-### Review Agents Used:
+### 使用的审查Agent：
 
 - kieran-rails-reviewer
 - security-sentinel
 - performance-oracle
 - architecture-strategist
 - agent-native-reviewer
-- [other agents]
+- [其他Agent]
 
-### Next Steps:
+### 下一步：
 
-1. **Address P1 Findings**: CRITICAL - must be fixed before merge
+1. **处理P1发现**：关键 - 合并前必须修复
 
-   - Review each P1 todo in detail
-   - Implement fixes or request exemption
-   - Verify fixes before merging PR
+   - 详细审查每个P1 todo
+   - 实施修复或请求豁免
+   - 合并PR前验证修复
 
-2. **Triage All Todos**:
+2. **分类所有Todo**：
    ```bash
-   ls todos/*-pending-*.md  # View all pending todos
-   /triage                  # Use slash command for interactive triage
+   ls todos/*-pending-*.md  # 查看所有待处理todo
+   /triage                  # 使用斜杠命令进行交互式分类
    ```
 ````
 
-3. **Work on Approved Todos**:
+3. **处理已批准的Todo**：
 
    ```bash
-   /resolve_todo_parallel  # Fix all approved items efficiently
+   /resolve_todo_parallel  # 高效修复所有已批准项
    ```
 
-4. **Track Progress**:
-   - Rename file when status changes: pending → ready → complete
-   - Update Work Log as you work
-   - Commit todos: `git add todos/ && git commit -m "refactor: add code review findings"`
+4. **跟踪进度**：
+   - 状态更改时重命名文件：pending → ready → complete
+   - 工作时更新Work Log
+   - 提交todo：`git add todos/ && git commit -m "refactor: add code review findings"`
 
-### Severity Breakdown:
+### 严重性细分：
 
-**🔴 P1 (Critical - Blocks Merge):**
+**🔴 P1（关键 - 阻止合并）：**
 
-- Security vulnerabilities
-- Data corruption risks
-- Breaking changes
-- Critical architectural issues
+- 安全漏洞
+- 数据损坏风险
+- 破坏性变更
+- 关键架构问题
 
-**🟡 P2 (Important - Should Fix):**
+**🟡 P2（重要 - 应该修复）：**
 
-- Performance issues
-- Significant architectural concerns
-- Major code quality problems
-- Reliability issues
+- 性能问题
+- 重大架构问题
+- 主要代码质量问题
+- 可靠性问题
 
-**🔵 P3 (Nice-to-Have):**
+**🔵 P3（锦上添花）：**
 
-- Minor improvements
-- Code cleanup
-- Optimization opportunities
-- Documentation updates
+- 小的改进
+- 代码清理
+- 优化机会
+- 文档更新
 
 ```
 
-### 7. End-to-End Testing (Optional)
+### 7. 端到端测试（可选）
 
 <detect_project_type>
 
-**First, detect the project type from PR files:**
+**首先，从PR文件检测项目类型：**
 
-| Indicator | Project Type |
-|-----------|--------------|
-| `*.xcodeproj`, `*.xcworkspace`, `Package.swift` (iOS) | iOS/macOS |
-| `Gemfile`, `package.json`, `app/views/*`, `*.html.*` | Web |
-| Both iOS files AND web files | Hybrid (test both) |
+| 指示器 | 项目类型 |
+|--------|----------|
+| `*.xcodeproj`、`*.xcworkspace`、`Package.swift` (iOS) | iOS/macOS |
+| `Gemfile`、`package.json`、`app/views/*`、`*.html.*` | Web |
+| iOS文件和web文件都有 | 混合（两者都测试） |
 
 </detect_project_type>
 
 <offer_testing>
 
-After presenting the Summary Report, offer appropriate testing based on project type:
+呈现摘要报告后，根据项目类型提供适当的测试：
 
-**For Web Projects:**
+**对于Web项目：**
 ```markdown
-**"Want to run Playwright browser tests on the affected pages?"**
-1. Yes - run `/playwright-test`
-2. No - skip
+**"想在受影响的页面上运行Playwright浏览器测试吗？"**
+1. 是 - 运行 `/playwright-test`
+2. 否 - 跳过
 ```
 
-**For iOS Projects:**
+**对于iOS项目：**
 ```markdown
-**"Want to run Xcode simulator tests on the app?"**
-1. Yes - run `/xcode-test`
-2. No - skip
+**"想在应用上运行Xcode模拟器测试吗？"**
+1. 是 - 运行 `/xcode-test`
+2. 否 - 跳过
 ```
 
-**For Hybrid Projects (e.g., Rails + Hotwire Native):**
+**对于混合项目（例如Rails + Hotwire Native）：**
 ```markdown
-**"Want to run end-to-end tests?"**
-1. Web only - run `/playwright-test`
-2. iOS only - run `/xcode-test`
-3. Both - run both commands
-4. No - skip
+**"想运行端到端测试吗？"**
+1. 仅Web - 运行 `/playwright-test`
+2. 仅iOS - 运行 `/xcode-test`
+3. 两者 - 运行两个命令
+4. 否 - 跳过
 ```
 
 </offer_testing>
 
-#### If User Accepts Web Testing:
+#### 如果用户接受Web测试：
 
-Spawn a subagent to run Playwright tests (preserves main context):
-
-```
-Task general-purpose("Run /playwright-test for PR #[number]. Test all affected pages, check for console errors, handle failures by creating todos and fixing.")
-```
-
-The subagent will:
-1. Identify pages affected by the PR
-2. Navigate to each page and capture snapshots
-3. Check for console errors
-4. Test critical interactions
-5. Pause for human verification on OAuth/email/payment flows
-6. Create P1 todos for any failures
-7. Fix and retry until all tests pass
-
-**Standalone:** `/playwright-test [PR number]`
-
-#### If User Accepts iOS Testing:
-
-Spawn a subagent to run Xcode tests (preserves main context):
+生成子Agent运行Playwright测试（保留主上下文）：
 
 ```
-Task general-purpose("Run /xcode-test for scheme [name]. Build for simulator, install, launch, take screenshots, check for crashes.")
+Task general-purpose("为PR #[number]运行/playwright-test。测试所有受影响的页面，检查控制台错误，通过创建todo和修复来处理失败。")
 ```
 
-The subagent will:
-1. Verify XcodeBuildMCP is installed
-2. Discover project and schemes
-3. Build for iOS Simulator
-4. Install and launch app
-5. Take screenshots of key screens
-6. Capture console logs for errors
-7. Pause for human verification (Sign in with Apple, push, IAP)
-8. Create P1 todos for any failures
-9. Fix and retry until all tests pass
+子Agent将：
+1. 识别PR影响的页面
+2. 导航到每个页面并捕获快照
+3. 检查控制台错误
+4. 测试关键交互
+5. 在OAuth/email/支付流程上暂停以进行人工验证
+6. 为任何失败创建P1 todo
+7. 修复并重试直到所有测试通过
 
-**Standalone:** `/xcode-test [scheme]`
+**独立命令：** `/playwright-test [PR number]`
 
-### Important: P1 Findings Block Merge
+#### 如果用户接受iOS测试：
 
-Any **🔴 P1 (CRITICAL)** findings must be addressed before merging the PR. Present these prominently and ensure they're resolved before accepting the PR.
+生成子Agent运行Xcode测试（保留主上下文）：
+
+```
+Task general-purpose("为scheme [name]运行/xcode-test。为模拟器构建，安装，启动，截图，检查崩溃。")
+```
+
+子Agent将：
+1. 验证XcodeBuildMCP已安装
+2. 发现项目和scheme
+3. 为iOS模拟器构建
+4. 安装并启动应用
+5. 截取关键屏幕的截图
+6. 捕获控制台日志以查找错误
+7. 暂停以进行人工验证（Sign in with Apple、推送、IAP）
+8. 为任何失败创建P1 todo
+9. 修复并重试直到所有测试通过
+
+**独立命令：** `/xcode-test [scheme]`
+
+### 重要提示：P1发现阻止合并
+
+任何 **🔴 P1（CRITICAL）** 发现必须在合并PR之前得到解决。突出呈现这些内容，并确保在接受PR之前解决它们。
 ```

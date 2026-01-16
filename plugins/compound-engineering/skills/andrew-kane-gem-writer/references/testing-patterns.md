@@ -1,8 +1,8 @@
-# Testing Patterns
+# 测试模式
 
-## Minitest Setup
+## Minitest 设置
 
-Kane exclusively uses Minitest—never RSpec.
+Kane 专门使用 Minitest——从不使用 RSpec。
 
 ```ruby
 # test/test_helper.rb
@@ -28,7 +28,7 @@ class Minitest::Test
 end
 ```
 
-## Test File Structure
+## 测试文件结构
 
 ```ruby
 # test/model_test.rb
@@ -58,9 +58,9 @@ class ModelTest < Minitest::Test
 end
 ```
 
-## Multi-Version Testing
+## 多版本测试
 
-Test against multiple Rails/Ruby versions using gemfiles:
+使用 gemfile 针对多个 Rails/Ruby 版本进行测试：
 
 ```
 test/
@@ -89,7 +89,7 @@ gem "activerecord", "~> 7.2.0"
 gem "sqlite3"
 ```
 
-Run with specific gemfile:
+使用特定 gemfile 运行：
 
 ```bash
 BUNDLE_GEMFILE=test/gemfiles/activerecord70.gemfile bundle install
@@ -148,7 +148,7 @@ jobs:
       - run: bundle exec rake test
 ```
 
-## Database-Specific Testing
+## 数据库特定测试
 
 ```yaml
 # .github/workflows/build.yml (with services)
@@ -170,7 +170,7 @@ env:
   DATABASE_URL: postgres://postgres:postgres@localhost/gemname_test
 ```
 
-## Test Database Setup
+## 测试数据库设置
 
 ```ruby
 # test/test_helper.rb
@@ -199,16 +199,16 @@ class User < ActiveRecord::Base
 end
 ```
 
-## Assertion Patterns
+## 断言模式
 
 ```ruby
-# Basic assertions
+# 基本断言
 assert result
 assert_equal expected, actual
 assert_nil value
 assert_empty array
 
-# Exception testing
+# 异常测试
 assert_raises(ArgumentError) { bad_code }
 
 error = assert_raises(GemName::Error) do
@@ -216,13 +216,13 @@ error = assert_raises(GemName::Error) do
 end
 assert_match /expected message/, error.message
 
-# Refutations
+# 否定断言
 refute condition
 refute_equal unexpected, actual
 refute_nil value
 ```
 
-## Test Helpers
+## 测试辅助方法
 
 ```ruby
 # test/test_helper.rb
@@ -247,7 +247,7 @@ class Minitest::Test
 end
 ```
 
-## Skipping Tests
+## 跳过测试
 
 ```ruby
 def test_postgresql_specific

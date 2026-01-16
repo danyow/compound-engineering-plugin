@@ -6,150 +6,150 @@ tags: []
 dependencies: []
 ---
 
-# Brief Task Title
+# 简要任务标题
 
-Replace with a concise title describing what needs to be done.
+用简洁的标题描述需要完成的工作。
 
-## Problem Statement
+## 问题陈述
 
-What is broken, missing, or needs improvement? Provide clear context about why this matters.
+哪些地方出现了问题、缺失或需要改进？提供清晰的上下文说明为什么这很重要。
 
-**Example:**
-- Template system lacks comprehensive test coverage for edge cases discovered during PR review
-- Email service is missing proper error handling for rate-limit scenarios
-- Documentation doesn't cover the new authentication flow
+**示例：**
+- 模板系统在 PR 审查期间发现的边界情况缺乏全面的测试覆盖
+- 邮件服务缺少对限流场景的正确错误处理
+- 文档未涵盖新的身份验证流程
 
-## Findings
+## 发现
 
-Investigation results, root cause analysis, and key discoveries.
+调查结果、根本原因分析和关键发现。
 
-- Finding 1 (with specifics: file, line number if applicable)
-- Finding 2
-- Key discovery with impact assessment
-- Related issues or patterns discovered
+- 发现 1（包含具体信息：文件、行号等）
+- 发现 2
+- 关键发现及影响评估
+- 发现的相关问题或模式
 
-**Example format:**
-- Identified 12 missing test scenarios in `app/models/user_test.rb`
-- Current coverage: 60% of code paths
-- Missing: empty inputs, special characters, large payloads
-- Similar issues exist in `app/models/post_test.rb` (~8 scenarios)
+**示例格式：**
+- 在 `app/models/user_test.rb` 中识别出 12 个缺失的测试场景
+- 当前覆盖率：60% 的代码路径
+- 缺失：空输入、特殊字符、大负载
+- 在 `app/models/post_test.rb` 中存在类似问题（约 8 个场景）
 
-## Proposed Solutions
+## 建议方案
 
-Present multiple options with pros, cons, effort estimates, and risk assessment.
+提供多个选项，包含优缺点、工作量估算和风险评估。
 
-### Option 1: [Solution Name]
+### 选项 1：[方案名称]
 
-**Approach:** Describe the solution clearly.
+**方法：** 清楚地描述解决方案。
 
-**Pros:**
-- Benefit 1
-- Benefit 2
+**优点：**
+- 优势 1
+- 优势 2
 
-**Cons:**
-- Drawback 1
-- Drawback 2
+**缺点：**
+- 劣势 1
+- 劣势 2
 
-**Effort:** 2-3 hours
+**工作量：** 2-3 小时
 
-**Risk:** Low / Medium / High
-
----
-
-### Option 2: [Solution Name]
-
-**Approach:** Describe the solution clearly.
-
-**Pros:**
-- Benefit 1
-- Benefit 2
-
-**Cons:**
-- Drawback 1
-- Drawback 2
-
-**Effort:** 4-6 hours
-
-**Risk:** Low / Medium / High
+**风险：** 低 / 中 / 高
 
 ---
 
-### Option 3: [Solution Name]
+### 选项 2：[方案名称]
 
-(Include if you have alternatives)
+**方法：** 清楚地描述解决方案。
 
-## Recommended Action
+**优点：**
+- 优势 1
+- 优势 2
 
-**To be filled during triage.** Clear, actionable plan for resolving this todo.
+**缺点：**
+- 劣势 1
+- 劣势 2
 
-**Example:**
-"Implement both unit tests (covering each scenario) and integration tests (full pipeline) before merging. Estimated 4 hours total effort. Target coverage > 85% for this module."
+**工作量：** 4-6 小时
 
-## Technical Details
+**风险：** 低 / 中 / 高
 
-Affected files, related components, database changes, or architectural considerations.
+---
 
-**Affected files:**
-- `app/models/user.rb:45` - full_name method
-- `app/services/user_service.rb:12` - validation logic
-- `test/models/user_test.rb` - existing tests
+### 选项 3：[方案名称]
 
-**Related components:**
-- UserMailer (depends on user validation)
-- AccountPolicy (authorization checks)
+（如果有其他选择，可以在此添加）
 
-**Database changes (if any):**
-- Migration needed? Yes / No
-- New columns/tables? Describe here
+## 建议行动
 
-## Resources
+**在分类期间填写。** 解决此 todo 的明确可行计划。
 
-Links to errors, tests, PRs, documentation, similar issues.
+**示例：**
+"在合并之前实现单元测试（覆盖每个场景）和集成测试（完整流程）。预计总工作量 4 小时。目标覆盖率 > 85%。"
+
+## 技术细节
+
+受影响的文件、相关组件、数据库变更或架构考虑因素。
+
+**受影响的文件：**
+- `app/models/user.rb:45` - full_name 方法
+- `app/services/user_service.rb:12` - 验证逻辑
+- `test/models/user_test.rb` - 现有测试
+
+**相关组件：**
+- UserMailer（依赖于用户验证）
+- AccountPolicy（授权检查）
+
+**数据库变更（如有）：**
+- 是否需要迁移？是 / 否
+- 新列/新表？在此描述
+
+## 资源
+
+错误、测试、PR、文档、类似问题的链接。
 
 - **PR:** #1287
-- **Related issue:** #456
-- **Error log:** [link to AppSignal incident]
-- **Documentation:** [relevant docs]
-- **Similar patterns:** Issue #200 (completed, ref for approach)
+- **相关问题:** #456
+- **错误日志:** [AppSignal 事件链接]
+- **文档:** [相关文档]
+- **类似模式:** Issue #200（已完成，可参考方法）
 
-## Acceptance Criteria
+## 验收标准
 
-Testable checklist items for verifying completion.
+用于验证完成情况的可测试检查清单。
 
-- [ ] All acceptance criteria checked
-- [ ] Tests pass (unit + integration if applicable)
-- [ ] Code reviewed and approved
-- [ ] (Example) Test coverage > 85%
-- [ ] (Example) Performance metrics acceptable
-- [ ] (Example) Documentation updated
+- [ ] 所有验收标准已检查
+- [ ] 测试通过（单元测试 + 集成测试，如适用）
+- [ ] 代码已审查并批准
+- [ ] （示例）测试覆盖率 > 85%
+- [ ] （示例）性能指标可接受
+- [ ] （示例）文档已更新
 
-## Work Log
+## 工作日志
 
-Chronological record of work sessions, actions taken, and learnings.
+工作会话、采取的行动和学习的时间顺序记录。
 
-### 2025-11-12 - Initial Discovery
+### 2025-11-12 - 初步发现
 
-**By:** Claude Code
+**负责人：** Claude Code
 
-**Actions:**
-- Identified 12 missing test scenarios
-- Analyzed existing test coverage (file:line references)
-- Reviewed similar patterns in codebase
-- Drafted 3 solution approaches
+**行动：**
+- 识别出 12 个缺失的测试场景
+- 分析现有测试覆盖率（文件:行引用）
+- 审查代码库中的类似模式
+- 起草 3 种解决方案
 
-**Learnings:**
-- Similar issues exist in related modules
-- Current test setup supports both unit and integration tests
-- Performance testing would be valuable addition
+**学习：**
+- 在相关模块中存在类似问题
+- 当前测试设置支持单元测试和集成测试
+- 性能测试将是有价值的补充
 
 ---
 
-(Add more entries as work progresses)
+（随着工作进展添加更多条目）
 
-## Notes
+## 备注
 
-Additional context, decisions, or reminders.
+额外的上下文、决策或提醒事项。
 
-- Decision: Include both unit and integration tests for comprehensive coverage
-- Blocker: Depends on completion of issue #001
-- Timeline: Priority for sprint due to blocking other work
+- 决策：包含单元测试和集成测试以实现全面覆盖
+- 阻碍：依赖于问题 #001 的完成
+- 时间线：由于阻碍其他工作，此项为冲刺优先级

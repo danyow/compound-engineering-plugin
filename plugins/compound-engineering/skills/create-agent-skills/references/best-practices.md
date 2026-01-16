@@ -1,25 +1,25 @@
-# Skill Authoring Best Practices
+# Skill 编写最佳实践
 
-Source: [platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
+来源：[platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
 
-## Core Principles
+## 核心原则
 
-### Concise is Key
+### 简洁是关键
 
-The context window is a public good. Your Skill shares the context window with everything else Claude needs to know.
+上下文窗口是公共资源。你的 Skill 与 Claude 需要知道的其他所有内容共享上下文窗口。
 
-**Default assumption**: Claude is already very smart. Only add context Claude doesn't already have.
+**默认假设**：Claude 已经非常聪明。只添加 Claude 还没有的上下文。
 
-Challenge each piece of information:
-- "Does Claude really need this explanation?"
-- "Can I assume Claude knows this?"
-- "Does this paragraph justify its token cost?"
+质疑每条信息：
+- "Claude 真的需要这个解释吗？"
+- "我能假设 Claude 知道这个吗？"
+- "这段文字值得它的 token 成本吗？"
 
-**Good example (concise, ~50 tokens):**
+**好的示例（简洁，约 50 tokens）：**
 ```markdown
-## Extract PDF text
+## 提取 PDF 文本
 
-Use pdfplumber for text extraction:
+使用 pdfplumber 进行文本提取：
 
 ```python
 import pdfplumber
@@ -28,88 +28,88 @@ with pdfplumber.open("file.pdf") as pdf:
 ```
 ```
 
-**Bad example (too verbose, ~150 tokens):**
+**错误示例（过于冗长，约 150 tokens）：**
 ```markdown
-## Extract PDF text
+## 提取 PDF 文本
 
-PDF (Portable Document Format) files are a common file format that contains
-text, images, and other content. To extract text from a PDF, you'll need to
-use a library. There are many libraries available...
+PDF（便携式文档格式）文件是一种常见的文件格式，包含
+文本、图像和其他内容。要从 PDF 中提取文本，你需要
+使用一个库。有很多库可用...
 ```
 
-### Set Appropriate Degrees of Freedom
+### 设置适当的自由度
 
-Match specificity to task fragility and variability.
+将具体程度与任务脆弱性和可变性相匹配。
 
-**High freedom** (multiple valid approaches):
+**高自由度**（多种有效方法）：
 ```markdown
-## Code review process
+## 代码审查流程
 
-1. Analyze the code structure and organization
-2. Check for potential bugs or edge cases
-3. Suggest improvements for readability
-4. Verify adherence to project conventions
+1. 分析代码结构和组织
+2. 检查潜在的 bug 或边缘情况
+3. 建议提高可读性的改进
+4. 验证是否遵守项目约定
 ```
 
-**Medium freedom** (preferred pattern with variation):
+**中等自由度**（首选模式，有变化空间）：
 ```markdown
-## Generate report
+## 生成报告
 
-Use this template and customize as needed:
+使用此模板并根据需要自定义：
 
 ```python
 def generate_report(data, format="markdown"):
-    # Process data
-    # Generate output in specified format
+    # 处理数据
+    # 以指定格式生成输出
 ```
 ```
 
-**Low freedom** (fragile, exact sequence required):
+**低自由度**（脆弱，需要精确顺序）：
 ```markdown
-## Database migration
+## 数据库迁移
 
-Run exactly this script:
+精确运行此脚本：
 
 ```bash
 python scripts/migrate.py --verify --backup
 ```
 
-Do not modify the command or add flags.
+不要修改命令或添加标志。
 ```
 
-### Test With All Models
+### 使用所有模型测试
 
-Skills act as additions to models. Test with Haiku, Sonnet, and Opus.
+Skill 作为模型的补充。使用 Haiku、Sonnet 和 Opus 测试。
 
-- **Haiku**: Does the Skill provide enough guidance?
-- **Sonnet**: Is the Skill clear and efficient?
-- **Opus**: Does the Skill avoid over-explaining?
+- **Haiku**：Skill 是否提供了足够的指导？
+- **Sonnet**：Skill 是否清晰且高效？
+- **Opus**：Skill 是否避免了过度解释？
 
-## Naming Conventions
+## 命名约定
 
-Use **gerund form** (verb + -ing) for Skill names:
+使用**动名词形式**（动词 + -ing）命名 Skill：
 
-**Good:**
+**好的：**
 - `processing-pdfs`
 - `analyzing-spreadsheets`
 - `managing-databases`
 - `testing-code`
 - `writing-documentation`
 
-**Acceptable alternatives:**
-- Noun phrases: `pdf-processing`, `spreadsheet-analysis`
-- Action-oriented: `process-pdfs`, `analyze-spreadsheets`
+**可接受的替代：**
+- 名词短语：`pdf-processing`、`spreadsheet-analysis`
+- 面向操作：`process-pdfs`、`analyze-spreadsheets`
 
-**Avoid:**
-- Vague: `helper`, `utils`, `tools`
-- Generic: `documents`, `data`, `files`
-- Reserved: `anthropic-*`, `claude-*`
+**避免：**
+- 模糊的：`helper`、`utils`、`tools`
+- 通用的：`documents`、`data`、`files`
+- 保留的：`anthropic-*`、`claude-*`
 
-## Writing Effective Descriptions
+## 编写有效的描述
 
-**Always write in third person.** The description is injected into the system prompt.
+**始终使用第三人称。** 描述会被注入到系统提示中。
 
-**Be specific and include key terms:**
+**要具体并包含关键术语：**
 
 ```yaml
 # PDF Processing skill
@@ -122,16 +122,16 @@ description: Analyze Excel spreadsheets, create pivot tables, generate charts. U
 description: Generate descriptive commit messages by analyzing git diffs. Use when the user asks for help writing commit messages or reviewing staged changes.
 ```
 
-**Avoid vague descriptions:**
+**避免模糊的描述：**
 ```yaml
-description: Helps with documents  # Too vague!
-description: Processes data       # Too generic!
-description: Does stuff with files # Useless!
+description: Helps with documents  # 太模糊！
+description: Processes data       # 太通用！
+description: Does stuff with files # 无用！
 ```
 
-## Progressive Disclosure Patterns
+## 渐进式披露模式
 
-### Pattern 1: High-level guide with references
+### 模式 1：高层指南与参考
 
 ```markdown
 ---
@@ -141,7 +141,7 @@ description: Extracts text and tables from PDF files, fills forms, merges docume
 
 # PDF Processing
 
-## Quick start
+## 快速开始
 
 ```python
 import pdfplumber
@@ -149,256 +149,256 @@ with pdfplumber.open("file.pdf") as pdf:
     text = pdf.pages[0].extract_text()
 ```
 
-## Advanced features
+## 高级功能
 
-**Form filling**: See [FORMS.md](FORMS.md)
-**API reference**: See [REFERENCE.md](REFERENCE.md)
-**Examples**: See [EXAMPLES.md](EXAMPLES.md)
+**表单填充**：参见 [FORMS.md](FORMS.md)
+**API 参考**：参见 [REFERENCE.md](REFERENCE.md)
+**示例**：参见 [EXAMPLES.md](EXAMPLES.md)
 ```
 
-### Pattern 2: Domain-specific organization
+### 模式 2：特定领域组织
 
 ```
 bigquery-skill/
-├── SKILL.md (overview and navigation)
+├── SKILL.md（概述和导航）
 └── reference/
-    ├── finance.md (revenue, billing)
-    ├── sales.md (opportunities, pipeline)
-    ├── product.md (API usage, features)
-    └── marketing.md (campaigns, attribution)
+    ├── finance.md（收入、账单）
+    ├── sales.md（机会、渠道）
+    ├── product.md（API 使用、功能）
+    └── marketing.md（活动、归因）
 ```
 
-### Pattern 3: Conditional details
+### 模式 3：条件详细信息
 
 ```markdown
-# DOCX Processing
+# DOCX 处理
 
-## Creating documents
+## 创建文档
 
-Use docx-js for new documents. See [DOCX-JS.md](DOCX-JS.md).
+使用 docx-js 创建新文档。参见 [DOCX-JS.md](DOCX-JS.md)。
 
-## Editing documents
+## 编辑文档
 
-For simple edits, modify the XML directly.
+对于简单的编辑，直接修改 XML。
 
-**For tracked changes**: See [REDLINING.md](REDLINING.md)
-**For OOXML details**: See [OOXML.md](OOXML.md)
+**对于跟踪更改**：参见 [REDLINING.md](REDLINING.md)
+**对于 OOXML 详情**：参见 [OOXML.md](OOXML.md)
 ```
 
-## Keep References One Level Deep
+## 保持参考深度为一级
 
-Claude may partially read files when they're referenced from other referenced files.
+Claude 可能只会部分读取从其他参考文件引用的文件。
 
-**Bad (too deep):**
+**错误（过深）：**
 ```markdown
 # SKILL.md
-See [advanced.md](advanced.md)...
+参见 [advanced.md](advanced.md)...
 
 # advanced.md
-See [details.md](details.md)...
+参见 [details.md](details.md)...
 
 # details.md
-Here's the actual information...
+这是实际信息...
 ```
 
-**Good (one level deep):**
+**正确（一级深度）：**
 ```markdown
 # SKILL.md
 
-**Basic usage**: [in SKILL.md]
-**Advanced features**: See [advanced.md](advanced.md)
-**API reference**: See [reference.md](reference.md)
-**Examples**: See [examples.md](examples.md)
+**基本用法**：[在 SKILL.md 中]
+**高级功能**：参见 [advanced.md](advanced.md)
+**API 参考**：参见 [reference.md](reference.md)
+**示例**：参见 [examples.md](examples.md)
 ```
 
-## Workflows and Feedback Loops
+## 工作流和反馈循环
 
-### Workflow with Checklist
+### 带清单的工作流
 
 ```markdown
-## Research synthesis workflow
+## 研究综合工作流
 
-Copy this checklist:
+复制此清单：
 
 ```
-- [ ] Step 1: Read all source documents
-- [ ] Step 2: Identify key themes
-- [ ] Step 3: Cross-reference claims
-- [ ] Step 4: Create structured summary
-- [ ] Step 5: Verify citations
+- [ ] 步骤 1：阅读所有源文档
+- [ ] 步骤 2：识别关键主题
+- [ ] 步骤 3：交叉引用声明
+- [ ] 步骤 4：创建结构化摘要
+- [ ] 步骤 5：验证引用
 ```
 
-**Step 1: Read all source documents**
+**步骤 1：阅读所有源文档**
 
-Review each document in `sources/`. Note main arguments.
+查看 `sources/` 中的每个文档。注意主要论点。
 ...
 ```
 
-### Feedback Loop Pattern
+### 反馈循环模式
 
 ```markdown
-## Document editing process
+## 文档编辑流程
 
-1. Make your edits to `word/document.xml`
-2. **Validate immediately**: `python scripts/validate.py unpacked_dir/`
-3. If validation fails:
-   - Review the error message
-   - Fix the issues
-   - Run validation again
-4. **Only proceed when validation passes**
-5. Rebuild: `python scripts/pack.py unpacked_dir/ output.docx`
+1. 对 `word/document.xml` 进行编辑
+2. **立即验证**：`python scripts/validate.py unpacked_dir/`
+3. 如果验证失败：
+   - 查看错误消息
+   - 修复问题
+   - 再次运行验证
+4. **仅在验证通过后继续**
+5. 重新构建：`python scripts/pack.py unpacked_dir/ output.docx`
 ```
 
-## Common Patterns
+## 常见模式
 
-### Template Pattern
-
-```markdown
-## Report structure
-
-Use this template:
+### 模板模式
 
 ```markdown
-# [Analysis Title]
+## 报告结构
 
-## Executive summary
-[One-paragraph overview]
+使用此模板：
 
-## Key findings
-- Finding 1 with supporting data
-- Finding 2 with supporting data
+```markdown
+# [分析标题]
 
-## Recommendations
-1. Specific actionable recommendation
-2. Specific actionable recommendation
+## 执行摘要
+[一段式概述]
+
+## 关键发现
+- 发现 1 及支持数据
+- 发现 2 及支持数据
+
+## 建议
+1. 具体可操作的建议
+2. 具体可操作的建议
 ```
 ```
 
-### Examples Pattern
+### 示例模式
 
 ```markdown
-## Commit message format
+## 提交消息格式
 
-**Example 1:**
-Input: Added user authentication with JWT tokens
-Output:
+**示例 1：**
+输入：Added user authentication with JWT tokens
+输出：
 ```
 feat(auth): implement JWT-based authentication
 
 Add login endpoint and token validation middleware
 ```
 
-**Example 2:**
-Input: Fixed bug where dates displayed incorrectly
-Output:
+**示例 2：**
+输入：Fixed bug where dates displayed incorrectly
+输出：
 ```
 fix(reports): correct date formatting in timezone conversion
 ```
 ```
 
-### Conditional Workflow Pattern
+### 条件工作流模式
 
 ```markdown
-## Document modification
+## 文档修改
 
-1. Determine the modification type:
+1. 确定修改类型：
 
-   **Creating new content?** → Follow "Creation workflow"
-   **Editing existing?** → Follow "Editing workflow"
+   **创建新内容？** → 遵循"创建工作流"
+   **编辑现有内容？** → 遵循"编辑工作流"
 
-2. Creation workflow:
-   - Use docx-js library
-   - Build document from scratch
+2. 创建工作流：
+   - 使用 docx-js 库
+   - 从头构建文档
 
-3. Editing workflow:
-   - Unpack existing document
-   - Modify XML directly
-   - Validate after each change
+3. 编辑工作流：
+   - 解包现有文档
+   - 直接修改 XML
+   - 每次更改后验证
 ```
 
-## Content Guidelines
+## 内容指南
 
-### Avoid Time-Sensitive Information
+### 避免时间敏感信息
 
-**Bad:**
+**错误：**
 ```markdown
-If you're doing this before August 2025, use the old API.
+如果你在 2025 年 8 月之前执行此操作，请使用旧 API。
 ```
 
-**Good:**
+**正确：**
 ```markdown
-## Current method
+## 当前方法
 
-Use the v2 API endpoint: `api.example.com/v2/messages`
+使用 v2 API 端点：`api.example.com/v2/messages`
 
-## Old patterns
+## 旧模式
 
 <details>
-<summary>Legacy v1 API (deprecated 2025-08)</summary>
-The v1 API used: `api.example.com/v1/messages`
+<summary>旧版 v1 API（2025-08 已弃用）</summary>
+v1 API 使用：`api.example.com/v1/messages`
 </details>
 ```
 
-### Use Consistent Terminology
+### 使用一致的术语
 
-**Good - Consistent:**
-- Always "API endpoint"
-- Always "field"
-- Always "extract"
+**正确 - 一致：**
+- 始终"API endpoint"
+- 始终"field"
+- 始终"extract"
 
-**Bad - Inconsistent:**
-- Mix "API endpoint", "URL", "API route", "path"
-- Mix "field", "box", "element", "control"
+**错误 - 不一致：**
+- 混用"API endpoint"、"URL"、"API route"、"path"
+- 混用"field"、"box"、"element"、"control"
 
-## Anti-Patterns to Avoid
+## 应避免的反模式
 
-### Windows-Style Paths
+### Windows 风格路径
 
-- **Good**: `scripts/helper.py`, `reference/guide.md`
-- **Avoid**: `scripts\helper.py`, `reference\guide.md`
+- **正确**：`scripts/helper.py`、`reference/guide.md`
+- **避免**：`scripts\helper.py`、`reference\guide.md`
 
-### Too Many Options
+### 太多选项
 
-**Bad:**
+**错误：**
 ```markdown
-You can use pypdf, or pdfplumber, or PyMuPDF, or pdf2image, or...
+你可以使用 pypdf、pdfplumber、PyMuPDF、pdf2image 或...
 ```
 
-**Good:**
+**正确：**
 ```markdown
-Use pdfplumber for text extraction:
+使用 pdfplumber 进行文本提取：
 ```python
 import pdfplumber
 ```
 
-For scanned PDFs requiring OCR, use pdf2image with pytesseract instead.
+对于需要 OCR 的扫描 PDF，改用 pdf2image 和 pytesseract。
 ```
 
-## Checklist for Effective Skills
+## 有效 Skill 的检查清单
 
-### Core Quality
-- [ ] Description is specific and includes key terms
-- [ ] Description includes both what and when
-- [ ] SKILL.md body under 500 lines
-- [ ] Additional details in separate files
-- [ ] No time-sensitive information
-- [ ] Consistent terminology
-- [ ] Examples are concrete
-- [ ] References one level deep
-- [ ] Progressive disclosure used appropriately
-- [ ] Workflows have clear steps
+### 核心质量
+- [ ] 描述具体且包含关键术语
+- [ ] 描述包含是什么和何时使用
+- [ ] SKILL.md 主体少于 500 行
+- [ ] 额外详细信息在单独的文件中
+- [ ] 无时间敏感信息
+- [ ] 术语一致
+- [ ] 示例具体
+- [ ] 参考深度为一级
+- [ ] 适当使用渐进式披露
+- [ ] 工作流有清晰的步骤
 
-### Code and Scripts
-- [ ] Scripts handle errors explicitly
-- [ ] No "voodoo constants" (all values justified)
-- [ ] Required packages listed
-- [ ] Scripts have clear documentation
-- [ ] No Windows-style paths
-- [ ] Validation steps for critical operations
-- [ ] Feedback loops for quality-critical tasks
+### 代码和脚本
+- [ ] 脚本明确处理错误
+- [ ] 无"魔法常数"（所有值都有理由）
+- [ ] 列出所需的包
+- [ ] 脚本有清晰的文档
+- [ ] 无 Windows 风格路径
+- [ ] 关键操作有验证步骤
+- [ ] 质量关键任务有反馈循环
 
-### Testing
-- [ ] At least three test scenarios
-- [ ] Tested with Haiku, Sonnet, and Opus
-- [ ] Tested with real usage scenarios
-- [ ] Team feedback incorporated
+### 测试
+- [ ] 至少三个测试场景
+- [ ] 使用 Haiku、Sonnet 和 Opus 测试
+- [ ] 使用真实使用场景测试
+- [ ] 团队反馈已整合

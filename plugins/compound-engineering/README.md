@@ -1,8 +1,8 @@
-# Compounding Engineering Plugin
+# Compounding Engineering Plugin（复合工程 Plugin）
 
-AI-powered development tools that get smarter with every use. Make each unit of engineering work easier than the last.
+AI 驱动的开发工具，每次使用都会变得更智能。让每一个工程工作单元都比上一个更容易。
 
-## Components
+## 组件
 
 | Component | Count |
 |-----------|-------|
@@ -11,185 +11,185 @@ AI-powered development tools that get smarter with every use. Make each unit of 
 | Skills | 13 |
 | MCP Servers | 2 |
 
-## Agents
+## Agent
 
-Agents are organized into categories for easier discovery.
+Agent 按类别组织，便于发现。
 
 ### Review (14)
 
 | Agent | Description |
 |-------|-------------|
-| `agent-native-reviewer` | Verify features are agent-native (action + context parity) |
-| `architecture-strategist` | Analyze architectural decisions and compliance |
-| `code-simplicity-reviewer` | Final pass for simplicity and minimalism |
-| `data-integrity-guardian` | Database migrations and data integrity |
-| `data-migration-expert` | Validate ID mappings match production, check for swapped values |
-| `deployment-verification-agent` | Create Go/No-Go deployment checklists for risky data changes |
-| `dhh-rails-reviewer` | Rails review from DHH's perspective |
-| `kieran-rails-reviewer` | Rails code review with strict conventions |
-| `kieran-python-reviewer` | Python code review with strict conventions |
-| `kieran-typescript-reviewer` | TypeScript code review with strict conventions |
-| `pattern-recognition-specialist` | Analyze code for patterns and anti-patterns |
-| `performance-oracle` | Performance analysis and optimization |
-| `security-sentinel` | Security audits and vulnerability assessments |
-| `julik-frontend-races-reviewer` | Review JavaScript/Stimulus code for race conditions |
+| `agent-native-reviewer` | 验证功能是否为 agent-native（action + context parity） |
+| `architecture-strategist` | 分析架构决策和合规性 |
+| `code-simplicity-reviewer` | 简洁性和极简主义的最终审查 |
+| `data-integrity-guardian` | 数据库迁移和数据完整性 |
+| `data-migration-expert` | 验证 ID 映射是否匹配生产环境，检查交换的值 |
+| `deployment-verification-agent` | 为有风险的数据更改创建 Go/No-Go 部署清单 |
+| `dhh-rails-reviewer` | 从 DHH 的角度审查 Rails |
+| `kieran-rails-reviewer` | 使用严格约定的 Rails 代码审查 |
+| `kieran-python-reviewer` | 使用严格约定的 Python 代码审查 |
+| `kieran-typescript-reviewer` | 使用严格约定的 TypeScript 代码审查 |
+| `pattern-recognition-specialist` | 分析代码模式和反模式 |
+| `performance-oracle` | 性能分析和优化 |
+| `security-sentinel` | 安全审计和漏洞评估 |
+| `julik-frontend-races-reviewer` | 审查 JavaScript/Stimulus 代码的竞态条件 |
 
 ### Research (4)
 
 | Agent | Description |
 |-------|-------------|
-| `best-practices-researcher` | Gather external best practices and examples |
-| `framework-docs-researcher` | Research framework documentation and best practices |
-| `git-history-analyzer` | Analyze git history and code evolution |
-| `repo-research-analyst` | Research repository structure and conventions |
+| `best-practices-researcher` | 收集外部最佳实践和示例 |
+| `framework-docs-researcher` | 研究框架文档和最佳实践 |
+| `git-history-analyzer` | 分析 git 历史和代码演变 |
+| `repo-research-analyst` | 研究仓库结构和约定 |
 
 ### Design (3)
 
 | Agent | Description |
 |-------|-------------|
-| `design-implementation-reviewer` | Verify UI implementations match Figma designs |
-| `design-iterator` | Iteratively refine UI through systematic design iterations |
-| `figma-design-sync` | Synchronize web implementations with Figma designs |
+| `design-implementation-reviewer` | 验证 UI 实现是否匹配 Figma 设计 |
+| `design-iterator` | 通过系统化的设计迭代来迭代改进 UI |
+| `figma-design-sync` | 将 Web 实现与 Figma 设计同步 |
 
 ### Workflow (5)
 
 | Agent | Description |
 |-------|-------------|
-| `bug-reproduction-validator` | Systematically reproduce and validate bug reports |
-| `every-style-editor` | Edit content to conform to Every's style guide |
-| `lint` | Run linting and code quality checks on Ruby and ERB files |
-| `pr-comment-resolver` | Address PR comments and implement fixes |
-| `spec-flow-analyzer` | Analyze user flows and identify gaps in specifications |
+| `bug-reproduction-validator` | 系统化地重现和验证 bug 报告 |
+| `every-style-editor` | 编辑内容以符合 Every 的风格指南 |
+| `lint` | 在 Ruby 和 ERB 文件上运行 linting 和代码质量检查 |
+| `pr-comment-resolver` | 处理 PR 评论并实现修复 |
+| `spec-flow-analyzer` | 分析用户流程并识别规范中的差距 |
 
 ### Docs (1)
 
 | Agent | Description |
 |-------|-------------|
-| `ankane-readme-writer` | Create READMEs following Ankane-style template for Ruby gems |
+| `ankane-readme-writer` | 按照 Ankane 风格模板为 Ruby gem 创建 README |
 
-## Commands
+## Command
 
 ### Workflow Commands
 
-Core workflow commands use `workflows:` prefix to avoid collisions with built-in commands:
+核心工作流 Command 使用 `workflows:` 前缀以避免与内置 Command 冲突：
 
 | Command | Description |
 |---------|-------------|
-| `/workflows:plan` | Create implementation plans |
-| `/workflows:review` | Run comprehensive code reviews |
-| `/workflows:work` | Execute work items systematically |
-| `/workflows:compound` | Document solved problems to compound team knowledge |
+| `/workflows:plan` | 创建实施计划 |
+| `/workflows:review` | 运行全面的代码审查 |
+| `/workflows:work` | 系统化地执行工作项 |
+| `/workflows:compound` | 记录已解决的问题以累积团队知识 |
 
 ### Utility Commands
 
 | Command | Description |
 |---------|-------------|
-| `/deepen-plan` | Enhance plans with parallel research agents for each section |
-| `/changelog` | Create engaging changelogs for recent merges |
-| `/create-agent-skill` | Create or edit Claude Code skills |
-| `/generate_command` | Generate new slash commands |
-| `/heal-skill` | Fix skill documentation issues |
-| `/plan_review` | Multi-agent plan review in parallel |
-| `/report-bug` | Report a bug in the plugin |
-| `/reproduce-bug` | Reproduce bugs using logs and console |
-| `/resolve_parallel` | Resolve TODO comments in parallel |
-| `/resolve_pr_parallel` | Resolve PR comments in parallel |
-| `/resolve_todo_parallel` | Resolve todos in parallel |
-| `/triage` | Triage and prioritize issues |
-| `/playwright-test` | Run browser tests on PR-affected pages |
-| `/xcode-test` | Build and test iOS apps on simulator |
-| `/feature-video` | Record video walkthroughs and add to PR description |
+| `/deepen-plan` | 使用并行研究 Agent 增强每个部分的计划 |
+| `/changelog` | 为最近的合并创建引人入胜的 changelog |
+| `/create-agent-skill` | 创建或编辑 Claude Code Skill |
+| `/generate_command` | 生成新的 slash Command |
+| `/heal-skill` | 修复 Skill 文档问题 |
+| `/plan_review` | 并行进行多 Agent 计划审查 |
+| `/report-bug` | 报告 Plugin 中的 bug |
+| `/reproduce-bug` | 使用日志和控制台重现 bug |
+| `/resolve_parallel` | 并行解决 TODO 注释 |
+| `/resolve_pr_parallel` | 并行解决 PR 评论 |
+| `/resolve_todo_parallel` | 并行解决 todo |
+| `/triage` | 分类和优先处理 Issue |
+| `/playwright-test` | 在受 PR 影响的页面上运行浏览器测试 |
+| `/xcode-test` | 在模拟器上构建和测试 iOS 应用 |
+| `/feature-video` | 录制视频演练并添加到 PR 描述 |
 
-## Skills
+## Skill
 
 ### Architecture & Design
 
 | Skill | Description |
 |-------|-------------|
-| `agent-native-architecture` | Build AI agents using prompt-native architecture |
+| `agent-native-architecture` | 使用 prompt-native 架构构建 AI Agent |
 
 ### Development Tools
 
 | Skill | Description |
 |-------|-------------|
-| `andrew-kane-gem-writer` | Write Ruby gems following Andrew Kane's patterns |
-| `compound-docs` | Capture solved problems as categorized documentation |
-| `create-agent-skills` | Expert guidance for creating Claude Code skills |
-| `dhh-rails-style` | Write Ruby/Rails code in DHH's 37signals style |
-| `dspy-ruby` | Build type-safe LLM applications with DSPy.rb |
-| `frontend-design` | Create production-grade frontend interfaces |
-| `skill-creator` | Guide for creating effective Claude Code skills |
+| `andrew-kane-gem-writer` | 遵循 Andrew Kane 模式编写 Ruby gem |
+| `compound-docs` | 将已解决的问题捕获为分类文档 |
+| `create-agent-skills` | 创建 Claude Code Skill 的专家指导 |
+| `dhh-rails-style` | 以 DHH 的 37signals 风格编写 Ruby/Rails 代码 |
+| `dspy-ruby` | 使用 DSPy.rb 构建类型安全的 LLM 应用程序 |
+| `frontend-design` | 创建生产级前端界面 |
+| `skill-creator` | 创建有效 Claude Code Skill 的指南 |
 
 ### Content & Workflow
 
 | Skill | Description |
 |-------|-------------|
-| `every-style-editor` | Review copy for Every's style guide compliance |
-| `file-todos` | File-based todo tracking system |
-| `git-worktree` | Manage Git worktrees for parallel development |
+| `every-style-editor` | 审查文案是否符合 Every 的风格指南 |
+| `file-todos` | 基于文件的 todo 跟踪系统 |
+| `git-worktree` | 管理 Git worktree 以进行并行开发 |
 
 ### File Transfer
 
 | Skill | Description |
 |-------|-------------|
-| `rclone` | Upload files to S3, Cloudflare R2, Backblaze B2, and cloud storage |
+| `rclone` | 将文件上传到 S3、Cloudflare R2、Backblaze B2 和云存储 |
 
 ### Image Generation
 
 | Skill | Description |
 |-------|-------------|
-| `gemini-imagegen` | Generate and edit images using Google's Gemini API |
+| `gemini-imagegen` | 使用 Google 的 Gemini API 生成和编辑图像 |
 
-**gemini-imagegen features:**
-- Text-to-image generation
-- Image editing and manipulation
-- Multi-turn refinement
-- Multiple reference image composition (up to 14 images)
+**gemini-imagegen 功能：**
+- 文本到图像生成
+- 图像编辑和处理
+- 多轮改进
+- 多参考图像合成（最多 14 张图像）
 
-**Requirements:**
-- `GEMINI_API_KEY` environment variable
-- Python packages: `google-genai`, `pillow`
+**要求：**
+- `GEMINI_API_KEY` 环境变量
+- Python 包：`google-genai`、`pillow`
 
-## MCP Servers
+## MCP Server
 
 | Server | Description |
 |--------|-------------|
-| `playwright` | Browser automation via `@playwright/mcp` |
-| `context7` | Framework documentation lookup via Context7 |
+| `playwright` | 通过 `@playwright/mcp` 进行浏览器自动化 |
+| `context7` | 通过 Context7 查找框架文档 |
 
 ### Playwright
 
-**Tools provided:**
-- `browser_navigate` - Navigate to URLs
-- `browser_take_screenshot` - Take screenshots
-- `browser_click` - Click elements
-- `browser_fill_form` - Fill form fields
-- `browser_snapshot` - Get accessibility snapshot
-- `browser_evaluate` - Execute JavaScript
+**提供的工具：**
+- `browser_navigate` - 导航到 URL
+- `browser_take_screenshot` - 截屏
+- `browser_click` - 点击元素
+- `browser_fill_form` - 填写表单字段
+- `browser_snapshot` - 获取可访问性快照
+- `browser_evaluate` - 执行 JavaScript
 
 ### Context7
 
-**Tools provided:**
-- `resolve-library-id` - Find library ID for a framework/package
-- `get-library-docs` - Get documentation for a specific library
+**提供的工具：**
+- `resolve-library-id` - 查找框架/包的库 ID
+- `get-library-docs` - 获取特定库的文档
 
-Supports 100+ frameworks including Rails, React, Next.js, Vue, Django, Laravel, and more.
+支持 100+ 框架，包括 Rails、React、Next.js、Vue、Django、Laravel 等。
 
-MCP servers start automatically when the plugin is enabled.
+MCP Server 在启用 Plugin 时自动启动。
 
-## Installation
+## 安装
 
 ```bash
 claude /plugin install compound-engineering
 ```
 
-## Known Issues
+## 已知问题
 
-### MCP Servers Not Auto-Loading
+### MCP Server 未自动加载
 
-**Issue:** The bundled MCP servers (Playwright and Context7) may not load automatically when the plugin is installed.
+**问题：** 捆绑的 MCP Server（Playwright 和 Context7）可能不会在安装 Plugin 时自动加载。
 
-**Workaround:** Manually add them to your project's `.claude/settings.json`:
+**解决方法：** 手动将它们添加到项目的 `.claude/settings.json`：
 
 ```json
 {
@@ -208,12 +208,12 @@ claude /plugin install compound-engineering
 }
 ```
 
-Or add them globally in `~/.claude/settings.json` for all projects.
+或者在 `~/.claude/settings.json` 中全局添加它们以供所有项目使用。
 
-## Version History
+## 版本历史
 
-See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
+详细版本历史见 [CHANGELOG.md](CHANGELOG.md)。
 
-## License
+## 许可证
 
 MIT

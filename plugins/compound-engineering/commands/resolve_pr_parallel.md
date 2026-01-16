@@ -1,49 +1,49 @@
 ---
 name: resolve_pr_parallel
-description: Resolve all PR comments using parallel processing
-argument-hint: "[optional: PR number or current PR]"
+description: 使用并行处理解决所有 PR 评论
+argument-hint: "[可选：PR 编号或当前 PR]"
 ---
 
-Resolve all PR comments using parallel processing.
+使用并行处理解决所有 PR 评论。
 
-Claude Code automatically detects and understands your git context:
+Claude Code 自动检测并理解您的 git 上下文：
 
-- Current branch detection
-- Associated PR context
-- All PR comments and review threads
-- Can work with any PR by specifying the PR number, or ask it.
+- 当前分支检测
+- 关联的 PR 上下文
+- 所有 PR 评论和审查线程
+- 可以通过指定 PR 编号处理任何 PR，或询问它
 
-## Workflow
+## 工作流
 
-### 1. Analyze
+### 1. 分析
 
-Get all unresolved comments for PR
+获取 PR 的所有未解决评论
 
 ```bash
 gh pr status
 bin/get-pr-comments PR_NUMBER
 ```
 
-### 2. Plan
+### 2. 计划
 
-Create a TodoWrite list of all unresolved items grouped by type.
+创建所有未解决项目的 TodoWrite 列表，按类型分组。
 
-### 3. Implement (PARALLEL)
+### 3. 实施（并行）
 
-Spawn a pr-comment-resolver agent for each unresolved item in parallel.
+为每个未解决的项目并行生成一个 pr-comment-resolver Agent。
 
-So if there are 3 comments, it will spawn 3 pr-comment-resolver agents in parallel. liek this
+因此，如果有 3 条评论，它将并行生成 3 个 pr-comment-resolver Agent，像这样
 
 1. Task pr-comment-resolver(comment1)
 2. Task pr-comment-resolver(comment2)
 3. Task pr-comment-resolver(comment3)
 
-Always run all in parallel subagents/Tasks for each Todo item.
+始终为每个 Todo 项目并行运行所有子 Agent/Task。
 
-### 4. Commit & Resolve
+### 4. 提交和解决
 
-- Commit changes
-- Run bin/resolve-pr-thread THREAD_ID_1
-- Push to remote
+- 提交更改
+- 运行 bin/resolve-pr-thread THREAD_ID_1
+- 推送到远程
 
-Last, check bin/get-pr-comments PR_NUMBER again to see if all comments are resolved. They should be, if not, repeat the process from 1.
+最后，再次检查 bin/get-pr-comments PR_NUMBER 以查看是否所有评论都已解决。它们应该是，如果没有，从 1 开始重复该过程。

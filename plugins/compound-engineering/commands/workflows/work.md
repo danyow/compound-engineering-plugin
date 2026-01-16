@@ -1,169 +1,169 @@
 ---
 name: workflows:work
-description: Execute work plans efficiently while maintaining quality and finishing features
-argument-hint: "[plan file, specification, or todo file path]"
+description: 高效执行工作计划，同时保持质量并完成功能
+argument-hint: "[计划文件、规范或todo文件路径]"
 ---
 
-# Work Plan Execution Command
+# 工作计划执行Command
 
-Execute a work plan efficiently while maintaining quality and finishing features.
+高效执行工作计划，同时保持质量并完成功能。
 
-## Introduction
+## 介绍
 
-This command takes a work document (plan, specification, or todo file) and executes it systematically. The focus is on **shipping complete features** by understanding requirements quickly, following existing patterns, and maintaining quality throughout.
+此命令接受一个工作文档（计划、规范或todo文件）并系统地执行它。重点是通过快速理解需求、遵循现有模式并在整个过程中保持质量来**交付完整的功能**。
 
-## Input Document
+## 输入文档
 
 <input_document> #$ARGUMENTS </input_document>
 
-## Execution Workflow
+## 执行工作流
 
-### Phase 1: Quick Start
+### Phase 1: 快速启动
 
-1. **Read Plan and Clarify**
+1. **阅读计划并澄清**
 
-   - Read the work document completely
-   - Review any references or links provided in the plan
-   - If anything is unclear or ambiguous, ask clarifying questions now
-   - Get user approval to proceed
-   - **Do not skip this** - better to ask questions now than build the wrong thing
+   - 完整阅读工作文档
+   - 审查计划中提供的任何引用或链接
+   - 如果有任何不清楚或含糊不清的地方，现在就提出澄清问题
+   - 获得用户批准继续
+   - **不要跳过这一步** - 现在提问比构建错误的东西更好
 
-2. **Setup Environment**
+2. **设置环境**
 
-   Choose your work style:
+   选择您的工作方式：
 
-   **Option A: Live work on current branch**
+   **选项A：在当前分支上实时工作**
    ```bash
    git checkout main && git pull origin main
    git checkout -b feature-branch-name
    ```
 
-   **Option B: Parallel work with worktree (recommended for parallel development)**
+   **选项B：使用worktree并行工作（推荐用于并行开发）**
    ```bash
-   # Ask user first: "Work in parallel with worktree or on current branch?"
-   # If worktree:
+   # 首先询问用户："使用worktree并行工作还是在当前分支上工作？"
+   # 如果是worktree：
    skill: git-worktree
-   # The skill will create a new branch from main in an isolated worktree
+   # 该skill将从main在隔离的worktree中创建新分支
    ```
 
-   **Recommendation**: Use worktree if:
-   - You want to work on multiple features simultaneously
-   - You want to keep main clean while experimenting
-   - You plan to switch between branches frequently
+   **建议**：在以下情况下使用worktree：
+   - 您想同时处理多个功能
+   - 您想在实验时保持main干净
+   - 您计划经常在分支之间切换
 
-   Use live branch if:
-   - You're working on a single feature
-   - You prefer staying in the main repository
+   在以下情况下使用实时分支：
+   - 您正在处理单个功能
+   - 您更喜欢留在主仓库中
 
-3. **Create Todo List**
-   - Use TodoWrite to break plan into actionable tasks
-   - Include dependencies between tasks
-   - Prioritize based on what needs to be done first
-   - Include testing and quality check tasks
-   - Keep tasks specific and completable
+3. **创建Todo列表**
+   - 使用TodoWrite将计划分解为可操作的任务
+   - 包含任务之间的依赖关系
+   - 根据需要首先完成的内容进行优先级排序
+   - 包含测试和质量检查任务
+   - 保持任务具体且可完成
 
-### Phase 2: Execute
+### Phase 2: 执行
 
-1. **Task Execution Loop**
+1. **任务执行循环**
 
-   For each task in priority order:
+   按优先级顺序执行每个任务：
 
    ```
    while (tasks remain):
-     - Mark task as in_progress in TodoWrite
-     - Read any referenced files from the plan
-     - Look for similar patterns in codebase
-     - Implement following existing conventions
-     - Write tests for new functionality
-     - Run tests after changes
-     - Mark task as completed
+     - 在TodoWrite中将任务标记为in_progress
+     - 从计划中读取任何引用的文件
+     - 在代码库中查找类似模式
+     - 遵循现有约定实施
+     - 为新功能编写测试
+     - 更改后运行测试
+     - 将任务标记为completed
    ```
 
-2. **Follow Existing Patterns**
+2. **遵循现有模式**
 
-   - The plan should reference similar code - read those files first
-   - Match naming conventions exactly
-   - Reuse existing components where possible
-   - Follow project coding standards (see CLAUDE.md)
-   - When in doubt, grep for similar implementations
+   - 计划应引用类似代码 - 首先阅读这些文件
+   - 完全匹配命名约定
+   - 尽可能重用现有组件
+   - 遵循项目编码标准（参见CLAUDE.md）
+   - 如有疑问，grep查找类似实现
 
-3. **Test Continuously**
+3. **持续测试**
 
-   - Run relevant tests after each significant change
-   - Don't wait until the end to test
-   - Fix failures immediately
-   - Add new tests for new functionality
+   - 每次重大更改后运行相关测试
+   - 不要等到最后才测试
+   - 立即修复失败
+   - 为新功能添加新测试
 
-4. **Figma Design Sync** (if applicable)
+4. **Figma设计同步**（如果适用）
 
-   For UI work with Figma designs:
+   对于使用Figma设计的UI工作：
 
-   - Implement components following design specs
-   - Use figma-design-sync agent iteratively to compare
-   - Fix visual differences identified
-   - Repeat until implementation matches design
+   - 按照设计规范实施组件
+   - 迭代使用figma-design-sync Agent进行比较
+   - 修复识别出的视觉差异
+   - 重复直到实现与设计匹配
 
-5. **Track Progress**
-   - Keep TodoWrite updated as you complete tasks
-   - Note any blockers or unexpected discoveries
-   - Create new tasks if scope expands
-   - Keep user informed of major milestones
+5. **跟踪进度**
+   - 在完成任务时保持TodoWrite更新
+   - 记录任何阻碍或意外发现
+   - 如果范围扩大，创建新任务
+   - 让用户了解主要里程碑
 
-### Phase 3: Quality Check
+### Phase 3: 质量检查
 
-1. **Run Core Quality Checks**
+1. **运行核心质量检查**
 
-   Always run before submitting:
+   提交前始终运行：
 
    ```bash
-   # Run full test suite
+   # 运行完整测试套件
    bin/rails test
 
-   # Run linting (per CLAUDE.md)
-   # Use linting-agent before pushing to origin
+   # 运行linting（根据CLAUDE.md）
+   # 推送到origin前使用linting-agent
    ```
 
-2. **Consider Reviewer Agents** (Optional)
+2. **考虑审查者Agent**（可选）
 
-   Use for complex, risky, or large changes:
+   用于复杂、有风险或大型更改：
 
-   - **code-simplicity-reviewer**: Check for unnecessary complexity
-   - **kieran-rails-reviewer**: Verify Rails conventions (Rails projects)
-   - **performance-oracle**: Check for performance issues
-   - **security-sentinel**: Scan for security vulnerabilities
-   - **cora-test-reviewer**: Review test quality (CORA projects)
+   - **code-simplicity-reviewer**：检查不必要的复杂性
+   - **kieran-rails-reviewer**：验证Rails约定（Rails项目）
+   - **performance-oracle**：检查性能问题
+   - **security-sentinel**：扫描安全漏洞
+   - **cora-test-reviewer**：审查测试质量（CORA项目）
 
-   Run reviewers in parallel with Task tool:
+   使用Task工具并行运行审查者：
 
    ```
-   Task(code-simplicity-reviewer): "Review changes for simplicity"
-   Task(kieran-rails-reviewer): "Check Rails conventions"
+   Task(code-simplicity-reviewer): "审查更改的简单性"
+   Task(kieran-rails-reviewer): "检查Rails约定"
    ```
 
-   Present findings to user and address critical issues.
+   向用户呈现发现并解决关键问题。
 
-3. **Final Validation**
-   - All TodoWrite tasks marked completed
-   - All tests pass
-   - Linting passes
-   - Code follows existing patterns
-   - Figma designs match (if applicable)
-   - No console errors or warnings
+3. **最终验证**
+   - 所有TodoWrite任务标记为completed
+   - 所有测试通过
+   - Linting通过
+   - 代码遵循现有模式
+   - Figma设计匹配（如果适用）
+   - 没有控制台错误或警告
 
-### Phase 4: Ship It
+### Phase 4: 交付
 
-1. **Create Commit**
+1. **创建Commit**
 
    ```bash
    git add .
-   git status  # Review what's being committed
-   git diff --staged  # Check the changes
+   git status  # 审查正在提交的内容
+   git diff --staged  # 检查更改
 
-   # Commit with conventional format
+   # 使用常规格式提交
    git commit -m "$(cat <<'EOF'
-   feat(scope): description of what and why
+   feat(scope): 描述做了什么和为什么
 
-   Brief explanation if needed.
+   如有需要，简要说明。
 
    🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
@@ -172,50 +172,50 @@ This command takes a work document (plan, specification, or todo file) and execu
    )"
    ```
 
-2. **Capture and Upload Screenshots for UI Changes** (REQUIRED for any UI work)
+2. **为UI更改捕获并上传截图**（任何UI工作都必需）
 
-   For **any** design changes, new views, or UI modifications, you MUST capture and upload screenshots:
+   对于**任何**设计更改、新视图或UI修改，您必须捕获并上传截图：
 
-   **Step 1: Start dev server** (if not running)
+   **Step 1: 启动开发服务器**（如果尚未运行）
    ```bash
-   bin/dev  # Run in background
+   bin/dev  # 在后台运行
    ```
 
-   **Step 2: Capture screenshots with Playwright MCP tools**
-   - `browser_navigate` to go to affected pages
-   - `browser_resize` to set viewport (desktop or mobile as needed)
-   - `browser_snapshot` to verify page state
-   - `browser_take_screenshot` to capture images
+   **Step 2: 使用Playwright MCP工具捕获截图**
+   - `browser_navigate` 导航到受影响的页面
+   - `browser_resize` 设置视口（根据需要为桌面或移动设备）
+   - `browser_snapshot` 验证页面状态
+   - `browser_take_screenshot` 捕获图像
 
-   **Step 3: Upload using imgup skill**
+   **Step 3: 使用imgup skill上传**
    ```bash
    skill: imgup
-   # Then upload each screenshot:
-   imgup -h pixhost screenshot.png  # pixhost works without API key
-   # Alternative hosts: catbox, imagebin, beeimg
+   # 然后上传每个截图：
+   imgup -h pixhost screenshot.png  # pixhost无需API密钥即可工作
+   # 替代托管：catbox、imagebin、beeimg
    ```
 
-   **What to capture:**
-   - **New screens**: Screenshot of the new UI
-   - **Modified screens**: Before AND after screenshots
-   - **Design implementation**: Screenshot showing Figma design match
+   **捕获内容：**
+   - **新屏幕**：新UI的截图
+   - **修改的屏幕**：之前和之后的截图
+   - **设计实现**：显示Figma设计匹配的截图
 
-   **IMPORTANT**: Always include uploaded image URLs in PR description. This provides visual context for reviewers and documents the change.
+   **重要**：始终在PR描述中包含上传的图像URL。这为审查者提供视觉上下文并记录更改。
 
-3. **Create Pull Request**
+3. **创建Pull Request**
 
    ```bash
    git push -u origin feature-branch-name
 
-   gh pr create --title "Feature: [Description]" --body "$(cat <<'EOF'
+   gh pr create --title "Feature: [描述]" --body "$(cat <<'EOF'
    ## Summary
-   - What was built
-   - Why it was needed
-   - Key decisions made
+   - 构建了什么
+   - 为什么需要它
+   - 做出的关键决策
 
    ## Testing
-   - Tests added/modified
-   - Manual testing performed
+   - 添加/修改的测试
+   - 执行的手动测试
 
    ## Before / After Screenshots
    | Before | After |
@@ -223,86 +223,86 @@ This command takes a work document (plan, specification, or todo file) and execu
    | ![before](URL) | ![after](URL) |
 
    ## Figma Design
-   [Link if applicable]
+   [如果适用，提供链接]
 
    🤖 Generated with [Claude Code](https://claude.com/claude-code)
    EOF
    )"
    ```
 
-4. **Notify User**
-   - Summarize what was completed
-   - Link to PR
-   - Note any follow-up work needed
-   - Suggest next steps if applicable
+4. **通知用户**
+   - 总结完成的内容
+   - 链接到PR
+   - 记录任何需要的后续工作
+   - 如果适用，建议下一步
 
 ---
 
-## Key Principles
+## 关键原则
 
-### Start Fast, Execute Faster
+### 快速启动，更快执行
 
-- Get clarification once at the start, then execute
-- Don't wait for perfect understanding - ask questions and move
-- The goal is to **finish the feature**, not create perfect process
+- 在开始时获得一次澄清，然后执行
+- 不要等待完美的理解 - 提问并继续
+- 目标是**完成功能**，而不是创建完美的流程
 
-### The Plan is Your Guide
+### 计划是您的指南
 
-- Work documents should reference similar code and patterns
-- Load those references and follow them
-- Don't reinvent - match what exists
+- 工作文档应引用类似的代码和模式
+- 加载这些引用并遵循它们
+- 不要重新发明 - 匹配现有的内容
 
-### Test As You Go
+### 边做边测试
 
-- Run tests after each change, not at the end
-- Fix failures immediately
-- Continuous testing prevents big surprises
+- 每次更改后运行测试，而不是最后
+- 立即修复失败
+- 持续测试可防止大的意外
 
-### Quality is Built In
+### 质量是内置的
 
-- Follow existing patterns
-- Write tests for new code
-- Run linting before pushing
-- Use reviewer agents for complex/risky changes only
+- 遵循现有模式
+- 为新代码编写测试
+- 推送前运行linting
+- 仅对复杂/有风险的更改使用审查者Agent
 
-### Ship Complete Features
+### 交付完整的功能
 
-- Mark all tasks completed before moving on
-- Don't leave features 80% done
-- A finished feature that ships beats a perfect feature that doesn't
+- 在继续之前标记所有任务为已完成
+- 不要让功能停留在80%完成
+- 交付的完成功能胜过不交付的完美功能
 
-## Quality Checklist
+## 质量检查清单
 
-Before creating PR, verify:
+创建PR前，验证：
 
-- [ ] All clarifying questions asked and answered
-- [ ] All TodoWrite tasks marked completed
-- [ ] Tests pass (run `bin/rails test`)
-- [ ] Linting passes (use linting-agent)
-- [ ] Code follows existing patterns
-- [ ] Figma designs match implementation (if applicable)
-- [ ] Before/after screenshots captured and uploaded (for UI changes)
-- [ ] Commit messages follow conventional format
-- [ ] PR description includes summary, testing notes, and screenshots
+- [ ] 所有澄清问题都已提出并回答
+- [ ] 所有TodoWrite任务标记为completed
+- [ ] 测试通过（运行 `bin/rails test`）
+- [ ] Linting通过（使用linting-agent）
+- [ ] 代码遵循现有模式
+- [ ] Figma设计与实现匹配（如果适用）
+- [ ] 已捕获并上传之前/之后的截图（对于UI更改）
+- [ ] Commit消息遵循常规格式
+- [ ] PR描述包含摘要、测试说明和截图
 
-## When to Use Reviewer Agents
+## 何时使用审查者Agent
 
-**Don't use by default.** Use reviewer agents only when:
+**默认不使用。** 仅在以下情况下使用审查者Agent：
 
-- Large refactor affecting many files (10+)
-- Security-sensitive changes (authentication, permissions, data access)
-- Performance-critical code paths
-- Complex algorithms or business logic
-- User explicitly requests thorough review
+- 影响许多文件的大型重构（10+）
+- 安全敏感的更改（身份验证、权限、数据访问）
+- 性能关键的代码路径
+- 复杂的算法或业务逻辑
+- 用户明确请求彻底审查
 
-For most features: tests + linting + following patterns is sufficient.
+对于大多数功能：测试 + linting + 遵循模式就足够了。
 
-## Common Pitfalls to Avoid
+## 要避免的常见陷阱
 
-- **Analysis paralysis** - Don't overthink, read the plan and execute
-- **Skipping clarifying questions** - Ask now, not after building wrong thing
-- **Ignoring plan references** - The plan has links for a reason
-- **Testing at the end** - Test continuously or suffer later
-- **Forgetting TodoWrite** - Track progress or lose track of what's done
-- **80% done syndrome** - Finish the feature, don't move on early
-- **Over-reviewing simple changes** - Save reviewer agents for complex work
+- **分析瘫痪** - 不要过度思考，阅读计划并执行
+- **跳过澄清问题** - 现在就问，而不是在构建错误的东西之后
+- **忽略计划引用** - 计划有链接是有原因的
+- **最后才测试** - 持续测试或以后受苦
+- **忘记TodoWrite** - 跟踪进度或失去对已完成内容的跟踪
+- **80%完成综合症** - 完成功能，不要提前继续
+- **过度审查简单更改** - 为复杂工作保留审查者Agent

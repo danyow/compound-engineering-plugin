@@ -1,29 +1,29 @@
-# Rails Integration Patterns
+# Rails 集成模式
 
-## The Golden Rule
+## 黄金法则
 
-**Never require Rails gems directly.** This causes loading order issues.
+**永远不要直接 require Rails gem。** 这会导致加载顺序问题。
 
 ```ruby
-# WRONG - causes premature loading
+# 错误 - 导致过早加载
 require "active_record"
 ActiveRecord::Base.include(MyGem::Model)
 
-# CORRECT - lazy loading
+# 正确 - 懒加载
 ActiveSupport.on_load(:active_record) do
   extend MyGem::Model
 end
 ```
 
-## ActiveSupport.on_load Hooks
+## ActiveSupport.on_load 钩子
 
-Common hooks and their uses:
+常见钩子及其用途：
 
 ```ruby
 # Models
 ActiveSupport.on_load(:active_record) do
-  extend GemName::Model        # Add class methods (searchkick, has_encrypted)
-  include GemName::Callbacks   # Add instance methods
+  extend GemName::Model        # 添加类方法（searchkick, has_encrypted）
+  include GemName::Callbacks   # 添加实例方法
 end
 
 # Controllers
@@ -42,9 +42,9 @@ ActiveSupport.on_load(:action_mailer) do
 end
 ```
 
-## Prepend for Behavior Modification
+## 使用 Prepend 修改行为
 
-When overriding existing Rails methods:
+当覆盖现有 Rails 方法时：
 
 ```ruby
 ActiveSupport.on_load(:active_record) do
@@ -53,9 +53,9 @@ ActiveSupport.on_load(:active_record) do
 end
 ```
 
-## Railtie Pattern
+## Railtie 模式
 
-Minimal Railtie for non-mountable gems:
+用于非挂载式 gem 的最小 Railtie：
 
 ```ruby
 # lib/gemname/railtie.rb
@@ -67,7 +67,7 @@ module GemName
       end
     end
 
-    # Optional: Add to controller runtime logging
+    # 可选：添加到控制器运行时日志
     initializer "gemname.log_runtime" do
       require_relative "controller_runtime"
       ActiveSupport.on_load(:action_controller) do
@@ -75,7 +75,7 @@ module GemName
       end
     end
 
-    # Optional: Rake tasks
+    # 可选：Rake 任务
     rake_tasks do
       load "tasks/gemname.rake"
     end
@@ -83,9 +83,9 @@ module GemName
 end
 ```
 
-## Engine Pattern (Mountable Gems)
+## Engine 模式（可挂载 Gem）
 
-For gems with web interfaces (PgHero, Blazer, Ahoy):
+用于带有 Web 界面的 gem（PgHero、Blazer、Ahoy）：
 
 ```ruby
 # lib/pghero/engine.rb
@@ -107,26 +107,26 @@ module PgHero
 end
 ```
 
-## Routes for Engines
+## Engine 的路由
 
 ```ruby
-# config/routes.rb (in engine)
+# config/routes.rb（在 engine 中）
 PgHero::Engine.routes.draw do
   root to: "home#index"
   resources :databases, only: [:show]
 end
 ```
 
-Mount in app:
+在应用中挂载：
 
 ```ruby
-# config/routes.rb (in app)
+# config/routes.rb（在应用中）
 mount PgHero::Engine, at: "pghero"
 ```
 
-## YAML Configuration with ERB
+## 使用 ERB 的 YAML 配置
 
-For complex gems needing config files:
+用于需要配置文件的复杂 gem：
 
 ```ruby
 def self.settings
@@ -141,7 +141,7 @@ def self.settings
 end
 ```
 
-## Generator Pattern
+## 生成器模式
 
 ```ruby
 # lib/generators/gemname/install_generator.rb
@@ -162,15 +162,15 @@ module GemName
 end
 ```
 
-## Conditional Feature Detection
+## 条件特性检测
 
 ```ruby
-# Check for specific Rails versions
+# 检查特定 Rails 版本
 if ActiveRecord.version >= Gem::Version.new("7.0")
-  # Rails 7+ specific code
+  # Rails 7+ 特定代码
 end
 
-# Check for optional dependencies
+# 检查可选依赖
 def self.client
   @client ||= if defined?(OpenSearch::Client)
     OpenSearch::Client.new

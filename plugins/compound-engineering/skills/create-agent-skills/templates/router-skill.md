@@ -4,70 +4,70 @@ description: {{What it does}} Use when {{trigger conditions}}.
 ---
 
 <essential_principles>
-## {{Core Concept}}
+## {{核心概念}}
 
-{{Principles that ALWAYS apply, regardless of which workflow runs}}
+{{无论运行哪个 workflow 都始终适用的原则}}
 
-### 1. {{First principle}}
-{{Explanation}}
+### 1. {{第一个原则}}
+{{说明}}
 
-### 2. {{Second principle}}
-{{Explanation}}
+### 2. {{第二个原则}}
+{{说明}}
 
-### 3. {{Third principle}}
-{{Explanation}}
+### 3. {{第三个原则}}
+{{说明}}
 </essential_principles>
 
 <intake>
-**Ask the user:**
+**询问用户：**
 
-What would you like to do?
-1. {{First option}}
-2. {{Second option}}
-3. {{Third option}}
+您想做什么？
+1. {{第一个选项}}
+2. {{第二个选项}}
+3. {{第三个选项}}
 
-**Wait for response before proceeding.**
+**在继续之前等待响应。**
 </intake>
 
 <routing>
-| Response | Workflow |
+| 响应 | Workflow |
 |----------|----------|
-| 1, "{{keywords}}" | `workflows/{{first-workflow}}.md` |
-| 2, "{{keywords}}" | `workflows/{{second-workflow}}.md` |
-| 3, "{{keywords}}" | `workflows/{{third-workflow}}.md` |
+| 1, "{{关键词}}" | `workflows/{{first-workflow}}.md` |
+| 2, "{{关键词}}" | `workflows/{{second-workflow}}.md` |
+| 3, "{{关键词}}" | `workflows/{{third-workflow}}.md` |
 
-**After reading the workflow, follow it exactly.**
+**读取 workflow 后，严格遵循它。**
 </routing>
 
 <quick_reference>
-## {{Skill Name}} Quick Reference
+## {{Skill 名称}} 快速参考
 
-{{Brief reference information always useful to have visible}}
+{{始终有用的简要参考信息}}
 </quick_reference>
 
 <reference_index>
-## Domain Knowledge
+## 领域知识
 
-All in `references/`:
-- {{reference-1.md}} - {{purpose}}
-- {{reference-2.md}} - {{purpose}}
+全部在 `references/` 中：
+- {{reference-1.md}} - {{用途}}
+- {{reference-2.md}} - {{用途}}
 </reference_index>
 
 <workflows_index>
 ## Workflows
 
-All in `workflows/`:
+全部在 `workflows/` 中：
 
-| Workflow | Purpose |
+| Workflow | 用途 |
 |----------|---------|
-| {{first-workflow}}.md | {{purpose}} |
-| {{second-workflow}}.md | {{purpose}} |
-| {{third-workflow}}.md | {{purpose}} |
+| {{first-workflow}}.md | {{用途}} |
+| {{second-workflow}}.md | {{用途}} |
+| {{third-workflow}}.md | {{用途}} |
 </workflows_index>
 
 <success_criteria>
-A well-executed {{skill name}}:
-- {{First criterion}}
-- {{Second criterion}}
-- {{Third criterion}}
+一个执行良好的 {{skill 名称}}：
+- {{第一个标准}}
+- {{第二个标准}}
+- {{第三个标准}}
 </success_criteria>

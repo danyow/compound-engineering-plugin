@@ -1,20 +1,20 @@
 <overview>
-How to design MCP tools following prompt-native principles. Tools should be primitives that enable capability, not workflows that encode decisions.
+如何按照prompt原生原则设计MCP工具。工具应该是启用能力的原始操作，而不是编码决定的工作流。
 
-**Core principle:** Whatever a user can do, the agent should be able to do. Don't artificially limit the agent—give it the same primitives a power user would have.
+**核心原则：** 用户能做什么，Agent就应该能做什么。不要人为限制Agent——给它与高级用户相同的原始操作。
 </overview>
 
 <principle name="primitives-not-workflows">
-## Tools Are Primitives, Not Workflows
+## 工具是原始操作，不是工作流
 
-**Wrong approach:** Tools that encode business logic
+**错误方法：** 编码业务逻辑的工具
 ```typescript
 tool("process_feedback", {
   feedback: z.string(),
   category: z.enum(["bug", "feature", "question"]),
   priority: z.enum(["low", "medium", "high"]),
 }, async ({ feedback, category, priority }) => {
-  // Tool decides how to process
+  // Tool决定如何处理
   const processed = categorize(feedback);
   const stored = await saveToDatabase(processed);
   const notification = await notify(priority);
@@ -22,14 +22,14 @@ tool("process_feedback", {
 });
 ```
 
-**Right approach:** Primitives that enable any workflow
+**正确方法：** 启用任何工作流的原始操作
 ```typescript
 tool("store_item", {
   key: z.string(),
   value: z.any(),
 }, async ({ key, value }) => {
   await db.set(key, value);
-  return { text: `Stored ${key}` };
+  return { text: `已存储${key}` };
 });
 
 tool("send_message", {
@@ -37,34 +37,34 @@ tool("send_message", {
   content: z.string(),
 }, async ({ channel, content }) => {
   await messenger.send(channel, content);
-  return { text: "Sent" };
+  return { text: "已发送" };
 });
 ```
 
-The agent decides categorization, priority, and when to notify based on the system prompt.
+Agent根据系统prompt决定分类、优先级以及何时通知。
 </principle>
 
 <principle name="descriptive-names">
-## Tools Should Have Descriptive, Primitive Names
+## 工具应具有描述性的原始操作名称
 
-Names should describe the capability, not the use case:
+名称应描述能力，而不是用例：
 
-| Wrong | Right |
+| 错误 | 正确 |
 |-------|-------|
 | `process_user_feedback` | `store_item` |
 | `create_feedback_summary` | `write_file` |
 | `send_notification` | `send_message` |
 | `deploy_to_production` | `git_push` |
 
-The prompt tells the agent *when* to use primitives. The tool just provides *capability*.
+prompt告诉Agent何时使用原始操作。工具只是提供能力。
 </principle>
 
 <principle name="simple-inputs">
-## Inputs Should Be Simple
+## 输入应该简单
 
-Tools accept data. They don't accept decisions.
+Tool接受数据。它们不接受决定。
 
-**Wrong:** Tool accepts decisions
+**错误：** Tool接受决定
 ```typescript
 tool("format_content", {
   content: z.string(),
@@ -73,44 +73,44 @@ tool("format_content", {
 }, ...)
 ```
 
-**Right:** Tool accepts data, agent decides format
+**正确：** Tool接受数据，Agent决定格式
 ```typescript
 tool("write_file", {
   path: z.string(),
   content: z.string(),
 }, ...)
-// Agent decides to write index.html with HTML content, or data.json with JSON
+// Agent决定用HTML内容写入index.html，或用JSON写入data.json
 ```
 </principle>
 
 <principle name="rich-outputs">
-## Outputs Should Be Rich
+## 输出应该丰富
 
-Return enough information for the agent to verify and iterate.
+返回足够的信息供Agent验证和迭代。
 
-**Wrong:** Minimal output
+**错误：** 最小输出
 ```typescript
 async ({ key }) => {
   await db.delete(key);
-  return { text: "Deleted" };
+  return { text: "已删除" };
 }
 ```
 
-**Right:** Rich output
+**正确：** 丰富输出
 ```typescript
 async ({ key }) => {
   const existed = await db.has(key);
   if (!existed) {
-    return { text: `Key ${key} did not exist` };
+    return { text: `Key ${key}不存在` };
   }
   await db.delete(key);
-  return { text: `Deleted ${key}. ${await db.count()} items remaining.` };
+  return { text: `已删除${key}。${await db.count()}个项目仍存在。` };
 }
 ```
 </principle>
 
 <design_template>
-## Tool Design Template
+## 工具设计模板
 
 ```typescript
 import { createSdkMcpServer, tool } from "@anthropic-ai/claude-agent-sdk";
@@ -213,9 +213,9 @@ export const serverName = createSdkMcpServer({
 </design_template>
 
 <example name="feedback-server">
-## Example: Feedback Storage Server
+## 示例：反馈存储服务器
 
-This server provides primitives for storing feedback. It does NOT decide how to categorize or organize feedback—that's the agent's job via the prompt.
+此服务器提供用于存储反馈的原始操作。它不决定如何分类或组织反馈——那是Agent通过prompt的工作。
 
 ```typescript
 export const feedbackMcpServer = createSdkMcpServer({
@@ -288,33 +288,33 @@ export const feedbackMcpServer = createSdkMcpServer({
 });
 ```
 
-The system prompt then tells the agent *how* to use these primitives:
+系统prompt然后告诉Agent如何使用这些原始操作：
 
 ```markdown
-## Feedback Processing
+## 反馈处理
 
-When someone shares feedback:
-1. Extract author, content, and any URLs
-2. Rate importance 1-5 based on actionability
-3. Store using feedback.store_feedback
-4. If high importance (4-5), notify the channel
+当有人分享反馈时：
+1. 提取作者、内容和任何URL
+2. 根据可行性将重要性评为1-5
+3. 使用feedback.store_feedback存储
+4. 如果重要性高（4-5），通知渠道
 
-Use your judgment about importance ratings.
+对重要性评级使用你的判断。
 ```
 </example>
 
 <principle name="dynamic-capability-discovery">
-## Dynamic Capability Discovery vs Static Tool Mapping
+## 动态能力发现 vs 静态工具映射
 
-**This pattern is specifically for agent-native apps** where you want the agent to have full access to an external API—the same access a user would have. It follows the core agent-native principle: "Whatever the user can do, the agent can do."
+**这个模式专门用于Agent原生应用**，你希望Agent能够完全访问外部API——与用户相同的访问权限。它遵循Agent原生的核心原则："用户能做什么，Agent就能做什么"。
 
-If you're building a constrained agent with limited capabilities, static tool mapping may be intentional. But for agent-native apps integrating with HealthKit, HomeKit, GraphQL, or similar APIs:
+如果你正在构建具有有限功能的受限Agent，静态工具映射可能是故意的。但对于与HealthKit、HomeKit、GraphQL或类似API集成的Agent原生应用：
 
-**Static Tool Mapping (Anti-pattern for Agent-Native):**
-Build individual tools for each API capability. Always out of date, limits agent to only what you anticipated.
+**静态工具映射（Agent原生的反模式）：**
+为每个API功能构建单独的工具。总是过时，将Agent限制于你预期的内容。
 
 ```typescript
-// ❌ Static: Every API type needs a hardcoded tool
+// ❌ 静态：每个API类型需要一个硬编码的工具
 tool("read_steps", async ({ startDate, endDate }) => {
   return healthKit.query(HKQuantityType.stepCount, startDate, endDate);
 });
@@ -327,16 +327,16 @@ tool("read_sleep", async ({ startDate, endDate }) => {
   return healthKit.query(HKCategoryType.sleepAnalysis, startDate, endDate);
 });
 
-// When HealthKit adds glucose tracking... you need a code change
+// 当HealthKit添加葡萄糖跟踪时...你需要代码更改
 ```
 
-**Dynamic Capability Discovery (Preferred):**
-Build a meta-tool that discovers what's available, and a generic tool that can access anything.
+**动态能力发现（优选）：**
+构建一个元工具来发现什么是可用的，以及一个通用工具来访问任何东西。
 
 ```typescript
-// ✅ Dynamic: Agent discovers and uses any capability
+// ✅ 动态：Agent发现并使用任何能力
 
-// Discovery tool - returns what's available at runtime
+// 发现工具 - 返回运行时可用的内容
 tool("list_available_capabilities", async () => {
   const quantityTypes = await healthKit.availableQuantityTypes();
   const categoryTypes = await healthKit.availableCategoryTypes();
@@ -349,7 +349,7 @@ tool("list_available_capabilities", async () => {
   };
 });
 
-// Generic access tool - type is a string, API validates
+// 通用访问工具 - 类型是字符串，API验证
 tool("read_health_data", {
   dataType: z.string(),  // NOT z.enum - let HealthKit validate
   startDate: z.string(),
@@ -444,21 +444,21 @@ func buildSystemPrompt() -> String {
 </principle>
 
 <principle name="crud-completeness">
-## CRUD Completeness
+## CRUD完整性
 
-Every data type the agent can create, it should be able to read, update, and delete. Incomplete CRUD = broken action parity.
+Agent能创建的每个数据类型，它都应该能够读取、更新和删除。不完整的CRUD =破损的操作奇偶性。
 
-**Anti-pattern: Create-only tools**
+**反模式：仅创建的工具**
 ```typescript
-// ❌ Can create but not modify or delete
+// ❌ 可以创建但不能修改或删除
 tool("create_experiment", { hypothesis, variable, metric })
 tool("write_journal_entry", { content, author, tags })
-// User: "Delete that experiment" → Agent: "I can't do that"
+// 用户："删除那个实验" → Agent："我不能做到"
 ```
 
-**Correct: Full CRUD for each entity**
+**正确：每个实体的完整CRUD**
 ```typescript
-// ✅ Complete CRUD
+// ✅ 完整CRUD
 tool("create_experiment", { hypothesis, variable, metric })
 tool("read_experiment", { id })
 tool("update_experiment", { id, updates: { hypothesis?, status?, endDate? } })
@@ -470,37 +470,37 @@ tool("update_journal_entry", { id, content, tags? })
 tool("delete_journal_entry", { id })
 ```
 
-**The CRUD Audit:**
-For each entity type in your app, verify:
-- [ ] Create: Agent can create new instances
-- [ ] Read: Agent can query/search/list instances
-- [ ] Update: Agent can modify existing instances
-- [ ] Delete: Agent can remove instances
+**CRUD审计：**
+对于应用中的每个实体类型，验证：
+- [ ] 创建：Agent可以创建新实例
+- [ ] 读取：Agent可以查询/搜索/列表实例
+- [ ] 更新：Agent可以修改现有实例
+- [ ] 删除：Agent可以删除实例
 
-If any operation is missing, users will eventually ask for it and the agent will fail.
+如果任何操作缺失，用户最终会要求它，Agent将失败。
 </principle>
 
 <checklist>
-## MCP Tool Design Checklist
+## MCP工具设计检查清单
 
-**Fundamentals:**
-- [ ] Tool names describe capability, not use case
-- [ ] Inputs are data, not decisions
-- [ ] Outputs are rich (enough for agent to verify)
-- [ ] CRUD operations are separate tools (not one mega-tool)
-- [ ] No business logic in tool implementations
-- [ ] Error states clearly communicated via `isError`
-- [ ] Descriptions explain what the tool does, not when to use it
+**基础：**
+- [ ] 工具名称描述能力，而不是用例
+- [ ] 输入是数据，不是决定
+- [ ] 输出是丰富的（足以供Agent验证）
+- [ ] CRUD操作是分离的工具（而不是一个超级工具）
+- [ ] 工具实现中没有业务逻辑
+- [ ] 错误状态通过`isError`清晰地沟通
+- [ ] 描述解释工具做什么，而不是何时使用它
 
-**Dynamic Capability Discovery (for agent-native apps):**
-- [ ] For external APIs where agent should have full access, use dynamic discovery
-- [ ] Include a `list_*` or `discover_*` tool for each API surface
-- [ ] Use string inputs (not enums) when the API validates
-- [ ] Inject available capabilities into system prompt at runtime
-- [ ] Only use static tool mapping if intentionally limiting agent scope
+**动态能力发现（针对Agent原生应用）：**
+- [ ] 对于Agent应该拥有完全访问权限的外部API，使用动态发现
+- [ ] 为每个API表面包含`list_*`或`discover_*`工具
+- [ ] 当API验证时使用字符串输入（不是枚举）
+- [ ] 在运行时将可用功能注入系统prompt中
+- [ ] 仅在有意限制Agent范围时才使用静态工具映射
 
-**CRUD Completeness:**
-- [ ] Every entity has create, read, update, delete operations
-- [ ] Every UI action has a corresponding agent tool
-- [ ] Test: "Can the agent undo what it just did?"
+**CRUD完整性：**
+- [ ] 每个实体都有创建、读取、更新、删除操作
+- [ ] 每个UI操作都有对应的Agent工具
+- [ ] 测试："Agent能撤销它刚刚所做的吗？"
 </checklist>

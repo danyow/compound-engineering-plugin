@@ -1,310 +1,311 @@
 ---
 name: triage
-description: Triage and categorize findings for the CLI todo system
-argument-hint: "[findings list or source type]"
+description: 为 CLI 待办系统对发现的问题进行分类和归类
+argument-hint: "[发现列表或来源类型]"
 ---
 
-- First set the /model to Haiku
-- Then read all pending todos in the todos/ directory
+- 首先设置 /model 为 Haiku
+- 然后读取 todos/ 目录中所有待处理的待办事项
 
-Present all findings, decisions, or issues here one by one for triage. The goal is to go through each item and decide whether to add it to the CLI todo system.
+逐一展示所有发现、决策或问题以进行分类。目标是遍历每个项目并决定是否将其添加到 CLI 待办系统。
 
-**IMPORTANT: DO NOT CODE ANYTHING DURING TRIAGE!**
+**重要提示：分类期间不要编写任何代码！**
 
-This command is for:
+此命令用于：
 
-- Triaging code review findings
-- Processing security audit results
-- Reviewing performance analysis
-- Handling any other categorized findings that need tracking
+- 对代码审查发现进行分类
+- 处理安全审计结果
+- 审查性能分析
+- 处理任何其他需要跟踪的分类发现
 
-## Workflow
+## 工作流
 
-### Step 1: Present Each Finding
+### 步骤 1：展示每个发现
 
-For each finding, present in this format:
+对于每个发现，以此格式展示：
 
 ```
 ---
-Issue #X: [Brief Title]
+问题 #X：[简短标题]
 
-Severity: 🔴 P1 (CRITICAL) / 🟡 P2 (IMPORTANT) / 🔵 P3 (NICE-TO-HAVE)
+严重程度：🔴 P1（严重）/ 🟡 P2（重要）/ 🔵 P3（可选）
 
-Category: [Security/Performance/Architecture/Bug/Feature/etc.]
+类别：[安全/性能/架构/Bug/特性/等]
 
-Description:
-[Detailed explanation of the issue or improvement]
+描述：
+[问题或改进的详细说明]
 
-Location: [file_path:line_number]
+位置：[file_path:line_number]
 
-Problem Scenario:
-[Step by step what's wrong or could happen]
+问题场景：
+[逐步说明问题所在或可能发生的情况]
 
-Proposed Solution:
-[How to fix it]
+建议解决方案：
+[如何修复]
 
-Estimated Effort: [Small (< 2 hours) / Medium (2-8 hours) / Large (> 8 hours)]
+预估工作量：[小型（< 2 小时）/ 中型（2-8 小时）/ 大型（> 8 小时）]
 
 ---
-Do you want to add this to the todo list?
-1. yes - create todo file
-2. next - skip this item
-3. custom - modify before creating
+是否要将此项添加到待办列表？
+1. yes - 创建待办文件
+2. next - 跳过此项
+3. custom - 修改后再创建
 ```
 
-### Step 2: Handle User Decision
+### 步骤 2：处理用户决策
 
-**When user says "yes":**
+**当用户选择 "yes"：**
 
-1. **Update existing todo file** (if it exists) or **Create new filename:**
+1. **更新现有待办文件**（如果存在）或**创建新文件名：**
 
-   If todo already exists (from code review):
+   如果待办已存在（来自代码审查）：
 
-   - Rename file from `{id}-pending-{priority}-{desc}.md` → `{id}-ready-{priority}-{desc}.md`
-   - Update YAML frontmatter: `status: pending` → `status: ready`
-   - Keep issue_id, priority, and description unchanged
+   - 重命名文件：`{id}-pending-{priority}-{desc}.md` → `{id}-ready-{priority}-{desc}.md`
+   - 更新 YAML frontmatter：`status: pending` → `status: ready`
+   - 保持 issue_id、priority 和 description 不变
 
-   If creating new todo:
+   如果创建新待办：
 
    ```
    {next_id}-ready-{priority}-{brief-description}.md
    ```
 
-   Priority mapping:
+   优先级映射：
 
-   - 🔴 P1 (CRITICAL) → `p1`
-   - 🟡 P2 (IMPORTANT) → `p2`
-   - 🔵 P3 (NICE-TO-HAVE) → `p3`
+   - 🔴 P1（严重）→ `p1`
+   - 🟡 P2（重要）→ `p2`
+   - 🔵 P3（可选）→ `p3`
 
-   Example: `042-ready-p1-transaction-boundaries.md`
+   示例：`042-ready-p1-transaction-boundaries.md`
 
-2. **Update YAML frontmatter:**
+2. **更新 YAML frontmatter：**
 
    ```yaml
    ---
-   status: ready # IMPORTANT: Change from "pending" to "ready"
-   priority: p1 # or p2, p3 based on severity
+   status: ready # 重要：从 "pending" 改为 "ready"
+   priority: p1 # 或 p2、p3，基于严重程度
    issue_id: "042"
    tags: [category, relevant-tags]
    dependencies: []
    ---
    ```
 
-3. **Populate or update the file:**
+3. **填充或更新文件：**
 
    ```yaml
-   # [Issue Title]
+   # [问题标题]
 
-   ## Problem Statement
-   [Description from finding]
+   ## 问题陈述
+   [来自发现的描述]
 
-   ## Findings
-   - [Key discoveries]
-   - Location: [file_path:line_number]
-   - [Scenario details]
+   ## 发现
+   - [关键发现]
+   - 位置：[file_path:line_number]
+   - [场景详情]
 
-   ## Proposed Solutions
+   ## 建议解决方案
 
-   ### Option 1: [Primary solution]
-   - **Pros**: [Benefits]
-   - **Cons**: [Drawbacks if any]
-   - **Effort**: [Small/Medium/Large]
-   - **Risk**: [Low/Medium/High]
+   ### 方案 1：[主要解决方案]
+   - **优点**：[好处]
+   - **缺点**：[缺点（如有）]
+   - **工作量**：[小型/中型/大型]
+   - **风险**：[低/中/高]
 
-   ## Recommended Action
-   [Filled during triage - specific action plan]
+   ## 推荐行动
+   [在分类期间填写 - 具体行动计划]
 
-   ## Technical Details
-   - **Affected Files**: [List files]
-   - **Related Components**: [Components affected]
-   - **Database Changes**: [Yes/No - describe if yes]
+   ## 技术细节
+   - **受影响文件**：[列出文件]
+   - **相关组件**：[受影响的组件]
+   - **数据库变更**：[是/否 - 如果是则描述]
 
-   ## Resources
-   - Original finding: [Source of this issue]
-   - Related issues: [If any]
+   ## 资源
+   - 原始发现：[此问题的来源]
+   - 相关问题：[如有]
 
-   ## Acceptance Criteria
-   - [ ] [Specific success criteria]
-   - [ ] Tests pass
-   - [ ] Code reviewed
+   ## 验收标准
+   - [ ] [具体成功标准]
+   - [ ] 测试通过
+   - [ ] 代码已审查
 
-   ## Work Log
+   ## 工作日志
 
-   ### {date} - Approved for Work
-   **By:** Claude Triage System
-   **Actions:**
-   - Issue approved during triage session
-   - Status changed from pending → ready
-   - Ready to be picked up and worked on
+   ### {date} - 批准开始工作
+   **审批人：** Claude Triage System
+   **操作：**
+   - 问题在分类会议期间批准
+   - 状态从 pending 更改为 ready
+   - 准备好被领取和处理
 
-   **Learnings:**
-   - [Context and insights]
+   **经验教训：**
+   - [上下文和见解]
 
-   ## Notes
-   Source: Triage session on {date}
+   ## 备注
+   来源：{date} 的分类会议
    ```
 
-4. **Confirm approval:** "✅ Approved: `{new_filename}` (Issue #{issue_id}) - Status: **ready** → Ready to work on"
+4. **确认批准：** "✅ 已批准：`{new_filename}`（问题 #{issue_id}）- 状态：**ready** → 准备开始工作"
 
-**When user says "next":**
+**当用户选择 "next"：**
 
-- **Delete the todo file** - Remove it from todos/ directory since it's not relevant
-- Skip to the next item
-- Track skipped items for summary
+- **删除待办文件** - 从 todos/ 目录中删除，因为它不相关
+- 跳到下一项
+- 跟踪跳过的项目以供摘要
 
-**When user says "custom":**
+**当用户选择 "custom"：**
 
-- Ask what to modify (priority, description, details)
-- Update the information
-- Present revised version
-- Ask again: yes/next/custom
+- 询问要修改什么（优先级、描述、详情）
+- 更新信息
+- 展示修订版本
+- 再次询问：yes/next/custom
 
-### Step 3: Continue Until All Processed
+### 步骤 3：继续处理直到全部完成
 
-- Process all items one by one
-- Track using TodoWrite for visibility
-- Don't wait for approval between items - keep moving
+- 逐一处理所有项目
+- 使用 TodoWrite 跟踪以提高可见性
+- 不要在项目之间等待批准 - 继续前进
 
-### Step 4: Final Summary
+### 步骤 4：最终摘要
 
-After all items processed:
+所有项目处理完成后：
 
 ````markdown
-## Triage Complete
+## 分类完成
 
-**Total Items:** [X] **Todos Approved (ready):** [Y] **Skipped:** [Z]
+**总项目数：** [X] **已批准待办（准备就绪）：** [Y] **已跳过：** [Z]
 
-### Approved Todos (Ready for Work):
+### 已批准待办（准备开始工作）：
 
-- `042-ready-p1-transaction-boundaries.md` - Transaction boundary issue
-- `043-ready-p2-cache-optimization.md` - Cache performance improvement ...
+- `042-ready-p1-transaction-boundaries.md` - 事务边界问题
+- `043-ready-p2-cache-optimization.md` - 缓存性能改进 ...
 
-### Skipped Items (Deleted):
+### 已跳过项目（已删除）：
 
-- Item #5: [reason] - Removed from todos/
-- Item #12: [reason] - Removed from todos/
+- 项目 #5：[原因] - 已从 todos/ 中删除
+- 项目 #12：[原因] - 已从 todos/ 中删除
 
-### Summary of Changes Made:
+### 所做更改摘要：
 
-During triage, the following status updates occurred:
+在分类过程中，发生了以下状态更新：
 
-- **Pending → Ready:** Filenames and frontmatter updated to reflect approved status
-- **Deleted:** Todo files for skipped findings removed from todos/ directory
-- Each approved file now has `status: ready` in YAML frontmatter
+- **Pending → Ready：** 文件名和 frontmatter 已更新以反映批准状态
+- **已删除：** 已跳过发现的待办文件已从 todos/ 目录中删除
+- 每个批准的文件现在在 YAML frontmatter 中都有 `status: ready`
 
-### Next Steps:
+### 后续步骤：
 
-1. View approved todos ready for work:
+1. 查看准备工作的已批准待办：
    ```bash
    ls todos/*-ready-*.md
    ```
 ````
 
-2. Start work on approved items:
+2. 开始处理已批准的项目：
 
    ```bash
-   /resolve_todo_parallel  # Work on multiple approved items efficiently
+   /resolve_todo_parallel  # 高效处理多个已批准项目
    ```
 
-3. Or pick individual items to work on
+3. 或选择单个项目进行处理
 
-4. As you work, update todo status:
-   - Ready → In Progress (in your local context as you work)
-   - In Progress → Complete (rename file: ready → complete, update frontmatter)
+4. 在工作过程中，更新待办状态：
+   - Ready → In Progress（在工作时在本地上下文中）
+   - In Progress → Complete（重命名文件：ready → complete，更新 frontmatter）
 
 ```
 
-## Example Response Format
+## 响应格式示例
 
 ```
 
 ---
 
-Issue #5: Missing Transaction Boundaries for Multi-Step Operations
+问题 #5：多步操作缺少事务边界
 
-Severity: 🔴 P1 (CRITICAL)
+严重程度：🔴 P1（严重）
 
-Category: Data Integrity / Security
+类别：数据完整性 / 安全
 
-Description: The google_oauth2_connected callback in GoogleOauthCallbacks concern performs multiple database operations without transaction protection. If any step fails midway, the database is left in an inconsistent state.
+描述：GoogleOauthCallbacks concern 中的 google_oauth2_connected 回调执行多个数据库操作，没有事务保护。如果任何步骤在中途失败，数据库将处于不一致状态。
 
-Location: app/controllers/concerns/google_oauth_callbacks.rb:13-50
+位置：app/controllers/concerns/google_oauth_callbacks.rb:13-50
 
-Problem Scenario:
+问题场景：
 
-1. User.update succeeds (email changed)
-2. Account.save! fails (validation error)
-3. Result: User has changed email but no associated Account
-4. Next login attempt fails completely
+1. User.update 成功（邮箱已更改）
+2. Account.save! 失败（验证错误）
+3. 结果：用户已更改邮箱但没有关联的 Account
+4. 下次登录尝试完全失败
 
-Operations Without Transaction:
+没有事务的操作：
 
-- User confirmation (line 13)
-- Waitlist removal (line 14)
-- User profile update (line 21-23)
-- Account creation (line 28-37)
-- Avatar attachment (line 39-45)
-- Journey creation (line 47)
+- 用户确认（第 13 行）
+- 移除等待列表（第 14 行）
+- 用户资料更新（第 21-23 行）
+- Account 创建（第 28-37 行）
+- Avatar 附件（第 39-45 行）
+- Journey 创建（第 47 行）
 
-Proposed Solution: Wrap all operations in ApplicationRecord.transaction do ... end block
+建议解决方案：将所有操作包装在 ApplicationRecord.transaction do ... end 块中
 
-Estimated Effort: Small (30 minutes)
+预估工作量：小型（30 分钟）
 
 ---
 
-Do you want to add this to the todo list?
+是否要将此项添加到待办列表？
 
-1. yes - create todo file
-2. next - skip this item
-3. custom - modify before creating
-
-```
-
-## Important Implementation Details
-
-### Status Transitions During Triage
-
-**When "yes" is selected:**
-1. Rename file: `{id}-pending-{priority}-{desc}.md` → `{id}-ready-{priority}-{desc}.md`
-2. Update YAML frontmatter: `status: pending` → `status: ready`
-3. Update Work Log with triage approval entry
-4. Confirm: "✅ Approved: `{filename}` (Issue #{issue_id}) - Status: **ready**"
-
-**When "next" is selected:**
-1. Delete the todo file from todos/ directory
-2. Skip to next item
-3. No file remains in the system
-
-### Progress Tracking
-
-Every time you present a todo as a header, include:
-- **Progress:** X/Y completed (e.g., "3/10 completed")
-- **Estimated time remaining:** Based on how quickly you're progressing
-- **Pacing:** Monitor time per finding and adjust estimate accordingly
-
-Example:
-```
-
-Progress: 3/10 completed | Estimated time: ~2 minutes remaining
+1. yes - 创建待办文件
+2. next - 跳过此项
+3. custom - 修改后再创建
 
 ```
 
-### Do Not Code During Triage
+## 重要实施细节
 
-- ✅ Present findings
-- ✅ Make yes/next/custom decisions
-- ✅ Update todo files (rename, frontmatter, work log)
-- ❌ Do NOT implement fixes or write code
-- ❌ Do NOT add detailed implementation details
-- ❌ That's for /resolve_todo_parallel phase
+### 分类期间的状态转换
+
+**当选择 "yes"：**
+1. 重命名文件：`{id}-pending-{priority}-{desc}.md` → `{id}-ready-{priority}-{desc}.md`
+2. 更新 YAML frontmatter：`status: pending` → `status: ready`
+3. 使用分类批准条目更新工作日志
+4. 确认："✅ 已批准：`{filename}`（问题 #{issue_id}）- 状态：**ready**"
+
+**当选择 "next"：**
+1. 从 todos/ 目录删除待办文件
+2. 跳到下一项
+3. 系统中不保留文件
+
+### 进度跟踪
+
+每次将待办作为标题展示时，包括：
+- **进度：** X/Y 已完成（例如，"3/10 已完成"）
+- **预计剩余时间：** 基于进展速度
+- **节奏：** 监控每个发现的时间并相应调整估计
+
+示例：
 ```
 
-When done give these options
+进度：3/10 已完成 | 预计时间：约 2 分钟剩余
+
+```
+
+### 分类期间不要编码
+
+- ✅ 展示发现
+- ✅ 做出 yes/next/custom 决策
+- ✅ 更新待办文件（重命名、frontmatter、工作日志）
+- ❌ 不要实施修复或编写代码
+- ❌ 不要添加详细的实施细节
+- ❌ 那是 /resolve_todo_parallel 阶段的事
+
+```
+
+完成后提供这些选项
 
 ```markdown
-What would you like to do next?
+接下来您想做什么？
 
-1. run /resolve_todo_parallel to resolve the todos
-2. commit the todos
-3. nothing, go chill
+1. 运行 /resolve_todo_parallel 解决待办
+2. 提交待办
+3. 什么都不做，休息一下
 ```

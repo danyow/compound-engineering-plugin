@@ -1,132 +1,132 @@
 <overview>
-Agent-native architecture has consequences for how products feel, not just how they're built. This document covers progressive disclosure of complexity, discovering latent demand through agent usage, and designing approval flows that match stakes and reversibility.
+Agent原生架构对产品的感受有影响，不仅仅是构建方式。本文档涵盖复杂性的渐进式披露、通过Agent使用发现潜在需求，以及设计与风险和可逆性相匹配的审批流程。
 </overview>
 
 <progressive_disclosure>
-## Progressive Disclosure of Complexity
+## 复杂性的渐进式披露
 
-The best agent-native applications are simple to start but endlessly powerful.
+最好的Agent原生应用开始很简单但功能无尽。
 
-### The Excel Analogy
+### Excel类比
 
-Excel is the canonical example: you can use it for a grocery list, or you can build complex financial models. The same tool, radically different depths of use.
+Excel是标准示例：你可以用它来列购物清单，或者构建复杂的财务模型。相同的工具，使用深度截然不同。
 
-Claude Code has this quality: fix a typo, or refactor an entire codebase. The interface is the same—natural language—but the capability scales with the ask.
+Claude Code具有这种品质：修复打字错误或重构整个代码库。接口相同——自然语言——但能力随着请求而扩展。
 
-### The Pattern
+### 模式
 
-Agent-native applications should aspire to this:
+Agent原生应用应该渴望这样做：
 
-**Simple entry:** Basic requests work immediately with no learning curve
+**简单入口：** 基本请求立即工作，无需学习曲线
 ```
-User: "Organize my downloads"
-Agent: [Does it immediately, no configuration needed]
-```
-
-**Discoverable depth:** Users find they can do more as they explore
-```
-User: "Organize my downloads by project"
-Agent: [Adapts to preference]
-
-User: "Every Monday, review last week's downloads"
-Agent: [Sets up recurring workflow]
+用户："整理我的下载"
+Agent：[立即执行，无需配置]
 ```
 
-**No ceiling:** Power users can push the system in ways you didn't anticipate
+**可发现的深度：** 用户在探索时发现他们可以做得更多
 ```
-User: "Cross-reference my downloads with my calendar and flag
-       anything I downloaded during a meeting that I haven't
-       followed up on"
-Agent: [Composes capabilities to accomplish this]
+用户："按项目整理我的下载"
+Agent：[适应偏好]
+
+用户："每个周一，回顾上周的下载"
+Agent：[设置重复工作流]
 ```
 
-### How This Emerges
+**无上限：** 高级用户可以以你未预料的方式推动系统
+```
+用户："交叉引用我的下载和日历，并标记
+       在会议期间下载的任何我还没有
+       跟进的内容"
+Agent：[组合能力来实现这个]
+```
 
-This isn't something you design directly. It **emerges naturally from the architecture:**
+### 这是如何出现的
 
-1. When features are prompts and tools are composable...
-2. Users can start simple ("organize my downloads")...
-3. And gradually discover complexity ("every Monday, review last week's...")...
-4. Without you having to build each level explicitly
+这不是你直接设计的。它**从架构中自然出现：**
 
-The agent meets users where they are.
+1. 当功能是prompt且工具是可组合的...
+2. 用户可以从简单开始（"整理我的下载"）...
+3. 并逐步发现复杂性（"每周一，回顾上周..."）...
+4. 无需你显式构建每个级别
 
-### Design Implications
+Agent在用户所在的地方与他们相遇。
 
-- **Don't force configuration upfront** - Let users start immediately
-- **Don't hide capabilities** - Make them discoverable through use
-- **Don't cap complexity** - If the agent can do it, let users ask for it
-- **Do provide hints** - Help users discover what's possible
+### 设计含义
+
+- **不要强制前期配置** - 让用户立即开始
+- **不要隐藏功能** - 通过使用使其可发现
+- **不要限制复杂性** - 如果Agent能做，就让用户问
+- **提供提示** - 帮助用户发现可能的内容
 </progressive_disclosure>
 
 <latent_demand_discovery>
-## Latent Demand Discovery
+## 潜在需求发现
 
-Traditional product development: imagine what users want, build it, see if you're right.
+传统产品开发：想象用户想要什么，构建它，看看你是否正确。
 
-Agent-native product development: build a capable foundation, observe what users ask the agent to do, formalize the patterns that emerge.
+Agent原生产品开发：构建一个有能力的基础，观察用户要求Agent做什么，形式化出现的模式。
 
-### The Shift
+### 转变
 
-**Traditional approach:**
+**传统方法：**
 ```
-1. Imagine features users might want
-2. Build them
-3. Ship
-4. Hope you guessed right
-5. If wrong, rebuild
-```
-
-**Agent-native approach:**
-```
-1. Build capable foundation (atomic tools, parity)
-2. Ship
-3. Users ask agent for things
-4. Observe what they're asking for
-5. Patterns emerge
-6. Formalize patterns into domain tools or prompts
-7. Repeat
+1. 想象用户可能想要的功能
+2. 构建它们
+3. 发布
+4. 希望你猜对了
+5. 如果错了，重建
 ```
 
-### The Flywheel
+**Agent原生方法：**
+```
+1. 构建有能力的基础（原子工具、奇偶性）
+2. 发布
+3. 用户向Agent要求东西
+4. 观察他们要求什么
+5. 模式出现
+6. 将模式形式化为领域工具或prompt
+7. 重复
+```
+
+### 飞轮
 
 ```
-Build with atomic tools and parity
+用原子工具和奇偶性构建
            ↓
-Users ask for things you didn't anticipate
+用户要求你没有预料到的东西
            ↓
-Agent composes tools to accomplish them
-(or fails, revealing a capability gap)
+Agent组合工具来完成它们
+（或失败，暴露能力差距）
            ↓
-You observe patterns in what's being requested
+你观察所要求内容中的模式
            ↓
-Add domain tools or prompts to optimize common patterns
+添加领域工具或prompt来优化常见模式
            ↓
 (Repeat)
 ```
 
-### What You Learn
+### 你学到什么
 
-**When users ask and the agent succeeds:**
-- This is a real need
-- Your architecture supports it
-- Consider optimizing with a domain tool if it's common
+**当用户问且Agent成功时：**
+- 这是真实的需求
+- 你的架构支持它
+- 如果很常见，考虑用领域工具优化
 
-**When users ask and the agent fails:**
-- This is a real need
-- You have a capability gap
-- Fix the gap: add tool, fix parity, improve context
+**当用户问且Agent失败时：**
+- 这是真实的需求
+- 你有能力差距
+- 修复差距：添加工具、修复奇偶性、改进context
 
-**When users don't ask for something:**
-- Maybe they don't need it
-- Or maybe they don't know it's possible (capability hiding)
+**当用户不要求某些东西时：**
+- 也许他们不需要
+- 或者也许他们不知道这是可能的（能力隐藏）
 
-### Implementation
+### 实现
 
-**Log agent requests:**
+**记录Agent请求：**
 ```typescript
 async function handleAgentRequest(request: string) {
-  // Log what users are asking for
+  // 记录用户要求什么
   await analytics.log({
     type: 'agent_request',
     request: request,
@@ -137,7 +137,7 @@ async function handleAgentRequest(request: string) {
 }
 ```
 
-**Track success/failure:**
+**跟踪成功/失败：**
 ```typescript
 async function completeAgentSession(session: AgentSession) {
   await analytics.log({
@@ -150,95 +150,95 @@ async function completeAgentSession(session: AgentSession) {
 }
 ```
 
-**Review patterns:**
-- What are users asking for most?
-- What's failing? Why?
-- What would benefit from a domain tool?
-- What needs better context injection?
+**审查模式：**
+- 用户最常问什么？
+- 什么失败了？为什么？
+- 什么会从领域工具中受益？
+- 什么需要更好的context注入？
 
-### Example: Discovering "Weekly Review"
+### 示例：发现"周评论"
 
 ```
-Week 1: Users start asking "summarize my activity this week"
-        Agent: Composes list_files + read_file, works but slow
+周1：用户开始问"总结我这周的活动"
+        Agent：组合list_files + read_file，工作但缓慢
 
-Week 2: More users asking similar things
-        Pattern emerges: weekly review is common
+周2：更多用户问类似的事情
+        模式出现：周评论很常见
 
-Week 3: Add prompt section for weekly review
-        Faster, more consistent, still flexible
+周3：添加周评论的prompt部分
+        更快、更一致、仍然灵活
 
-Week 4: If still common and performance matters
-        Add domain tool: generate_weekly_summary
+周4：如果仍然常见且性能很重要
+        添加领域工具：generate_weekly_summary
 ```
 
-You didn't have to guess that weekly review would be popular. You discovered it.
+你不必猜测周评论会很受欢迎。你发现了它。
 </latent_demand_discovery>
 
 <approval_and_agency>
-## Approval and User Agency
+## 审批和用户代理
 
-When agents take unsolicited actions—doing things on their own rather than responding to explicit requests—you need to decide how much autonomy to grant.
+当Agent采取无声请求的操作时——自己做事而不是响应显式请求——你需要决定给予多少自主权。
 
-> **Note:** This framework applies to unsolicited agent actions. If the user explicitly asks the agent to do something ("send that email"), that's already approval—the agent just does it.
+> **注意：** 此框架适用于无声请求的Agent操作。如果用户明确要求Agent做某事（"发送那封电子邮件"），那已经是批准——Agent只需做就可以。
 
-### The Stakes/Reversibility Matrix
+### 风险/可逆性矩阵
 
-Consider two dimensions:
-- **Stakes:** How much does it matter if this goes wrong?
-- **Reversibility:** How easy is it to undo?
+考虑两个维度：
+- **风险：** 如果这出错，会有多大关系？
+- **可逆性：** 撤销有多容易？
 
-| Stakes | Reversibility | Pattern | Example |
+| 风险 | 可逆性 | 模式 | 示例 |
 |--------|---------------|---------|---------|
-| Low | Easy | **Auto-apply** | Organizing files |
-| Low | Hard | **Quick confirm** | Publishing to a private feed |
-| High | Easy | **Suggest + apply** | Code changes with undo |
-| High | Hard | **Explicit approval** | Sending emails, payments |
+| 低 | 容易 | **自动应用** | 组织文件 |
+| 低 | 困难 | **快速确认** | 发布到私有feed |
+| 高 | 容易 | **建议+应用** | 代码更改带撤销 |
+| 高 | 困难 | **明确批准** | 发送电子邮件、付款 |
 
-### Patterns in Detail
+### 详细的模式
 
-**Auto-apply (low stakes, easy reversal):**
+**自动应用（低风险，容易撤销）：**
 ```
-Agent: [Organizes files into folders]
-Agent: "I organized your downloads into folders by type.
-        You can undo with Cmd+Z or move them back."
+Agent：[将文件组织到文件夹中]
+Agent："我按类型将你的下载组织到文件夹中。
+        你可以用Cmd+Z撤销或将它们移回。"
 ```
-User doesn't need to approve—it's easy to undo and doesn't matter much.
+用户不需要批准——很容易撤销，也不太重要。
 
-**Quick confirm (low stakes, hard reversal):**
+**快速确认（低风险，困难撤销）：**
 ```
-Agent: "I've drafted a post about your reading insights.
-        Publish to your feed?"
-        [Publish] [Edit first] [Cancel]
+Agent："我起草了一篇关于你的阅读见解的帖子。
+        发布到你的feed？"
+        [发布] [先编辑] [取消]
 ```
-One-tap confirm because stakes are low, but it's hard to un-publish.
+一键确认因为风险低，但取消发布很困难。
 
-**Suggest + apply (high stakes, easy reversal):**
+**建议+应用（高风险，容易撤销）：**
 ```
-Agent: "I recommend these code changes to fix the bug:
-        [Shows diff]
-        Apply? Changes can be reverted with git."
-        [Apply] [Modify] [Cancel]
+Agent："我建议这些代码更改来修复bug：
+        [显示diff]
+        应用？更改可以用git撤销。"
+        [应用] [修改] [取消]
 ```
-Shows what will happen, makes reversal clear.
+显示会发生什么，使撤销清晰。
 
-**Explicit approval (high stakes, hard reversal):**
+**明确批准（高风险，困难撤销）：**
 ```
-Agent: "I've drafted this email to your team about the deadline change:
-        [Shows full email]
-        This will send immediately and cannot be unsent.
-        Type 'send' to confirm."
+Agent："我起草了这封关于截止日期更改的电子邮件给你的团队：
+        [显示完整电子邮件]
+        这会立即发送，无法撤销。
+        输入"send"来确认。"
 ```
-Requires explicit action, makes consequences clear.
+需要明确的操作，明确后果。
 
-### Implementation
+### 实现
 
 ```swift
 enum ApprovalLevel {
-    case autoApply       // Just do it
-    case quickConfirm    // One-tap approval
-    case suggestApply    // Show preview, ask to apply
-    case explicitApproval // Require explicit confirmation
+    case autoApply       // 直接做
+    case quickConfirm    // 一键批准
+    case suggestApply    // 显示预览，询问是否应用
+    case explicitApproval // 需要明确确认
 }
 
 func approvalLevelFor(action: AgentAction) -> ApprovalLevel {
@@ -274,18 +274,18 @@ func assessReversibility(_ action: AgentAction) -> Reversibility {
 }
 ```
 
-### Self-Modification Considerations
+### 自修改考虑
 
-When agents can modify their own behavior—changing prompts, updating preferences, adjusting workflows—the goals are:
+当Agent可以修改自己的行为时——改变prompt、更新偏好、调整工作流——目标是：
 
-1. **Visibility:** User can see what changed
-2. **Understanding:** User understands the effects
-3. **Rollback:** User can undo changes
+1. **可见性：** 用户可以看到什么改变了
+2. **理解：** 用户理解效果
+3. **回滚：** 用户可以撤销更改
 
-Approval flows are one way to achieve this. Audit logs with easy rollback could be another. **The principle is: make it legible.**
+审批流程是实现这一目标的一种方式。带有轻松回滚的审计日志可能是另一种。**原则是：使其可读。**
 
 ```swift
-// When agent modifies its own prompt
+// 当Agent修改自己的prompt时
 func agentSelfModify(change: PromptChange) async {
     // Log the change
     await auditLog.record(change)
@@ -294,7 +294,7 @@ func agentSelfModify(change: PromptChange) async {
     await createCheckpoint(currentState)
 
     // Notify user (could be async/batched)
-    await notifyUser("I've adjusted my approach: \(change.summary)")
+    await notifyUser("我已调整我的方法：\(change.summary)")
 
     // Apply change
     await applyChange(change)
@@ -303,141 +303,141 @@ func agentSelfModify(change: PromptChange) async {
 </approval_and_agency>
 
 <capability_visibility>
-## Capability Visibility
+## 能力可见性
 
-Users need to discover what the agent can do. Hidden capabilities lead to underutilization.
+用户需要发现Agent能做什么。隐藏的能力导致未被充分利用。
 
-### The Problem
+### 问题
 
 ```
-User: "Help me with my reading"
-Agent: "What would you like help with?"
-// Agent doesn't mention it can publish to feed, research books,
-// generate introductions, analyze themes...
+用户："帮助我阅读"
+Agent："你需要什么帮助？"
+// Agent不提及它可以发布到feed、研究书籍、
+// 生成介绍、分析主题...
 ```
 
-The agent can do these things, but the user doesn't know.
+Agent可以做这些事情，但用户不知道。
 
-### Solutions
+### 解决方案
 
-**Onboarding hints:**
+**入职提示：**
 ```
-Agent: "I can help you with your reading in several ways:
-        - Research any book (web search + save findings)
-        - Generate personalized introductions
-        - Publish insights to your reading feed
-        - Analyze themes across your library
-        What interests you?"
-```
-
-**Contextual suggestions:**
-```
-User: "I just finished reading 1984"
-Agent: "Great choice! Would you like me to:
-        - Research historical context?
-        - Compare it to other books in your library?
-        - Publish an insight about it to your feed?"
+Agent："我可以通过多种方式帮助你阅读：
+        - 研究任何书籍（网络搜索+保存发现）
+        - 生成个性化介绍
+        - 将见解发布到你的阅读feed
+        - 分析你的库中的主题
+        什么让你感兴趣？"
 ```
 
-**Progressive revelation:**
+**上下文建议：**
 ```
-// After user uses basic features
-Agent: "By the way, you can also ask me to set up
-        recurring tasks, like 'every Monday, review my
-        reading progress.' Just let me know!"
+用户："我刚读完《1984》"
+Agent："很好的选择！你想让我：
+        - 研究历史背景？
+        - 将它与你的库中的其他书籍进行比较？
+        - 将关于它的见解发布到你的feed？"
 ```
 
-### Balance
+**渐进式披露：**
+```
+// 用户使用基本功能后
+Agent："顺便说一下，你也可以要求我设置
+        重复任务，比如"每周一，回顾我的
+        阅读进度。"只要告诉我就可以了！"
+```
 
-- **Don't overwhelm** with all capabilities upfront
-- **Do reveal** capabilities naturally through use
-- **Don't assume** users will discover things on their own
-- **Do make** capabilities visible when relevant
+### 平衡
+
+- **不要用所有前期能力压倒** 用户
+- **确实通过使用自然地披露**能力
+- **不要假设** 用户会自己发现事情
+- **确实使** 能力在相关时可见
 </capability_visibility>
 
 <designing_for_trust>
-## Designing for Trust
+## 为信任设计
 
-Agent-native apps require trust. Users are giving an AI significant capability. Build trust through:
+Agent原生应用需要信任。用户给了AI重要能力。通过以下方式建立信任：
 
-### Transparency
+### 透明度
 
-- Show what the agent is doing (tool calls, progress)
-- Explain reasoning when it matters
-- Make all agent work inspectable (files, logs)
+- 显示Agent在做什么（工具调用、进度）
+- 在重要时解释推理
+- 使所有Agent工作可检查（文件、日志）
 
-### Predictability
+### 可预测性
 
-- Consistent behavior for similar requests
-- Clear patterns for when approval is needed
-- No surprises in what the agent can access
+- 类似请求的一致行为
+- 何时需要批准的清晰模式
+- Agent可以访问什么没有惊喜
 
-### Reversibility
+### 可逆性
 
-- Easy undo for agent actions
-- Checkpoints before significant changes
-- Clear rollback paths
+- 轻松撤销Agent操作
+- 在显著更改前检查点
+- 清晰的回滚路径
 
-### Control
+### 控制
 
-- User can stop agent at any time
-- User can adjust agent behavior (prompts, preferences)
-- User can restrict capabilities if desired
+- 用户可以随时停止Agent
+- 用户可以调整Agent行为（prompt、偏好）
+- 用户可以根据需要限制功能
 
 ### Implementation
 
 ```swift
 struct AgentTransparency {
-    // Show what's happening
+    // 显示发生了什么
     func onToolCall(_ tool: ToolCall) {
-        showInUI("Using \(tool.name)...")
+        showInUI("使用 \(tool.name)...")
     }
 
-    // Explain reasoning
+    // 解释推理
     func onDecision(_ decision: AgentDecision) {
         if decision.needsExplanation {
-            showInUI("I chose this because: \(decision.reasoning)")
+            showInUI("我选择这个是因为：\(decision.reasoning)")
         }
     }
 
-    // Make work inspectable
+    // 使工作可检查
     func onOutput(_ output: AgentOutput) {
-        // All output is in files user can see
-        // Or in visible UI state
+        // 所有输出都在用户可以看到的文件中
+        // 或在可见的UI状态中
     }
 }
 ```
 </designing_for_trust>
 
 <checklist>
-## Product Design Checklist
+## 产品设计检查清单
 
-### Progressive Disclosure
-- [ ] Basic requests work immediately (no config)
-- [ ] Depth is discoverable through use
-- [ ] No artificial ceiling on complexity
-- [ ] Capability hints provided
+### 渐进式披露
+- [ ] 基本请求立即工作（无配置）
+- [ ] 深度可通过使用发现
+- [ ] 复杂性没有人工上限
+- [ ] 提供能力提示
 
-### Latent Demand Discovery
-- [ ] Agent requests are logged
-- [ ] Success/failure is tracked
-- [ ] Patterns are reviewed regularly
-- [ ] Common patterns formalized into tools/prompts
+### 潜在需求发现
+- [ ] Agent请求被记录
+- [ ] 成功/失败被跟踪
+- [ ] 模式定期审查
+- [ ] 常见模式形式化为工具/prompt
 
-### Approval & Agency
-- [ ] Stakes assessed for each action type
-- [ ] Reversibility assessed for each action type
-- [ ] Approval pattern matches stakes/reversibility
-- [ ] Self-modification is legible (visible, understandable, reversible)
+### 审批与代理
+- [ ] 评估每个操作类型的风险
+- [ ] 评估每个操作类型的可逆性
+- [ ] 审批模式与风险/可逆性匹配
+- [ ] 自修改是可读的（可见、可理解、可逆）
 
-### Capability Visibility
-- [ ] Onboarding reveals key capabilities
-- [ ] Contextual suggestions provided
-- [ ] Users aren't expected to guess what's possible
+### 能力可见性
+- [ ] 入职揭示关键能力
+- [ ] 提供上下文建议
+- [ ] 不希望用户猜测什么是可能的
 
-### Trust
-- [ ] Agent actions are transparent
-- [ ] Behavior is predictable
-- [ ] Actions are reversible
-- [ ] User has control
+### 信任
+- [ ] Agent操作是透明的
+- [ ] 行为是可预测的
+- [ ] 操作是可逆的
+- [ ] 用户有控制权
 </checklist>

@@ -1,32 +1,32 @@
 ---
 name: andrew-kane-gem-writer
-description: This skill should be used when writing Ruby gems following Andrew Kane's proven patterns and philosophy. It applies when creating new Ruby gems, refactoring existing gems, designing gem APIs, or when clean, minimal, production-ready Ruby library code is needed. Triggers on requests like "create a gem", "write a Ruby library", "design a gem API", or mentions of Andrew Kane's style.
+description: 在编写遵循 Andrew Kane 经过验证的模式和哲学的 Ruby gem 时应使用此 skill。适用于创建新的 Ruby gem、重构现有 gem、设计 gem API，或需要简洁、最小化、生产就绪的 Ruby 库代码时。触发词："创建 gem"、"编写 Ruby 库"、"设计 gem API"，或提及 Andrew Kane 的风格。
 ---
 
 # Andrew Kane Gem Writer
 
-Write Ruby gems following Andrew Kane's battle-tested patterns from 100+ gems with 374M+ downloads (Searchkick, PgHero, Chartkick, Strong Migrations, Lockbox, Ahoy, Blazer, Groupdate, Neighbor, Blind Index).
+遵循 Andrew Kane 经过实战检验的模式编写 Ruby gem，这些模式来自 100+ 个 gem，总下载量达 374M+（Searchkick、PgHero、Chartkick、Strong Migrations、Lockbox、Ahoy、Blazer、Groupdate、Neighbor、Blind Index）。
 
-## Core Philosophy
+## 核心哲学
 
-**Simplicity over cleverness.** Zero or minimal dependencies. Explicit code over metaprogramming. Rails integration without Rails coupling. Every pattern serves production use cases.
+**简单胜于聪明。** 零依赖或最小依赖。显式代码胜于元编程。Rails 集成但不耦合 Rails。每个模式都服务于生产用例。
 
-## Entry Point Structure
+## 入口点结构
 
-Every gem follows this exact pattern in `lib/gemname.rb`:
+每个 gem 在 `lib/gemname.rb` 中都遵循这个确切模式：
 
 ```ruby
-# 1. Dependencies (stdlib preferred)
+# 1. 依赖（优先使用标准库）
 require "forwardable"
 
-# 2. Internal modules
+# 2. 内部模块
 require_relative "gemname/model"
 require_relative "gemname/version"
 
-# 3. Conditional Rails (CRITICAL - never require Rails directly)
+# 3. 条件加载 Rails（关键 - 永远不要直接 require Rails）
 require_relative "gemname/railtie" if defined?(Rails)
 
-# 4. Module with config and errors
+# 4. 包含配置和错误的模块
 module GemName
   class Error < StandardError; end
   class InvalidConfigError < Error; end
@@ -36,21 +36,21 @@ module GemName
     attr_writer :client
   end
 
-  self.timeout = 10  # Defaults set immediately
+  self.timeout = 10  # 立即设置默认值
 end
 ```
 
-## Class Macro DSL Pattern
+## 类宏 DSL 模式
 
-The signature Kane pattern—single method call configures everything:
+Kane 的标志性模式——单个方法调用配置一切：
 
 ```ruby
-# Usage
+# 使用方式
 class Product < ApplicationRecord
   searchkick word_start: [:name]
 end
 
-# Implementation
+# 实现方式
 module GemName
   module Model
     def gemname(**options)
@@ -74,29 +74,29 @@ module GemName
 end
 ```
 
-## Rails Integration
+## Rails 集成
 
-**Always use `ActiveSupport.on_load`—never require Rails gems directly:**
+**始终使用 `ActiveSupport.on_load`——永远不要直接 require Rails gem：**
 
 ```ruby
-# WRONG
+# 错误方式
 require "active_record"
 ActiveRecord::Base.include(MyGem::Model)
 
-# CORRECT
+# 正确方式
 ActiveSupport.on_load(:active_record) do
   extend GemName::Model
 end
 
-# Use prepend for behavior modification
+# 使用 prepend 来修改行为
 ActiveSupport.on_load(:active_record) do
   ActiveRecord::Migration.prepend(GemName::Migration)
 end
 ```
 
-## Configuration Pattern
+## 配置模式
 
-Use `class << self` with `attr_accessor`, not Configuration objects:
+使用 `class << self` 和 `attr_accessor`，而非配置对象：
 
 ```ruby
 module GemName
@@ -114,9 +114,9 @@ module GemName
 end
 ```
 
-## Error Handling
+## 错误处理
 
-Simple hierarchy with informative messages:
+简单的层次结构和信息丰富的消息：
 
 ```ruby
 module GemName
@@ -125,13 +125,13 @@ module GemName
   class ValidationError < Error; end
 end
 
-# Validate early with ArgumentError
+# 使用 ArgumentError 尽早验证
 def initialize(key:)
   raise ArgumentError, "Key must be 32 bytes" unless key&.bytesize == 32
 end
 ```
 
-## Testing (Minitest Only)
+## 测试（仅使用 Minitest）
 
 ```ruby
 # test/test_helper.rb
@@ -148,9 +148,9 @@ class ModelTest < Minitest::Test
 end
 ```
 
-## Gemspec Pattern
+## Gemspec 模式
 
-Zero runtime dependencies when possible:
+尽可能零运行时依赖：
 
 ```ruby
 Gem::Specification.new do |spec|
@@ -159,26 +159,26 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 3.1"
   spec.files = Dir["*.{md,txt}", "{lib}/**/*"]
   spec.require_path = "lib"
-  # NO add_dependency lines - dev deps go in Gemfile
+  # 不添加 add_dependency 行 - 开发依赖放在 Gemfile 中
 end
 ```
 
-## Anti-Patterns to Avoid
+## 要避免的反模式
 
-- `method_missing` (use `define_method` instead)
-- Configuration objects (use class accessors)
-- `@@class_variables` (use `class << self`)
-- Requiring Rails gems directly
-- Many runtime dependencies
-- Committing Gemfile.lock in gems
-- RSpec (use Minitest)
-- Heavy DSLs (prefer explicit Ruby)
+- `method_missing`（使用 `define_method` 代替）
+- 配置对象（使用类访问器）
+- `@@class_variables`（使用 `class << self`）
+- 直接 require Rails gem
+- 过多的运行时依赖
+- 在 gem 中提交 Gemfile.lock
+- RSpec（使用 Minitest）
+- 重量级 DSL（优先使用显式 Ruby）
 
-## Reference Files
+## 参考文件
 
-For deeper patterns, see:
-- **[references/module-organization.md](references/module-organization.md)** - Directory layouts, method decomposition
-- **[references/rails-integration.md](references/rails-integration.md)** - Railtie, Engine, on_load patterns
-- **[references/database-adapters.md](references/database-adapters.md)** - Multi-database support patterns
-- **[references/testing-patterns.md](references/testing-patterns.md)** - Multi-version testing, CI setup
-- **[references/resources.md](references/resources.md)** - Links to Kane's repos and articles
+深入了解模式，请参阅：
+- **[references/module-organization.md](references/module-organization.md)** - 目录布局、方法分解
+- **[references/rails-integration.md](references/rails-integration.md)** - Railtie、Engine、on_load 模式
+- **[references/database-adapters.md](references/database-adapters.md)** - 多数据库支持模式
+- **[references/testing-patterns.md](references/testing-patterns.md)** - 多版本测试、CI 设置
+- **[references/resources.md](references/resources.md)** - Kane 的代码库和文章链接
