@@ -1,7 +1,7 @@
 {
   "name": "compound-engineering",
-  "version": "2.23.1",
-  "description": "AI-powered development tools. 27 agents, 21 commands, 13 skills, 2 MCP servers for code review, research, design, and workflow automation.",
+  "version": "2.26.4",
+  "description": "AI-powered development tools. 27 agents, 21 commands, 14 skills, 1 MCP server for code review, research, design, and workflow automation.",
   "author": {
     "name": "Kieran Klaassen",
     "email": "kieran@every.to",
@@ -21,16 +21,10 @@
     "typescript",
     "knowledge-management",
     "image-generation",
-    "playwright",
+    "agent-browser",
     "browser-automation"
   ],
   "mcpServers": {
-    "pw": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest"],
-      "env": {}
-    },
     "context7": {
       "type": "http",
       "url": "https://mcp.context7.com/mcp"
