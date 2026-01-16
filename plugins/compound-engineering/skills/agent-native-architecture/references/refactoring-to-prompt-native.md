@@ -1,80 +1,80 @@
 <overview>
-How to refactor existing agent code to follow prompt-native principles. The goal: move behavior from code into prompts, and simplify tools into primitives.
+如何重构现有Agent代码以遵循prompt原生原则。目标：将行为从代码移动到prompt中，并将工具简化为原始操作。
 </overview>
 
 <diagnosis>
-## Diagnosing Non-Prompt-Native Code
+## 诊断非Prompt原生代码
 
-Signs your agent isn't prompt-native:
+你的Agent不是prompt原生的迹象：
 
-**Tools that encode workflows:**
+**编码工作流的工具：**
 ```typescript
-// RED FLAG: Tool contains business logic
+// 红旗：工具包含业务逻辑
 tool("process_feedback", async ({ message }) => {
-  const category = categorize(message);        // Logic in code
-  const priority = calculatePriority(message); // Logic in code
-  await store(message, category, priority);    // Orchestration in code
-  if (priority > 3) await notify();            // Decision in code
+  const category = categorize(message);        // 代码中的逻辑
+  const priority = calculatePriority(message); // 代码中的逻辑
+  await store(message, category, priority);    // 代码中的编排
+  if (priority > 3) await notify();            // 代码中的决定
 });
 ```
 
-**Agent calls functions instead of figuring things out:**
+**Agent调用函数而不是自己解决问题：**
 ```typescript
-// RED FLAG: Agent is just a function caller
-"Use process_feedback to handle incoming messages"
+// 红旗：Agent只是一个函数调用者
+"使用process_feedback处理传入消息"
 // vs.
-"When feedback comes in, decide importance, store it, notify if high"
+"当反馈来临时，决定重要性，存储它，如果很高则通知"
 ```
 
-**Artificial limits on agent capability:**
+**Agent能力的人工限制：**
 ```typescript
-// RED FLAG: Tool prevents agent from doing what users can do
+// 红旗：工具阻止Agent做用户能做的事
 tool("read_file", async ({ path }) => {
   if (!ALLOWED_PATHS.includes(path)) {
-    throw new Error("Not allowed to read this file");
+    throw new Error("不允许读取此文件");
   }
   return readFile(path);
 });
 ```
 
-**Prompts that specify HOW instead of WHAT:**
+**指定HOW而不是WHAT的Prompt：**
 ```markdown
-// RED FLAG: Micromanaging the agent
-When creating a summary:
-1. Use exactly 3 bullet points
-2. Each bullet must be under 20 words
-3. Format with em-dashes for sub-points
-4. Bold the first word of each bullet
+// 红旗：微管理Agent
+创建摘要时：
+1. 使用恰好3个项目符号点
+2. 每个项目符号必须在20个单词以下
+3. 使用em破折号格式化子点
+4. 每个项目符号的第一个单词加粗
 ```
 </diagnosis>
 
 <refactoring_workflow>
-## Step-by-Step Refactoring
+## 分步重构
 
-**Step 1: Identify workflow tools**
+**步骤1：识别工作流工具**
 
-List all your tools. Mark any that:
-- Have business logic (categorize, calculate, decide)
-- Orchestrate multiple operations
-- Make decisions on behalf of the agent
-- Contain conditional logic (if/else based on content)
+列出所有工具。标记任何：
+- 具有业务逻辑（分类、计算、决定）
+- 编排多个操作
+- 代表Agent做决定
+- 包含条件逻辑（基于内容的if/else）
 
-**Step 2: Extract the primitives**
+**步骤2：提取原始操作**
 
-For each workflow tool, identify the underlying primitives:
+对于每个工作流工具，识别底层原始操作：
 
-| Workflow Tool | Hidden Primitives |
+| 工作流工具 | 隐藏的原始操作 |
 |---------------|-------------------|
 | `process_feedback` | `store_item`, `send_message` |
 | `generate_report` | `read_file`, `write_file` |
 | `deploy_and_notify` | `git_push`, `send_message` |
 
-**Step 3: Move behavior to the prompt**
+**步骤3：将行为移到prompt中**
 
-Take the logic from your workflow tools and express it in natural language:
+从工作流工具中获取逻辑并用自然语言表示：
 
 ```typescript
-// Before (in code):
+// 之前（在代码中）：
 async function processFeedback(message) {
   const priority = message.includes("crash") ? 5 :
                    message.includes("bug") ? 4 : 3;
@@ -84,67 +84,67 @@ async function processFeedback(message) {
 ```
 
 ```markdown
-// After (in prompt):
-## Feedback Processing
+// 之后（在prompt中）：
+## 反馈处理
 
-When someone shares feedback:
-1. Rate importance 1-5:
-   - 5: Crashes, data loss, security issues
-   - 4: Bug reports with clear reproduction steps
-   - 3: General suggestions, minor issues
-2. Store using store_item
-3. If importance >= 4, notify the team
+当有人分享反馈时：
+1. 评价重要性1-5：
+   - 5：崩溃、数据丢失、安全问题
+   - 4：具有明确重现步骤的bug报告
+   - 3：一般建议、次要问题
+2. 使用store_item存储
+3. 如果重要性 >= 4，通知团队
 
-Use your judgment. Context matters more than keywords.
+使用你的判断。Context比关键字更重要。
 ```
 
-**Step 4: Simplify tools to primitives**
+**步骤4：将工具简化为原始操作**
 
 ```typescript
-// Before: 1 workflow tool
-tool("process_feedback", { message, category, priority }, ...complex logic...)
+// 之前：1个工作流工具
+tool("process_feedback", { message, category, priority }, ...复杂逻辑...)
 
-// After: 2 primitive tools
-tool("store_item", { key: z.string(), value: z.any() }, ...simple storage...)
-tool("send_message", { channel: z.string(), content: z.string() }, ...simple send...)
+// 之后：2个原始工具
+tool("store_item", { key: z.string(), value: z.any() }, ...简单存储...)
+tool("send_message", { channel: z.string(), content: z.string() }, ...简单发送...)
 ```
 
-**Step 5: Remove artificial limits**
+**步骤5：删除人工限制**
 
 ```typescript
-// Before: Limited capability
+// 之前：能力受限
 tool("read_file", async ({ path }) => {
-  if (!isAllowed(path)) throw new Error("Forbidden");
+  if (!isAllowed(path)) throw new Error("禁止");
   return readFile(path);
 });
 
-// After: Full capability
+// 之后：完整能力
 tool("read_file", async ({ path }) => {
-  return readFile(path);  // Agent can read anything
+  return readFile(path);  // Agent可以读取任何内容
 });
-// Use approval gates for WRITES, not artificial limits on READS
+// 对WRITES使用审批门，而不是对READS的人工限制
 ```
 
-**Step 6: Test with outcomes, not procedures**
+**步骤6：以结果而不是过程进行测试**
 
-Instead of testing "does it call the right function?", test "does it achieve the outcome?"
+而不是测试"它是否调用正确的函数？"，测试"它是否实现结果？"
 
 ```typescript
-// Before: Testing procedure
+// 之前：测试过程
 expect(mockProcessFeedback).toHaveBeenCalledWith(...)
 
-// After: Testing outcome
-// Send feedback → Check it was stored with reasonable importance
-// Send high-priority feedback → Check notification was sent
+// 之后：测试结果
+// 发送反馈 → 检查它是否以合理的重要性存储
+// 发送高优先级反馈 → 检查是否发送了通知
 ```
 </refactoring_workflow>
 
 <before_after>
-## Before/After Examples
+## 之前/之后示例
 
-**Example 1: Feedback Processing**
+**示例1：反馈处理**
 
-Before:
+之前：
 ```typescript
 tool("handle_feedback", async ({ message, author }) => {
   const category = detectCategory(message);
@@ -159,47 +159,47 @@ tool("handle_feedback", async ({ message, author }) => {
   });
 
   if (priority >= 4) {
-    await discord.send(ALERT_CHANNEL, `High priority feedback from ${author}`);
+    await discord.send(ALERT_CHANNEL, `来自${author}的高优先级反馈`);
   }
 
   return { feedbackId, category, priority };
 });
 ```
 
-After:
+之后：
 ```typescript
-// Simple storage primitive
+// 简单的存储原始
 tool("store_feedback", async ({ item }) => {
   await db.feedback.insert(item);
-  return { text: `Stored feedback ${item.id}` };
+  return { text: `已存储反馈${item.id}` };
 });
 
-// Simple message primitive
+// 简单的消息原始
 tool("send_message", async ({ channel, content }) => {
   await discord.send(channel, content);
-  return { text: "Sent" };
+  return { text: "已发送" };
 });
 ```
 
-System prompt:
+系统prompt：
 ```markdown
 ## Feedback Processing
 
-When someone shares feedback:
-1. Generate a unique ID
-2. Rate importance 1-5 based on impact and urgency
-3. Store using store_feedback with the full item
-4. If importance >= 4, send a notification to the team channel
+当有人分享反馈时：
+1. 生成唯一ID
+2. 根据影响和紧急性评价重要性1-5
+3. 使用store_feedback存储完整项
+4. 如果重要性 >= 4，向团队渠道发送通知
 
-Importance guidelines:
-- 5: Critical (crashes, data loss, security)
-- 4: High (detailed bug reports, blocking issues)
-- 3: Medium (suggestions, minor bugs)
-- 2: Low (cosmetic, edge cases)
-- 1: Minimal (off-topic, duplicates)
+重要性指南：
+- 5：关键（崩溃、数据丢失、安全）
+- 4：高（详细的bug报告、阻塞问题）
+- 3：中等（建议、次要bug）
+- 2：低（装饰性、边界情况）
+- 1：最小（离题、重复）
 ```
 
-**Example 2: Report Generation**
+**示例2：报告生成**
 
 Before:
 ```typescript
@@ -227,91 +227,91 @@ tool("query_metrics", async ({ start, end }) => {
 
 tool("write_file", async ({ path, content }) => {
   writeFileSync(path, content);
-  return { text: `Wrote ${path}` };
+  return { text: `已写入${path}` };
 });
 ```
 
 System prompt:
 ```markdown
-## Report Generation
+## 报告生成
 
-When asked to generate a report:
-1. Query the relevant metrics using query_metrics
-2. Analyze the data and identify key trends
-3. Create a clear, well-formatted report
-4. Write it using write_file in the appropriate format
+当被要求生成报告时：
+1. 使用query_metrics查询相关指标
+2. 分析数据并识别关键趋势
+3. 创建清晰、格式良好的报告
+4. 使用write_file以适当的格式写入
 
-Use your judgment about format and structure. Make it useful.
+根据你的判断关于格式和结构。使其有用。
 ```
 </before_after>
 
 <common_challenges>
-## Common Refactoring Challenges
+## 常见重构挑战
 
-**"But the agent might make mistakes!"**
+**"但Agent可能会犯错！"**
 
-Yes, and you can iterate. Change the prompt to add guidance:
+是的，你可以迭代。改变prompt来添加指导：
 ```markdown
-// Before
-Rate importance 1-5.
+// 之前
+评价重要性1-5。
 
-// After (if agent keeps rating too high)
-Rate importance 1-5. Be conservative—most feedback is 2-3.
-Only use 4-5 for truly blocking or critical issues.
+// 之后（如果Agent保持评级过高）
+评价重要性1-5。保持保守——大多数反馈是2-3。
+仅对真正的阻塞或关键问题使用4-5。
 ```
 
-**"The workflow is complex!"**
+**"工作流很复杂！"**
 
-Complex workflows can still be expressed in prompts. The agent is smart.
+复杂的工作流仍然可以在prompt中表示。Agent很聪明。
 ```markdown
-When processing video feedback:
-1. Check if it's a Loom, YouTube, or direct link
-2. For YouTube, pass URL directly to video analysis
-3. For others, download first, then analyze
-4. Extract timestamped issues
-5. Rate based on issue density and severity
+处理视频反馈时：
+1. 检查是否是Loom、YouTube或直接链接
+2. 对于YouTube，直接将URL传递给视频分析
+3. 对于其他人，首先下载，然后分析
+4. 提取带时间戳的问题
+5. 根据问题密度和严重性评价
 ```
 
-**"We need deterministic behavior!"**
+**"我们需要确定性行为！"**
 
-Some operations should stay in code. That's fine. Prompt-native isn't all-or-nothing.
+某些操作应该保留在代码中。没关系。Prompt原生不是全有或全无。
 
-Keep in code:
-- Security validation
-- Rate limiting
-- Audit logging
-- Exact format requirements
+保持在代码中：
+- 安全验证
+- 速率限制
+- 审计日志
+- 精确的格式要求
 
-Move to prompts:
-- Categorization decisions
-- Priority judgments
-- Content generation
-- Workflow orchestration
+移到prompt中：
+- 分类决定
+- 优先级判断
+- 内容生成
+- 工作流编排
 
-**"What about testing?"**
+**"测试呢？"**
 
-Test outcomes, not procedures:
-- "Given this input, does the agent achieve the right result?"
-- "Does stored feedback have reasonable importance ratings?"
-- "Are notifications sent for truly high-priority items?"
+测试结果而不是过程：
+- "给定此输入，Agent是否实现了正确的结果？"
+- "存储的反馈是否具有合理的重要性评级？"
+- "真正的高优先级项目是否发送了通知？"
 </common_challenges>
 
 <checklist>
-## Refactoring Checklist
+## 重构检查清单
 
-Diagnosis:
-- [ ] Listed all tools with business logic
-- [ ] Identified artificial limits on agent capability
-- [ ] Found prompts that micromanage HOW
+诊断：
+- [ ] 列出了所有具有业务逻辑的工具
+- [ ] 识别了Agent能力的人工限制
+- [ ] 找到了微管理HOW的prompt
 
-Refactoring:
-- [ ] Extracted primitives from workflow tools
-- [ ] Moved business logic to system prompt
-- [ ] Removed artificial limits
-- [ ] Simplified tool inputs to data, not decisions
+重构：
+- [ ] 从工作流工具中提取了原始操作
+- [ ] 将业务逻辑移到系统prompt
+- [ ] 删除了人工限制
+- [ ] 简化了工具输入为数据，而不是决定
 
-Validation:
-- [ ] Agent achieves same outcomes with primitives
-- [ ] Behavior can be changed by editing prompts
-- [ ] New features could be added without new tools
+验证：
+- [ ] Agent用原始操作实现了相同的结果
+- [ ] 行为可以通过编辑prompt来改变
+- [ ] 可以在没有新工具的情况下添加新功能
 </checklist>

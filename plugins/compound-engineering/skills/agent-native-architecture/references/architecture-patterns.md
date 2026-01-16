@@ -1,18 +1,18 @@
 <overview>
-Architectural patterns for building agent-native systems. These patterns emerge from the five core principles: Parity, Granularity, Composability, Emergent Capability, and Improvement Over Time.
+用于构建Agent原生系统的架构模式。这些模式源于五个核心原则：平等性、粒度、可组合性、涌现能力和持续改进。
 
-Features are outcomes achieved by agents operating in a loop, not functions you write. Tools are atomic primitives. The agent applies judgment; the prompt defines the outcome.
+功能是Agent在循环中实现的结果，而不是你编写的函数。Tool是原子级别的原始操作。Agent应用判断力；提示语定义结果。
 
-See also:
-- [files-universal-interface.md](./files-universal-interface.md) for file organization and context.md patterns
-- [agent-execution-patterns.md](./agent-execution-patterns.md) for completion signals and partial completion
-- [product-implications.md](./product-implications.md) for progressive disclosure and approval patterns
+另见:
+- [files-universal-interface.md](./files-universal-interface.md) 用于文件组织和context.md模式
+- [agent-execution-patterns.md](./agent-execution-patterns.md) 用于完成信号和部分完成
+- [product-implications.md](./product-implications.md) 用于渐进式披露和批准模式
 </overview>
 
 <pattern name="event-driven-agent">
-## Event-Driven Agent Architecture
+## 事件驱动Agent架构
 
-The agent runs as a long-lived process that responds to events. Events become prompts.
+Agent作为一个长期运行的进程运行，响应事件。事件变成提示语。
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -31,15 +31,15 @@ The agent runs as a long-lived process that responds to events. Events become pr
                    (restart)       (list_items)
 ```
 
-**Key characteristics:**
-- Events (messages, webhooks, timers) trigger agent turns
-- Agent decides how to respond based on system prompt
-- Tools are primitives for IO, not business logic
-- State persists between events via data tools
+**关键特点：**
+- 事件（消息、webhooks、定时器）触发Agent轮次
+- Agent根据系统提示语决定如何响应
+- Tool是IO的原始操作，不是业务逻辑
+- 状态通过数据Tool在事件间保持
 
-**Example: Discord feedback bot**
+**示例：Discord反馈机器人**
 ```typescript
-// Event source
+// 事件源
 client.on("messageCreate", (message) => {
   if (!message.author.bot) {
     runAgent({
@@ -49,7 +49,7 @@ client.on("messageCreate", (message) => {
   }
 });
 
-// System prompt defines behavior
+// 系统提示语定义行为
 const systemPrompt = `
 When someone shares feedback:
 1. Acknowledge their feedback warmly
@@ -63,128 +63,128 @@ Use your judgment about importance and categorization.
 </pattern>
 
 <pattern name="two-layer-git">
-## Two-Layer Git Architecture
+## 双层Git架构
 
-For self-modifying agents, separate code (shared) from data (instance-specific).
+对于自修改的Agent，将代码（共享）与数据（实例特定）分开。
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     GitHub (shared repo)                     │
-│  - src/           (agent code)                              │
-│  - site/          (web interface)                           │
-│  - package.json   (dependencies)                            │
-│  - .gitignore     (excludes data/, logs/)                   │
+│                     GitHub (共享仓库)                     │
+│  - src/           (Agent代码)                              │
+│  - site/          (网页界面)                           │
+│  - package.json   (依赖)                            │
+│  - .gitignore     (排除 data/, logs/)                   │
 └─────────────────────────────────────────────────────────────┘
                           │
                      git clone
                           │
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                  Instance (Server)                           │
+│                  实例 (服务器)                           │
 │                                                              │
-│  FROM GITHUB (tracked):                                      │
-│  - src/           → pushed back on code changes             │
-│  - site/          → pushed, triggers deployment             │
+│  来自 GITHUB (跟踪):                                      │
+│  - src/           → 代码变更时推送回去             │
+│  - site/          → 推送，触发部署             │
 │                                                              │
-│  LOCAL ONLY (untracked):                                     │
-│  - data/          → instance-specific storage               │
-│  - logs/          → runtime logs                            │
-│  - .env           → secrets                                 │
+│  仅本地 (不跟踪):                                     │
+│  - data/          → 实例特定的存储               │
+│  - logs/          → 运行时日志                    │
+│  - .env           → 密钥                                 │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Why this works:**
-- Code and site are version controlled (GitHub)
-- Raw data stays local (instance-specific)
-- Site is generated from data, so reproducible
-- Automatic rollback via git history
+**为什么有效：**
+- 代码和网站都受版本控制（GitHub）
+- 原始数据保持本地（实例特定）
+- 网站由数据生成，因此可重现
+- 通过git历史自动回滚
 </pattern>
 
 <pattern name="multi-instance">
-## Multi-Instance Branching
+## 多实例分支
 
-Each agent instance gets its own branch while sharing core code.
+每个Agent实例获得自己的分支，同时共享核心代码。
 
 ```
-main                        # Shared features, bug fixes
-├── instance/feedback-bot   # Every Reader feedback bot
-├── instance/support-bot    # Customer support bot
-└── instance/research-bot   # Research assistant
+main                        # 共享功能、bug修复
+├── instance/feedback-bot   # 每个Reader反馈机器人
+├── instance/support-bot    # 客户支持机器人
+└── instance/research-bot   # 研究助手
 ```
 
-**Change flow:**
-| Change Type | Work On | Then |
+**变更流程：**
+| 变更类型 | 在此处理 | 然后 |
 |-------------|---------|------|
-| Core features | main | Merge to instance branches |
-| Bug fixes | main | Merge to instance branches |
-| Instance config | instance branch | Done |
-| Instance data | instance branch | Done |
+| 核心功能 | main | 合并到实例分支 |
+| Bug修复 | main | 合并到实例分支 |
+| 实例配置 | 实例分支 | 完成 |
+| 实例数据 | 实例分支 | 完成 |
 
-**Sync tools:**
+**同步工具：**
 ```typescript
-tool("self_deploy", "Pull latest from main, rebuild, restart", ...)
-tool("sync_from_instance", "Merge from another instance", ...)
-tool("propose_to_main", "Create PR to share improvements", ...)
+tool("self_deploy", "从main拉取最新，重建，重启", ...)
+tool("sync_from_instance", "从另一个实例合并", ...)
+tool("propose_to_main", "创建PR来共享改进", ...)
 ```
 </pattern>
 
 <pattern name="site-as-output">
-## Site as Agent Output
+## 网站作为Agent输出
 
-The agent generates and maintains a website as a natural output, not through specialized site tools.
+Agent生成并维护网站作为自然输出，而不是通过专门的网站工具。
 
 ```
-Discord Message
+Discord消息
       ↓
-Agent processes it, extracts insights
+Agent处理，提取见解
       ↓
-Agent decides what site updates are needed
+Agent决定需要什么网站更新
       ↓
-Agent writes files using write_file primitive
+Agent使用write_file原始操作写入文件
       ↓
-Git commit + push triggers deployment
+Git提交+推送触发部署
       ↓
-Site updates automatically
+网站自动更新
 ```
 
-**Key insight:** Don't build site generation tools. Give the agent file tools and teach it in the prompt how to create good sites.
+**关键洞察：** 不要构建网站生成工具。给Agent文件工具，并在提示语中教它如何创建好的网站。
 
 ```markdown
-## Site Management
+## 网站管理
 
-You maintain a public feedback site. When feedback comes in:
-1. Use write_file to update site/public/content/feedback.json
-2. If the site's React components need improvement, modify them
-3. Commit changes and push to trigger Vercel deploy
+你维护一个公共反馈网站。当反馈到来时：
+1. 使用write_file更新site/public/content/feedback.json
+2. 如果网站的React组件需要改进，修改它们
+3. 提交更改并推送以触发Vercel部署
 
-The site should be:
-- Clean, modern dashboard aesthetic
-- Clear visual hierarchy
-- Status organization (Inbox, Active, Done)
+网站应该是：
+- 清洁、现代的仪表板美学
+- 清晰的视觉层级
+- 状态组织（收件箱、活跃、完成）
 
-You decide the structure. Make it good.
+你决定结构。做好它。
 ```
 </pattern>
 
 <pattern name="approval-gates">
-## Approval Gates Pattern
+## 批准门控模式
 
-Separate "propose" from "apply" for dangerous operations.
+对于危险的操作，将"提议"与"应用"分开。
 
 ```typescript
-// Pending changes stored separately
+// 待处理更改单独存储
 const pendingChanges = new Map<string, string>();
 
 tool("write_file", async ({ path, content }) => {
   if (requiresApproval(path)) {
-    // Store for approval
+    // 存储以供批准
     pendingChanges.set(path, content);
     const diff = generateDiff(path, content);
     return {
       text: `Change requires approval.\n\n${diff}\n\nReply "yes" to apply.`
     };
   } else {
-    // Apply immediately
+    // 立即应用
     writeFileSync(path, content);
     return { text: `Wrote ${path}` };
   }
@@ -199,34 +199,34 @@ tool("apply_pending", async () => {
 });
 ```
 
-**What requires approval:**
-- src/*.ts (agent code)
-- package.json (dependencies)
-- system prompt changes
+**需要批准的内容：**
+- src/*.ts (Agent代码)
+- package.json (依赖)
+- 系统提示语更改
 
-**What doesn't:**
-- data/* (instance data)
-- site/* (generated content)
-- docs/* (documentation)
+**不需要的内容：**
+- data/* (实例数据)
+- site/* (生成的内容)
+- docs/* (文档)
 </pattern>
 
 <pattern name="unified-agent-architecture">
-## Unified Agent Architecture
+## 统一Agent架构
 
-One execution engine, many agent types. All agents use the same orchestrator but with different configurations.
+一个执行引擎，多个Agent类型。所有Agent使用同一个orchestrator但配置不同。
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    AgentOrchestrator                         │
 ├─────────────────────────────────────────────────────────────┤
-│  - Lifecycle management (start, pause, resume, stop)        │
-│  - Checkpoint/restore (for background execution)            │
-│  - Tool execution                                            │
-│  - Chat integration                                          │
+│  - 生命周期管理（启动、暂停、恢复、停止）        │
+│  - Checkpoint/恢复（用于后台执行）            │
+│  - Tool执行                                            │
+│  - 聊天集成                                          │
 └─────────────────────────────────────────────────────────────┘
           │                    │                    │
     ┌─────┴─────┐        ┌─────┴─────┐        ┌─────┴─────┐
-    │ Research  │        │   Chat    │        │  Profile  │
+    │ 研究  │        │   聊天    │        │  配置文件  │
     │   Agent   │        │   Agent   │        │   Agent   │
     └───────────┘        └───────────┘        └───────────┘
     - web_search         - read_library       - read_photos
@@ -234,17 +234,17 @@ One execution engine, many agent types. All agents use the same orchestrator but
     - read_file          - web_search         - analyze_image
 ```
 
-**Implementation:**
+**实现：**
 
 ```swift
-// All agents use the same orchestrator
+// 所有Agent使用同一个orchestrator
 let session = try await AgentOrchestrator.shared.startAgent(
     config: ResearchAgent.create(book: book),  // Config varies
     tools: ResearchAgent.tools,                 // Tools vary
     context: ResearchAgent.context(for: book)   // Context varies
 )
 
-// Agent types define their own configuration
+// Agent类型定义自己的配置
 struct ResearchAgent {
     static var tools: [AgentTool] {
         [
@@ -283,25 +283,25 @@ struct ChatAgent {
 }
 ```
 
-**Benefits:**
-- Consistent lifecycle management across all agent types
-- Automatic checkpoint/resume (critical for mobile)
-- Shared tool protocol
-- Easy to add new agent types
-- Centralized error handling and logging
+**优点：**
+- 所有Agent类型的一致生命周期管理
+- 自动checkpoint/恢复（对移动设备至关重要）
+- 共享tool协议
+- 易于添加新的Agent类型
+- 集中化的错误处理和日志记录
 </pattern>
 
 <pattern name="agent-to-ui-communication">
-## Agent-to-UI Communication
+## Agent到UI通信
 
-When agents take actions, the UI should reflect them immediately. The user should see what the agent did.
+当Agent采取行动时，UI应该立即反映它们。用户应该看到Agent做了什么。
 
-**Pattern 1: Shared Data Store (Recommended)**
+**模式1：共享数据存储（推荐）**
 
-Agent writes through the same service the UI observes:
+Agent通过UI观察的同一服务进行写入：
 
 ```swift
-// Shared service
+// 共享服务
 class BookLibraryService: ObservableObject {
     static let shared = BookLibraryService()
     @Published var books: [Book] = []
@@ -313,29 +313,29 @@ class BookLibraryService: ObservableObject {
     }
 }
 
-// Agent tool writes through shared service
+// Agent工具通过共享服务进行写入
 tool("publish_to_feed", async ({ bookId, content, headline }) => {
     let item = FeedItem(bookId: bookId, content: content, headline: headline)
     BookLibraryService.shared.addFeedItem(item)  // Same service UI uses
     return { text: "Published to feed" }
 })
 
-// UI observes the same service
+// UI观察同一服务
 struct FeedView: View {
     @StateObject var library = BookLibraryService.shared
 
     var body: some View {
         List(library.feedItems) { item in
             FeedItemRow(item: item)
-            // Automatically updates when agent adds items
+            // 当Agent添加项时自动更新
         }
     }
 }
 ```
 
-**Pattern 2: File System Observation**
+**模式2：文件系统观察**
 
-For file-based data, watch the file system:
+对于基于文件的数据，监视文件系统：
 
 ```swift
 class ResearchWatcher: ObservableObject {
@@ -353,29 +353,29 @@ class ResearchWatcher: ObservableObject {
     }
 }
 
-// Agent writes files
+// Agent写入文件
 tool("write_file", { path, content }) -> {
     writeFile(documentsURL.appendingPathComponent(path), content)
-    // DirectoryWatcher triggers UI update automatically
+    // DirectoryWatcher自动触发UI更新
 }
 ```
 
-**Pattern 3: Event Bus (Cross-Component)**
+**模式3：事件总线（跨组件）**
 
-For complex apps with multiple independent components:
+对于具有多个独立组件的复杂应用程序：
 
 ```typescript
-// Shared event bus
+// 共享事件总线
 const agentEvents = new EventEmitter();
 
-// Agent tool emits events
+// Agent工具发出事件
 tool("publish_to_feed", async ({ content }) => {
     const item = await feedService.add(content);
     agentEvents.emit('feed:new-item', item);
     return { text: "Published" };
 });
 
-// UI components subscribe
+// UI组件订阅
 function FeedView() {
     const [items, setItems] = useState([]);
 
@@ -389,43 +389,43 @@ function FeedView() {
 }
 ```
 
-**What to avoid:**
+**要避免的事项：**
 
 ```swift
-// BAD: UI doesn't observe agent changes
-// Agent writes to database directly
+// 不好：UI不观察Agent变化
+// Agent直接写入数据库
 tool("publish_to_feed", { content }) {
-    database.insert("feed", content)  // UI doesn't see this
+    database.insert("feed", content)  // UI看不到
 }
 
-// UI loads once at startup, never refreshes
+// UI在启动时加载一次，永不刷新
 struct FeedView: View {
-    let items = database.query("feed")  // Stale!
+    let items = database.query("feed")  // 过期！
 }
 ```
 </pattern>
 
 <pattern name="model-tier-selection">
-## Model Tier Selection
+## ModelTier选择
 
-Different agents need different intelligence levels. Use the cheapest model that achieves the outcome.
+不同的Agent需要不同的智力水平。使用达到结果的最便宜模型。
 
-| Agent Type | Recommended Tier | Reasoning |
+| Agent类型 | 推荐层级 | 理由 |
 |------------|-----------------|-----------|
-| Chat/Conversation | Balanced | Fast responses, good reasoning |
-| Research | Balanced | Tool loops, not ultra-complex synthesis |
-| Content Generation | Balanced | Creative but not synthesis-heavy |
-| Complex Analysis | Powerful | Multi-document synthesis, nuanced judgment |
-| Profile/Onboarding | Powerful | Photo analysis, complex pattern recognition |
-| Simple Queries | Fast/Haiku | Quick lookups, simple transformations |
+| 聊天/对话 | 平衡 | 快速响应，良好推理 |
+| 研究 | 平衡 | Tool循环，不是超复杂合成 |
+| 内容生成 | 平衡 | 创意但不是合成密集 |
+| 复杂分析 | 强大 | 多文档合成，细致判断 |
+| 配置文件/入职 | 强大 | 照片分析，复杂模式识别 |
+| 简单查询 | 快速/Haiku | 快速查询，简单转换 |
 
-**Implementation:**
+**实现：**
 
 ```swift
 enum ModelTier {
-    case fast      // claude-3-haiku: Quick, cheap, simple tasks
-    case balanced  // claude-3-sonnet: Good balance for most tasks
-    case powerful  // claude-3-opus: Complex reasoning, synthesis
+    case fast      // claude-3-haiku: 快速、廉价、简单任务
+    case balanced  // claude-3-sonnet: 对于大多数任务的良好平衡
+    case powerful  // claude-3-opus: 复杂推理、合成
 }
 
 struct AgentConfig {
@@ -434,45 +434,45 @@ struct AgentConfig {
     let systemPrompt: String
 }
 
-// Research agent: balanced tier
+// 研究Agent：平衡层级
 let researchConfig = AgentConfig(
     modelTier: .balanced,
     tools: researchTools,
     systemPrompt: researchPrompt
 )
 
-// Profile analysis: powerful tier (complex photo interpretation)
+// 配置文件分析：强大层级（复杂照片解释）
 let profileConfig = AgentConfig(
     modelTier: .powerful,
     tools: profileTools,
     systemPrompt: profilePrompt
 )
 
-// Quick lookup: fast tier
+// 快速查询：快速层级
 let lookupConfig = AgentConfig(
     modelTier: .fast,
     tools: [readLibrary],
-    systemPrompt: "Answer quick questions about the user's library."
+    systemPrompt: "回答关于用户库的快速问题。"
 )
 ```
 
-**Cost optimization strategies:**
-- Start with balanced tier, only upgrade if quality insufficient
-- Use fast tier for tool-heavy loops where each turn is simple
-- Reserve powerful tier for synthesis tasks (comparing multiple sources)
-- Consider token limits per turn to control costs
+**成本优化策略：**
+- 从平衡层级开始，仅在质量不足时升级
+- 对于工具密集型循环使用快速层级，其中每个转弯很简单
+- 为合成任务保留强大层级（比较多个源）
+- 考虑每个转弯的token限制以控制成本
 </pattern>
 
 <design_questions>
-## Questions to Ask When Designing
+## 设计时要问的问题
 
-1. **What events trigger agent turns?** (messages, webhooks, timers, user requests)
-2. **What primitives does the agent need?** (read, write, call API, restart)
-3. **What decisions should the agent make?** (format, structure, priority, action)
-4. **What decisions should be hardcoded?** (security boundaries, approval requirements)
-5. **How does the agent verify its work?** (health checks, build verification)
-6. **How does the agent recover from mistakes?** (git rollback, approval gates)
-7. **How does the UI know when agent changes state?** (shared store, file watching, events)
-8. **What model tier does each agent type need?** (fast, balanced, powerful)
-9. **How do agents share infrastructure?** (unified orchestrator, shared tools)
+1. **什么事件触发Agent轮次？** (消息、webhooks、定时器、用户请求)
+2. **Agent需要什么原始操作？** (读、写、调用API、重启)
+3. **Agent应该做什么决定？** (格式、结构、优先级、操作)
+4. **什么决定应该硬编码？** (安全边界、批准要求)
+5. **Agent如何验证其工作？** (健康检查、构建验证)
+6. **Agent如何从错误中恢复？** (git回滚、批准门控)
+7. **UI如何知道Agent何时改变状态？** (共享存储、文件监视、事件)
+8. **每个Agent类型需要什么ModelTier？** (快速、平衡、强大)
+9. **Agent如何共享基础设施？** (统一orchestrator、共享Tool)
 </design_questions>

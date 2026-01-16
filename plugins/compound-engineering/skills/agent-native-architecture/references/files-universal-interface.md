@@ -1,43 +1,43 @@
 <overview>
-Files are the universal interface for agent-native applications. Agents are naturally fluent with file operations—they already know how to read, write, and organize files. This document covers why files work so well, how to organize them, and the context.md pattern for accumulated knowledge.
+文件是Agent原生应用的通用接口。Agent天生就擅长文件操作——它们已经知道如何读取、写入和组织文件。本文档涵盖为什么文件效果很好、如何组织文件，以及用于积累知识的context.md模式。
 </overview>
 
 <why_files>
-## Why Files
+## 为什么选择文件
 
-Agents are naturally good at files. Claude Code works because bash + filesystem is the most battle-tested agent interface. When building agent-native apps, lean into this.
+Agent在文件方面做得很好。Claude Code之所以奏效，是因为bash + 文件系统是测试最充分的Agent接口。在构建Agent原生应用时，应该充分利用这一点。
 
-### Agents Already Know How
+### Agent已经知道如何使用
 
-You don't need to teach the agent your API—it already knows `cat`, `grep`, `mv`, `mkdir`. File operations are the primitives it's most fluent with.
+你不需要教Agent你的API——它已经知道`cat`、`grep`、`mv`、`mkdir`。文件操作是它最熟悉的原始操作。
 
-### Files Are Inspectable
+### 文件是可检查的
 
-Users can see what the agent created, edit it, move it, delete it. No black box. Complete transparency into agent behavior.
+用户可以看到Agent创建的内容、编辑它、移动它、删除它。没有黑箱。完全透明Agent的行为。
 
-### Files Are Portable
+### 文件是可移植的
 
-Export is trivial. Backup is trivial. Users own their data. No vendor lock-in, no complex migration paths.
+导出很简单。备份很简单。用户拥有他们的数据。没有供应商锁定，没有复杂的迁移路径。
 
-### App State Stays in Sync
+### 应用状态保持同步
 
-On mobile, if you use the file system with iCloud, all devices share the same file system. The agent's work on one device appears on all devices—without you having to build a server.
+在移动设备上，如果你使用iCloud的文件系统，所有设备共享相同的文件系统。Agent在一个设备上的工作会出现在所有设备上——无需你构建服务器。
 
-### Directory Structure Is Information Architecture
+### 目录结构是信息架构
 
-The filesystem gives you hierarchy for free. `/projects/acme/notes/` is self-documenting in a way that `SELECT * FROM notes WHERE project_id = 123` isn't.
+文件系统为你免费提供了层级结构。`/projects/acme/notes/`的自解释性方式是`SELECT * FROM notes WHERE project_id = 123`无法比拟的。
 </why_files>
 
 <file_organization>
-## File Organization Patterns
+## 文件组织模式
 
-> **Needs validation:** These conventions are one approach that's worked so far, not a prescription. Better solutions should be considered.
+> **需要验证：** 这些约定是迄今为止有效的一种方法，不是规定。应考虑更好的解决方案。
 
-A general principle of agent-native design: **Design for what agents can reason about.** The best proxy for that is what would make sense to a human. If a human can look at your file structure and understand what's going on, an agent probably can too.
+Agent原生设计的一般原则：**设计Agent能够推理的内容。** 最好的代理是对人类有意义的内容。如果人类看到你的文件结构能理解发生了什么，Agent可能也能理解。
 
-### Entity-Scoped Directories
+### 实体范围目录
 
-Organize files around entities, not actors or file types:
+围绕实体（而不是参与者或文件类型）组织文件：
 
 ```
 {entity_type}/{entity_id}/
@@ -46,178 +46,178 @@ Organize files around entities, not actors or file types:
 └── related materials
 ```
 
-**Example:** `Research/books/{bookId}/` contains everything about one book—full text, notes, sources, agent logs.
+**示例：** `Research/books/{bookId}/`包含关于一本书的所有内容——全文、笔记、来源、Agent日志。
 
-### Naming Conventions
+### 命名约定
 
-| File Type | Naming Pattern | Example |
+| 文件类型 | 命名模式 | 示例 |
 |-----------|---------------|---------|
-| Entity data | `{entity}.json` | `library.json`, `status.json` |
-| Human-readable content | `{content_type}.md` | `introduction.md`, `profile.md` |
-| Agent reasoning | `agent_log.md` | Per-entity agent history |
-| Primary content | `full_text.txt` | Downloaded/extracted text |
-| Multi-volume | `volume{N}.txt` | `volume1.txt`, `volume2.txt` |
-| External sources | `{source_name}.md` | `wikipedia.md`, `sparknotes.md` |
-| Checkpoints | `{sessionId}.checkpoint` | UUID-based |
-| Configuration | `config.json` | Feature settings |
+| 实体数据 | `{entity}.json` | `library.json`, `status.json` |
+| 人类可读内容 | `{content_type}.md` | `introduction.md`, `profile.md` |
+| Agent推理 | `agent_log.md` | 单个实体的Agent历史 |
+| 主要内容 | `full_text.txt` | 下载/提取的文本 |
+| 多卷 | `volume{N}.txt` | `volume1.txt`, `volume2.txt` |
+| 外部来源 | `{source_name}.md` | `wikipedia.md`, `sparknotes.md` |
+| 检查点 | `{sessionId}.checkpoint` | 基于UUID |
+| 配置 | `config.json` | 功能设置 |
 
-### Directory Naming
+### 目录命名
 
-- **Entity-scoped:** `{entityType}/{entityId}/` (e.g., `Research/books/{bookId}/`)
-- **Type-scoped:** `{type}/` (e.g., `AgentCheckpoints/`, `AgentLogs/`)
-- **Convention:** Lowercase with underscores, not camelCase
+- **实体范围：** `{entityType}/{entityId}/`（例如，`Research/books/{bookId}/`）
+- **类型范围：** `{type}/`（例如，`AgentCheckpoints/`、`AgentLogs/`）
+- **约定：** 小写带下划线，不是camelCase
 
-### Ephemeral vs. Durable Separation
+### 临时 vs. 持久分离
 
-Separate agent working files from user's permanent data:
+将Agent工作文件与用户的永久数据分开：
 
 ```
 Documents/
-├── AgentCheckpoints/     # Ephemeral (can delete)
+├── AgentCheckpoints/     # 临时（可以删除）
 │   └── {sessionId}.checkpoint
-├── AgentLogs/            # Ephemeral (debugging)
+├── AgentLogs/            # 临时（调试）
 │   └── {type}/{sessionId}.md
-└── Research/             # Durable (user's work)
+└── Research/             # 持久（用户的工作）
     └── books/{bookId}/
 ```
 
-### The Split: Markdown vs JSON
+### 分割：Markdown vs JSON
 
-- **Markdown:** For content users might read or edit
-- **JSON:** For structured data the app queries
+- **Markdown：** 用于用户可能读取或编辑的内容
+- **JSON：** 用于应用查询的结构化数据
 </file_organization>
 
 <context_md_pattern>
-## The context.md Pattern
+## context.md模式
 
-A file the agent reads at the start of each session and updates as it learns:
+Agent在每个会话开始时读取的文件，并在学习时更新：
 
 ```markdown
 # Context
 
-## Who I Am
-Reading assistant for the Every app.
+## 我是谁
+Every应用的阅读助手。
 
-## What I Know About This User
-- Interested in military history and Russian literature
-- Prefers concise analysis
-- Currently reading War and Peace
+## 我对这个用户的了解
+- 对军事历史和俄罗斯文学感兴趣
+- 更喜欢简明扼要的分析
+- 目前正在阅读《战争与和平》
 
-## What Exists
-- 12 notes in /notes
-- 3 active projects
-- User preferences at /preferences.md
+## 存在什么
+- /notes中有12条笔记
+- 3个活跃项目
+- 用户偏好设置位于/preferences.md
 
-## Recent Activity
-- User created "Project kickoff" (2 hours ago)
-- Analyzed passage about Austerlitz (yesterday)
+## 最近活动
+- 用户创建"项目启动"（2小时前）
+- 分析了关于奥斯特里茨的段落（昨天）
 
-## My Guidelines
-- Don't spoil books they're reading
-- Use their interests to personalize insights
+## 我的指导原则
+- 不要剧透他们正在阅读的书
+- 使用他们的兴趣来个性化见解
 
-## Current State
-- No pending tasks
-- Last sync: 10 minutes ago
+## 当前状态
+- 没有待处理任务
+- 上次同步：10分钟前
 ```
 
-### Benefits
+### 优点
 
-- **Agent behavior evolves without code changes** - Update the context, behavior changes
-- **Users can inspect and modify** - Complete transparency
-- **Natural place for accumulated context** - Learnings persist across sessions
-- **Portable across sessions** - Restart agent, knowledge preserved
+- **Agent行为可以不改代码而演变** - 更新context，行为就会改变
+- **用户可以检查和修改** - 完全透明
+- **积累context的自然位置** - 学习在会话之间持续
+- **可在会话间移植** - 重启Agent，知识得以保留
 
-### How It Works
+### 工作原理
 
-1. Agent reads `context.md` at session start
-2. Agent updates it when learning something important
-3. System can also update it (recent activity, new resources)
-4. Context persists across sessions
+1. Agent在会话开始时读取`context.md`
+2. Agent在学到重要内容时更新它
+3. 系统也可以更新它（最近活动、新资源）
+4. Context在会话间持续
 
-### What to Include
+### 包含内容
 
-| Section | Purpose |
+| 部分 | 目的 |
 |---------|---------|
-| Who I Am | Agent identity and role |
-| What I Know About This User | Learned preferences, interests |
-| What Exists | Available resources, data |
-| Recent Activity | Context for continuity |
-| My Guidelines | Learned rules and constraints |
-| Current State | Session status, pending items |
+| 我是谁 | Agent身份和角色 |
+| 我对这个用户的了解 | 学到的偏好、兴趣 |
+| 存在什么 | 可用资源、数据 |
+| 最近活动 | 连续性的context |
+| 我的指导原则 | 学到的规则和约束 |
+| 当前状态 | 会话状态、待处理项 |
 </context_md_pattern>
 
 <files_vs_database>
-## Files vs. Database
+## 文件 vs. 数据库
 
-> **Needs validation:** This framing is informed by mobile development. For web apps, the tradeoffs are different.
+> **需要验证：** 这个框架受到移动开发的启发。对于Web应用，权衡是不同的。
 
-| Use files for... | Use database for... |
+| 使用文件做... | 使用数据库做... |
 |------------------|---------------------|
-| Content users should read/edit | High-volume structured data |
-| Configuration that benefits from version control | Data that needs complex queries |
-| Agent-generated content | Ephemeral state (sessions, caches) |
-| Anything that benefits from transparency | Data with relationships |
-| Large text content | Data that needs indexing |
+| 用户应该读/编辑的内容 | 大量结构化数据 |
+| 从版本控制中获益的配置 | 需要复杂查询的数据 |
+| Agent生成的内容 | 临时状态（会话、缓存） |
+| 任何从透明性中获益的东西 | 具有关系的数据 |
+| 大型文本内容 | 需要索引的数据 |
 
-**The principle:** Files for legibility, databases for structure. When in doubt, files—they're more transparent and users can always inspect them.
+**原则：** 文件用于易读性，数据库用于结构。有疑问时，选择文件——它们更透明，用户可以随时检查。
 
-### When Files Work Best
+### 文件最有效的时候
 
-- Scale is small (one user's library, not millions of records)
-- Transparency is valued over query speed
-- Cloud sync (iCloud, Dropbox) works well with files
+- 规模很小（一个用户的库，不是数百万条记录）
+- 透明性优先于查询速度
+- 云同步（iCloud、Dropbox）与文件配合效果很好
 
-### Hybrid Approach
+### 混合方法
 
-Even if you need a database for performance, consider maintaining a file-based "source of truth" that the agent works with, synced to the database for the UI:
+即使你需要数据库来提高性能，也可以考虑维护一个基于文件的"真实源"供Agent使用，同步到数据库供UI查询：
 
 ```
-Files (agent workspace):
+文件（Agent工作区）：
   Research/book_123/introduction.md
 
-Database (UI queries):
+数据库（UI查询）：
   research_index: { bookId, path, title, createdAt }
 ```
 </files_vs_database>
 
 <conflict_model>
-## Conflict Model
+## 冲突模型
 
-If agents and users write to the same files, you need a conflict model.
+如果Agent和用户写入同一个文件，你需要一个冲突模型。
 
-### Current Reality
+### 当前现实
 
-Most implementations use **last-write-wins** via atomic writes:
+大多数实现使用**最后写入优先**（通过原子写入）：
 
 ```swift
 try data.write(to: url, options: [.atomic])
 ```
 
-This is simple but can lose changes.
+这很简单，但可能会丢失更改。
 
-### Options
+### 选项
 
-| Strategy | Pros | Cons |
+| 策略 | 优点 | 缺点 |
 |----------|------|------|
-| **Last write wins** | Simple | Changes can be lost |
-| **Agent checks before writing** | Preserves user edits | More complexity |
-| **Separate spaces** | No conflicts | Less collaboration |
-| **Append-only logs** | Never overwrites | Files grow forever |
-| **File locking** | Safe concurrent access | Complexity, can block |
+| **最后写入优先** | 简单 | 更改可能被丢失 |
+| **Agent在写入前检查** | 保留用户编辑 | 更多复杂性 |
+| **分离空间** | 无冲突 | 协作性较差 |
+| **仅追加日志** | 从不覆盖 | 文件永久增长 |
+| **文件锁定** | 安全并发访问 | 复杂性、可能阻塞 |
 
-### Recommended Approaches
+### 推荐方法
 
-**For files agents write frequently (logs, status):** Last-write-wins is fine. Conflicts are rare.
+**对于Agent频繁写入的文件（日志、状态）：** 最后写入优先就很好。冲突很少见。
 
-**For files users edit (profiles, notes):** Consider explicit handling:
-- Agent checks modification time before overwriting
-- Or keep agent output separate from user-editable content
-- Or use append-only pattern
+**对于用户编辑的文件（配置、笔记）：** 考虑显式处理：
+- Agent在覆盖前检查修改时间
+- 或将Agent输出与用户可编辑内容分开
+- 或使用仅追加模式
 
-### iCloud Considerations
+### iCloud注意事项
 
-iCloud sync adds complexity. It creates `{filename} (conflict).md` files when sync conflicts occur. Monitor for these:
+iCloud同步增加了复杂性。当同步冲突发生时，它会创建`{filename} (conflict).md`文件。监控这些文件：
 
 ```swift
 NotificationCenter.default.addObserver(
@@ -226,76 +226,75 @@ NotificationCenter.default.addObserver(
 )
 ```
 
-### System Prompt Guidance
+### 系统提示指导
 
-Tell the agent about the conflict model:
+告诉Agent关于冲突模型：
 
 ```markdown
-## Working with User Content
+## 与用户内容合作
 
-When you create content, the user may edit it afterward. Always read
-existing files before modifying them—the user may have made improvements
-you should preserve.
+当你创建内容时，用户可能之后会编辑它。在修改文件前始终先阅读
+存在的文件——用户可能做了你应该保留的改进。
 
-If a file has been modified since you last wrote it, ask before overwriting.
+如果文件自你上次写入后已被修改，在覆盖前询问。
 ```
 </conflict_model>
 
 <examples>
-## Example: Reading App File Structure
+## 示例：阅读应用文件结构
 
 ```
 Documents/
 ├── Library/
-│   └── library.json              # Book metadata
+│   └── library.json              # 书籍元数据
 ├── Research/
 │   └── books/
 │       └── {bookId}/
-│           ├── full_text.txt     # Downloaded content
-│           ├── introduction.md   # Agent-generated, user-editable
-│           ├── notes.md          # User notes
+│           ├── full_text.txt     # 下载的内容
+│           ├── introduction.md   # Agent生成、用户可编辑
+│           ├── notes.md          # 用户笔记
 │           └── sources/
-│               ├── wikipedia.md  # Research gathered by agent
+│               ├── wikipedia.md  # Agent收集的研究
 │               └── reviews.md
 ├── Chats/
-│   └── {conversationId}.json     # Chat history
+│   └── {conversationId}.json     # 聊天历史
 ├── Profile/
-│   └── profile.md                # User reading profile
-└── context.md                    # Agent's accumulated knowledge
+│   └── profile.md                # 用户阅读配置文件
+└── context.md                    # Agent的积累知识
 ```
 
-**How it works:**
+**工作方式：**
 
-1. User adds book → creates entry in `library.json`
-2. Agent downloads text → saves to `Research/books/{id}/full_text.txt`
-3. Agent researches → saves to `sources/`
-4. Agent generates intro → saves to `introduction.md`
-5. User edits intro → agent sees changes on next read
-6. Agent updates `context.md` with learnings
+1. 用户添加书籍 → 在`library.json`中创建条目
+2. Agent下载文本 → 保存到`Research/books/{id}/full_text.txt`
+3. Agent进行研究 → 保存到`sources/`
+4. Agent生成介绍 → 保存到`introduction.md`
+5. 用户编辑介绍 → Agent在下一次读取时看到更改
+6. Agent用学到的内容更新`context.md`
 </examples>
 
 <checklist>
-## Files as Universal Interface Checklist
+## 文件作为通用接口检查清单
 
-### Organization
-- [ ] Entity-scoped directories (`{type}/{id}/`)
-- [ ] Consistent naming conventions
-- [ ] Ephemeral vs durable separation
-- [ ] Markdown for human content, JSON for structured data
+### 组织
+- [ ] 实体范围目录（`{type}/{id}/`）
+- [ ] 一致的命名约定
+- [ ] 临时 vs 持久分离
+- [ ] Markdown用于人类内容，JSON用于结构化数据
 
 ### context.md
-- [ ] Agent reads context at session start
-- [ ] Agent updates context when learning
-- [ ] Includes: identity, user knowledge, what exists, guidelines
-- [ ] Persists across sessions
+- [ ] Agent在会话开始时读取context
+- [ ] Agent在学习时更新context
+- [ ] 包含：身份、用户知识、存在的东西、指导原则
+- [ ] 在会话间持续
 
-### Conflict Handling
-- [ ] Conflict model defined (last-write-wins, check-before-write, etc.)
-- [ ] Agent guidance in system prompt
-- [ ] iCloud conflict monitoring (if applicable)
+### 冲突处理
+- [ ] 冲突模型定义（最后写入优先、写入前检查等）
+- [ ] 系统提示中的Agent指导
+- [ ] iCloud冲突监控（如适用）
 
-### Integration
-- [ ] UI observes file changes (or shared service)
-- [ ] Agent can read user edits
-- [ ] User can inspect agent output
+### 集成
+- [ ] UI观察文件更改（或共享服务）
+- [ ] Agent可以读取用户编辑
+- [ ] 用户可以检查Agent输出
 </checklist>

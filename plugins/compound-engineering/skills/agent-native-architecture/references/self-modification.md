@@ -1,99 +1,99 @@
 <overview>
-Self-modification is the advanced tier of agent native engineering: agents that can evolve their own code, prompts, and behavior. Not required for every app, but a big part of the future.
+自修改是Agent原生工程的高级阶段：Agent可以演变自己的代码、prompt和行为。不是每个应用都需要，但是未来的重要部分。
 
-This is the logical extension of "whatever the developer can do, the agent can do."
+这是"开发人员能做什么，Agent能做什么"的逻辑扩展。
 </overview>
 
 <why_self_modification>
-## Why Self-Modification?
+## 为什么选择自修改？
 
-Traditional software is static—it does what you wrote, nothing more. Self-modifying agents can:
+传统软件是静态的——它做你写的东西，仅此而已。自修改Agent可以：
 
-- **Fix their own bugs** - See an error, patch the code, restart
-- **Add new capabilities** - User asks for something new, agent implements it
-- **Evolve behavior** - Learn from feedback and adjust prompts
-- **Deploy themselves** - Push code, trigger builds, restart
+- **修复自己的bug** - 看到错误，修复代码，重启
+- **添加新功能** - 用户要求新东西，Agent实现它
+- **演变行为** - 从反馈中学习并调整prompt
+- **自我部署** - 推送代码、触发构建、重启
 
-The agent becomes a living system that improves over time, not frozen code.
+Agent成为一个不断改进的活系统，而不是冻结的代码。
 </why_self_modification>
 
 <capabilities>
-## What Self-Modification Enables
+## 自修改启用什么
 
-**Code modification:**
-- Read and understand source files
-- Write fixes and new features
-- Commit and push to version control
-- Trigger builds and verify they pass
+**代码修改：**
+- 读取并理解源文件
+- 编写修复和新功能
+- 提交并推送到版本控制
+- 触发构建并验证它们通过
 
-**Prompt evolution:**
-- Edit the system prompt based on feedback
-- Add new features as prompt sections
-- Refine judgment criteria that aren't working
+**Prompt演变：**
+- 根据反馈编辑系统prompt
+- 添加新功能作为prompt部分
+- 改进不起作用的判断标准
 
-**Infrastructure control:**
-- Pull latest code from upstream
-- Merge from other branches/instances
-- Restart after changes
-- Roll back if something breaks
+**基础设施控制：**
+- 从上游拉取最新代码
+- 从其他分支/实例合并
+- 更改后重启
+- 如果某些内容损坏则回滚
 
-**Site/output generation:**
-- Generate and maintain websites
-- Create documentation
-- Build dashboards from data
+**网站/输出生成：**
+- 生成并维护网站
+- 创建文档
+- 从数据构建仪表板
 </capabilities>
 
 <guardrails>
-## Required Guardrails
+## 所需护栏
 
-Self-modification is powerful. It needs safety mechanisms.
+自修改很强大。它需要安全机制。
 
-**Approval gates for code changes:**
+**代码更改的审批门：**
 ```typescript
 tool("write_file", async ({ path, content }) => {
   if (isCodeFile(path)) {
-    // Store for approval, don't apply immediately
+    // 存储以供审批，不要立即应用
     pendingChanges.set(path, content);
     const diff = generateDiff(path, content);
-    return { text: `Requires approval:\n\n${diff}\n\nReply "yes" to apply.` };
+    return { text: `需要审批:\n\n${diff}\n\n回复"yes"以应用。` };
   }
-  // Non-code files apply immediately
+  // 非代码文件立即应用
   writeFileSync(path, content);
   return { text: `Wrote ${path}` };
 });
 ```
 
-**Auto-commit before changes:**
+**变更前自动提交：**
 ```typescript
 tool("self_deploy", async () => {
-  // Save current state first
-  runGit("stash");  // or commit uncommitted changes
+  // 首先保存当前状态
+  runGit("stash");  // 或提交未提交的更改
 
-  // Then pull/merge
+  // 然后拉取/合并
   runGit("fetch origin");
   runGit("merge origin/main --no-edit");
 
-  // Build and verify
+  // 构建和验证
   runCommand("npm run build");
 
-  // Only then restart
+  // 只有这样才能重启
   scheduleRestart();
 });
 ```
 
-**Build verification:**
+**构建验证：**
 ```typescript
-// Don't restart unless build passes
+// 除非构建通过，否则不要重启
 try {
   runCommand("npm run build", { timeout: 120000 });
 } catch (error) {
-  // Rollback the merge
+  // 回滚合并
   runGit("merge --abort");
-  return { text: "Build failed, aborting deploy", isError: true };
+  return { text: "构建失败，中止部署", isError: true };
 }
 ```
 
-**Health checks after restart:**
+**重启后的健康检查：**
 ```typescript
 tool("health_check", async () => {
   const uptime = process.uptime();
@@ -253,9 +253,9 @@ const gitMcpServer = createSdkMcpServer({
 
 Before enabling self-modification:
 - [ ] Git-based version control set up
-- [ ] Approval gates for code changes
-- [ ] Build verification before restart
-- [ ] Rollback mechanism available
+- [ ] 代码更改的审批门
+- [ ] 重启前的构建验证
+- [ ] 可用的回滚机制
 - [ ] Health check endpoint
 - [ ] Instance identity configured
 

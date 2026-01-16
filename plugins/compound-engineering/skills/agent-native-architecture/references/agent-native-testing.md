@@ -1,15 +1,15 @@
 <overview>
-Testing agent-native apps requires different approaches than traditional unit testing. You're testing whether the agent achieves outcomes, not whether it calls specific functions. This guide provides concrete testing patterns for verifying your app is truly agent-native.
+Agent-native 应用的测试与传统单元测试需要采用不同的方法。您需要测试 Agent 是否实现了目标，而不是测试它是否调用了特定函数。本指南提供了具体的测试模式，用于验证您的应用是否真正实现了 Agent-native。
 </overview>
 
 <testing_philosophy>
-## Testing Philosophy
+## 测试哲学
 
-### Test Outcomes, Not Procedures
+### 测试结果，而不是过程
 
-**Traditional (procedure-focused):**
+**传统方法（过程导向）：**
 ```typescript
-// Testing that a specific function was called with specific args
+// 测试特定函数是否被以特定参数调用
 expect(mockProcessFeedback).toHaveBeenCalledWith({
   message: "Great app!",
   category: "praise",
@@ -17,39 +17,39 @@ expect(mockProcessFeedback).toHaveBeenCalledWith({
 });
 ```
 
-**Agent-native (outcome-focused):**
+**Agent-native 方法（结果导向）：**
 ```typescript
-// Testing that the outcome was achieved
+// 测试结果是否实现
 const result = await agent.process("Great app!");
 const storedFeedback = await db.feedback.getLatest();
 
 expect(storedFeedback.content).toContain("Great app");
 expect(storedFeedback.importance).toBeGreaterThanOrEqual(1);
 expect(storedFeedback.importance).toBeLessThanOrEqual(5);
-// We don't care exactly how it categorized—just that it's reasonable
+// 我们不在乎它如何分类——只要分类是合理的即可
 ```
 
-### Accept Variability
+### 接受可变性
 
-Agents may solve problems differently each time. Your tests should:
-- Verify the end state, not the path
-- Accept reasonable ranges, not exact values
-- Check for presence of required elements, not exact format
+Agent 可能每次都以不同的方式解决问题。您的测试应该：
+- 验证最终状态，而不是路径
+- 接受合理的范围，而不是精确值
+- 检查必需元素的存在，而不是精确格式
 </testing_philosophy>
 
 <can_agent_do_it_test>
-## The "Can Agent Do It?" Test
+## "Agent 能做到吗？"测试
 
-For each UI feature, write a test prompt and verify the agent can accomplish it.
+针对每个 UI 功能，编写测试提示并验证 Agent 是否能完成它。
 
-### Template
+### 模板
 
 ```typescript
-describe('Agent Capability Tests', () => {
-  test('Agent can add a book to library', async () => {
+describe('Agent 能力测试', () => {
+  test('Agent 可以将书籍添加到库', async () => {
     const result = await agent.chat("Add 'Moby Dick' by Herman Melville to my library");
 
-    // Verify outcome
+    // 验证结果
     const library = await libraryService.getBooks();
     const mobyDick = library.find(b => b.title.includes("Moby Dick"));
 
@@ -57,13 +57,13 @@ describe('Agent Capability Tests', () => {
     expect(mobyDick.author).toContain("Melville");
   });
 
-  test('Agent can publish to feed', async () => {
-    // Setup: ensure a book exists
+  test('Agent 可以发布到信息流', async () => {
+    // 设置：确保书籍存在
     await libraryService.addBook({ id: "book_123", title: "1984" });
 
     const result = await agent.chat("Write something about surveillance themes in my feed");
 
-    // Verify outcome
+    // 验证结果
     const feed = await feedService.getItems();
     const newItem = feed.find(item => item.bookId === "book_123");
 
@@ -71,28 +71,28 @@ describe('Agent Capability Tests', () => {
     expect(newItem.content.toLowerCase()).toMatch(/surveillance|watching|control/);
   });
 
-  test('Agent can search and save research', async () => {
+  test('Agent 可以搜索和保存研究资料', async () => {
     await libraryService.addBook({ id: "book_456", title: "Moby Dick" });
 
     const result = await agent.chat("Research whale symbolism in Moby Dick");
 
-    // Verify files were created
+    // 验证文件是否被创建
     const files = await fileService.listFiles("Research/book_456/");
     expect(files.length).toBeGreaterThan(0);
 
-    // Verify content is relevant
+    // 验证内容相关性
     const content = await fileService.readFile(files[0]);
     expect(content.toLowerCase()).toMatch(/whale|symbolism|melville/);
   });
 });
 ```
 
-### The "Write to Location" Test
+### "写入位置"测试
 
-A key litmus test: can the agent create content in specific app locations?
+一个关键的测试：Agent 能否在特定应用位置创建内容？
 
 ```typescript
-describe('Location Awareness Tests', () => {
+describe('位置感知测试', () => {
   const locations = [
     { userPhrase: "my reading feed", expectedTool: "publish_to_feed" },
     { userPhrase: "my library", expectedTool: "add_book" },
@@ -101,16 +101,16 @@ describe('Location Awareness Tests', () => {
   ];
 
   for (const { userPhrase, expectedTool } of locations) {
-    test(`Agent knows how to write to "${userPhrase}"`, async () => {
+    test(`Agent 知道如何写入 "${userPhrase}"`, async () => {
       const prompt = `Write a test note to ${userPhrase}`;
       const result = await agent.chat(prompt);
 
-      // Check that agent used the right tool (or achieved the outcome)
+      // 检查 Agent 是否使用了正确的工具（或实现了结果）
       expect(result.toolCalls).toContainEqual(
         expect.objectContaining({ name: expectedTool })
       );
 
-      // Or verify outcome directly
+      // 或者直接验证结果
       // expect(await locationHasNewContent(userPhrase)).toBe(true);
     });
   }
@@ -119,28 +119,28 @@ describe('Location Awareness Tests', () => {
 </can_agent_do_it_test>
 
 <surprise_test>
-## The "Surprise Test"
+## "惊喜测试"
 
-A well-designed agent-native app lets the agent figure out creative approaches. Test this by giving open-ended requests.
+良好设计的 Agent-native 应用让 Agent 能够想出创意方案。通过给出开放式请求来测试这一点。
 
-### The Test
+### 测试
 
 ```typescript
-describe('Agent Creativity Tests', () => {
-  test('Agent can handle open-ended requests', async () => {
-    // Setup: user has some books
+describe('Agent 创意测试', () => {
+  test('Agent 可以处理开放式请求', async () => {
+    // 设置：用户有一些书籍
     await libraryService.addBook({ id: "1", title: "1984", author: "Orwell" });
     await libraryService.addBook({ id: "2", title: "Brave New World", author: "Huxley" });
     await libraryService.addBook({ id: "3", title: "Fahrenheit 451", author: "Bradbury" });
 
-    // Open-ended request
+    // 开放式请求
     const result = await agent.chat("Help me organize my reading for next month");
 
-    // The agent should do SOMETHING useful
-    // We don't specify exactly what—that's the point
+    // Agent 应该做一些有用的事
+    // 我们没有具体指定是什么——这才是要点
     expect(result.toolCalls.length).toBeGreaterThan(0);
 
-    // It should have engaged with the library
+    // 它应该与库进行交互
     const libraryTools = ["read_library", "write_file", "publish_to_feed"];
     const usedLibraryTool = result.toolCalls.some(
       call => libraryTools.includes(call.name)
@@ -148,61 +148,61 @@ describe('Agent Creativity Tests', () => {
     expect(usedLibraryTool).toBe(true);
   });
 
-  test('Agent finds creative solutions', async () => {
-    // Don't specify HOW to accomplish the task
+  test('Agent 找到创意解决方案', async () => {
+    // 不指定"如何"完成任务
     const result = await agent.chat(
       "I want to understand the dystopian themes across my sci-fi books"
     );
 
-    // Agent might:
-    // - Read all books and create a comparison document
-    // - Research dystopian literature and relate it to user's books
-    // - Create a mind map in a markdown file
-    // - Publish a series of insights to the feed
+    // Agent 可能会：
+    // - 阅读所有书籍并创建比较文档
+    // - 研究反乌托邦文学并将其与用户的书籍联系起来
+    // - 在 markdown 文件中创建思维导图
+    // - 向信息流发布一系列见解
 
-    // We just verify it did something substantive
+    // 我们只验证它做了实质性的工作
     expect(result.response.length).toBeGreaterThan(100);
     expect(result.toolCalls.length).toBeGreaterThan(0);
   });
 });
 ```
 
-### What Failure Looks Like
+### 失败的样子
 
 ```typescript
-// FAILURE: Agent can only say it can't do that
+// 失败：Agent 只能说它无法做到
 const result = await agent.chat("Help me prepare for a book club discussion");
 
-// Bad outcome:
+// 不好的结果：
 expect(result.response).not.toContain("I can't");
 expect(result.response).not.toContain("I don't have a tool");
 expect(result.response).not.toContain("Could you clarify");
 
-// If the agent asks for clarification on something it should understand,
-// you have a context injection or capability gap
+// 如果 Agent 询问某件它应该理解的事情的澄清，
+// 你就有上下文注入或能力差距问题
 ```
 </surprise_test>
 
 <parity_testing>
-## Automated Parity Testing
+## 自动化平等测试
 
-Ensure every UI action has an agent equivalent.
+确保每个 UI 操作都有 Agent 等价物。
 
-### Capability Map Testing
+### 能力映射测试
 
 ```typescript
 // capability-map.ts
 export const capabilityMap = {
-  // UI Action: Agent Tool
+  // UI 操作：Agent Tool
   "View library": "read_library",
   "Add book": "add_book",
   "Delete book": "delete_book",
   "Publish insight": "publish_to_feed",
   "Start research": "start_research",
-  "View highlights": "read_library",  // same tool, different query
+  "View highlights": "read_library",  // 同一工具，不同查询
   "Edit profile": "write_file",
   "Search web": "web_search",
-  "Export data": "N/A",  // UI-only action
+  "Export data": "N/A",  // 仅 UI 操作
 };
 
 // parity.test.ts
@@ -210,50 +210,50 @@ import { capabilityMap } from './capability-map';
 import { getAgentTools } from './agent-config';
 import { getSystemPrompt } from './system-prompt';
 
-describe('Action Parity', () => {
+describe('操作平等性', () => {
   const agentTools = getAgentTools();
   const systemPrompt = getSystemPrompt();
 
   for (const [uiAction, toolName] of Object.entries(capabilityMap)) {
     if (toolName === 'N/A') continue;
 
-    test(`"${uiAction}" has agent tool: ${toolName}`, () => {
+    test(`"${uiAction}" 有 Agent tool：${toolName}`, () => {
       const toolNames = agentTools.map(t => t.name);
       expect(toolNames).toContain(toolName);
     });
 
-    test(`${toolName} is documented in system prompt`, () => {
+    test(`${toolName} 在 system prompt 中有文档`, () => {
       expect(systemPrompt).toContain(toolName);
     });
   }
 });
 ```
 
-### Context Parity Testing
+### 上下文平等性测试
 
 ```typescript
-describe('Context Parity', () => {
-  test('Agent sees all data that UI shows', async () => {
-    // Setup: create some data
+describe('上下文平等性', () => {
+  test('Agent 看到 UI 显示的所有数据', async () => {
+    // 设置：创建一些数据
     await libraryService.addBook({ id: "1", title: "Test Book" });
     await feedService.addItem({ id: "f1", content: "Test insight" });
 
-    // Get system prompt (which includes context)
+    // 获取 system prompt（包括上下文）
     const systemPrompt = await buildSystemPrompt();
 
-    // Verify data is included
+    // 验证数据是否被包括
     expect(systemPrompt).toContain("Test Book");
     expect(systemPrompt).toContain("Test insight");
   });
 
-  test('Recent activity is visible to agent', async () => {
-    // Perform some actions
+  test('最近的活动对 Agent 可见', async () => {
+    // 执行一些操作
     await activityService.log({ action: "highlighted", bookId: "1" });
     await activityService.log({ action: "researched", bookId: "2" });
 
     const systemPrompt = await buildSystemPrompt();
 
-    // Verify activity is included
+    // 验证活动是否被包括
     expect(systemPrompt).toMatch(/highlighted|researched/);
   });
 });
@@ -261,53 +261,53 @@ describe('Context Parity', () => {
 </parity_testing>
 
 <integration_testing>
-## Integration Testing
+## 集成测试
 
-Test the full flow from user request to outcome.
+从用户请求到结果的完整流程测试。
 
-### End-to-End Flow Tests
+### 端到端流程测试
 
 ```typescript
-describe('End-to-End Flows', () => {
-  test('Research flow: request → web search → file creation', async () => {
-    // Setup
+describe('端到端流程', () => {
+  test('研究流程：请求 → 网络搜索 → 文件创建', async () => {
+    // 设置
     const bookId = "book_123";
     await libraryService.addBook({ id: bookId, title: "Moby Dick" });
 
-    // User request
+    // 用户请求
     await agent.chat("Research the historical context of whaling in Moby Dick");
 
-    // Verify: web search was performed
+    // 验证：网络搜索被执行
     const searchCalls = mockWebSearch.mock.calls;
     expect(searchCalls.length).toBeGreaterThan(0);
     expect(searchCalls.some(call =>
       call[0].query.toLowerCase().includes("whaling")
     )).toBe(true);
 
-    // Verify: files were created
+    // 验证：文件被创建
     const researchFiles = await fileService.listFiles(`Research/${bookId}/`);
     expect(researchFiles.length).toBeGreaterThan(0);
 
-    // Verify: content is relevant
+    // 验证：内容相关
     const content = await fileService.readFile(researchFiles[0]);
     expect(content.toLowerCase()).toMatch(/whale|whaling|nantucket|melville/);
   });
 
-  test('Publish flow: request → tool call → feed update → UI reflects', async () => {
-    // Setup
+  test('发布流程：请求 → 工具调用 → 信息流更新 → UI 反映', async () => {
+    // 设置
     await libraryService.addBook({ id: "book_1", title: "1984" });
 
-    // Initial state
+    // 初始状态
     const feedBefore = await feedService.getItems();
 
-    // User request
+    // 用户请求
     await agent.chat("Write something about Big Brother for my reading feed");
 
-    // Verify feed updated
+    // 验证信息流已更新
     const feedAfter = await feedService.getItems();
     expect(feedAfter.length).toBe(feedBefore.length + 1);
 
-    // Verify content
+    // 验证内容
     const newItem = feedAfter.find(item =>
       !feedBefore.some(old => old.id === item.id)
     );
@@ -317,33 +317,33 @@ describe('End-to-End Flows', () => {
 });
 ```
 
-### Failure Recovery Tests
+### 失败恢复测试
 
 ```typescript
-describe('Failure Recovery', () => {
-  test('Agent handles missing book gracefully', async () => {
+describe('失败恢复', () => {
+  test('Agent 优雅地处理缺失的书籍', async () => {
     const result = await agent.chat("Tell me about 'Nonexistent Book'");
 
-    // Agent should not crash
+    // Agent 不应该崩溃
     expect(result.error).toBeUndefined();
 
-    // Agent should acknowledge the issue
+    // Agent 应该确认问题
     expect(result.response.toLowerCase()).toMatch(
       /not found|don't see|can't find|library/
     );
   });
 
-  test('Agent recovers from API failure', async () => {
-    // Mock API failure
+  test('Agent 从 API 失败中恢复', async () => {
+    // 模拟 API 失败
     mockWebSearch.mockRejectedValueOnce(new Error("Network error"));
 
     const result = await agent.chat("Research this topic");
 
-    // Agent should handle gracefully
+    // Agent 应该优雅地处理
     expect(result.error).toBeUndefined();
     expect(result.response).not.toContain("unhandled exception");
 
-    // Agent should communicate the issue
+    // Agent 应该传达问题
     expect(result.response.toLowerCase()).toMatch(
       /couldn't search|unable to|try again/
     );
@@ -353,16 +353,16 @@ describe('Failure Recovery', () => {
 </integration_testing>
 
 <snapshot_testing>
-## Snapshot Testing for System Prompts
+## System Prompt 快照测试
 
-Track changes to system prompts and context injection over time.
+跟踪 system prompt 和上下文注入随时间的变化。
 
 ```typescript
-describe('System Prompt Stability', () => {
-  test('System prompt structure matches snapshot', async () => {
+describe('System Prompt 稳定性', () => {
+  test('System prompt 结构与快照匹配', async () => {
     const systemPrompt = await buildSystemPrompt();
 
-    // Extract structure (removing dynamic data)
+    // 提取结构（删除动态数据）
     const structure = systemPrompt
       .replace(/id: \w+/g, 'id: [ID]')
       .replace(/"[^"]+"/g, '"[TITLE]"')
@@ -371,7 +371,7 @@ describe('System Prompt Stability', () => {
     expect(structure).toMatchSnapshot();
   });
 
-  test('All capability sections are present', async () => {
+  test('所有能力部分都存在', async () => {
     const systemPrompt = await buildSystemPrompt();
 
     const requiredSections = [
@@ -389,13 +389,13 @@ describe('System Prompt Stability', () => {
 </snapshot_testing>
 
 <manual_testing>
-## Manual Testing Checklist
+## 手动测试清单
 
-Some things are best tested manually during development:
+某些事情最好在开发过程中手动测试：
 
-### Natural Language Variation Test
+### 自然语言变体测试
 
-Try multiple phrasings for the same request:
+尝试多个相同请求的表述方式：
 
 ```
 "Add this to my feed"
@@ -405,48 +405,48 @@ Try multiple phrasings for the same request:
 "I want this in my feed"
 ```
 
-All should work if context injection is correct.
+如果上下文注入正确，所有这些都应该有效。
 
-### Edge Case Prompts
+### 边界情况提示
 
 ```
 "What can you do?"
-→ Agent should describe capabilities
+→ Agent 应该描述能力
 
 "Help me with my books"
-→ Agent should engage with library, not ask what "books" means
+→ Agent 应该与库互动，而不是问"书籍"是什么意思
 
 "Write something"
-→ Agent should ask WHERE (feed, file, etc.) if not clear
+→ Agent 应该询问在哪里（信息流、文件等）（如果不明确）
 
 "Delete everything"
-→ Agent should confirm before destructive actions
+→ Agent 应该在执行破坏性操作前确认
 ```
 
-### Confusion Test
+### 混淆测试
 
-Ask about things that should exist but might not be properly connected:
+问一些应该存在但可能没有正确连接的内容：
 
 ```
 "What's in my research folder?"
-→ Should list files, not ask "what research folder?"
+→ 应该列出文件，而不是问"什么研究文件夹？"
 
 "Show me my recent reading"
-→ Should show activity, not ask "what do you mean?"
+→ 应该显示活动，而不是问"你的意思是什么？"
 
 "Continue where I left off"
-→ Should reference recent activity if available
+→ 如果可用，应该参考最近的活动
 ```
 </manual_testing>
 
 <ci_integration>
-## CI/CD Integration
+## CI/CD 集成
 
-Add agent-native tests to your CI pipeline:
+将 Agent-native 测试添加到您的 CI 流程：
 
 ```yaml
 # .github/workflows/test.yml
-name: Agent-Native Tests
+name: Agent-Native 测试
 
 on: [push, pull_request]
 
@@ -456,55 +456,55 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup
+      - name: 设置
         run: npm install
 
-      - name: Run Parity Tests
+      - name: 运行平等性测试
         run: npm run test:parity
 
-      - name: Run Capability Tests
+      - name: 运行能力测试
         run: npm run test:capabilities
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
-      - name: Check System Prompt Completeness
+      - name: 检查 System Prompt 完整性
         run: npm run test:system-prompt
 
-      - name: Verify Capability Map
+      - name: 验证能力映射
         run: |
-          # Ensure capability map is up to date
+          # 确保能力映射是最新的
           npm run generate:capability-map
           git diff --exit-code capability-map.ts
 ```
 
-### Cost-Aware Testing
+### 成本感知测试
 
-Agent tests cost API tokens. Strategies to manage:
+Agent 测试需要消耗 API token。管理策略：
 
 ```typescript
-// Use smaller models for basic tests
+// 对基本测试使用较小的模型
 const testConfig = {
   model: process.env.CI ? "claude-3-haiku" : "claude-3-opus",
-  maxTokens: 500,  // Limit output length
+  maxTokens: 500,  // 限制输出长度
 };
 
-// Cache responses for deterministic tests
+// 为确定性测试缓存响应
 const cachedAgent = new CachedAgent({
   cacheDir: ".test-cache",
-  ttl: 24 * 60 * 60 * 1000,  // 24 hours
+  ttl: 24 * 60 * 60 * 1000,  // 24 小时
 });
 
-// Run expensive tests only on main branch
+// 仅在主分支运行昂贵的测试
 if (process.env.GITHUB_REF === 'refs/heads/main') {
-  describe('Full Integration Tests', () => { ... });
+  describe('完整集成测试', () => { ... });
 }
 ```
 </ci_integration>
 
 <test_utilities>
-## Test Utilities
+## 测试工具类
 
-### Agent Test Harness
+### Agent 测试工具
 
 ```typescript
 class AgentTestHarness {
@@ -515,7 +515,7 @@ class AgentTestHarness {
     this.mockServices = createMockServices();
     this.agent = await createAgent({
       services: this.mockServices,
-      model: "claude-3-haiku",  // Cheaper for tests
+      model: "claude-3-haiku",  // 测试用成本更低
     });
   }
 
@@ -542,8 +542,8 @@ class AgentTestHarness {
   }
 }
 
-// Usage
-test('full flow', async () => {
+// 使用示例
+test('完整流程', async () => {
   const harness = new AgentTestHarness();
   await harness.setup();
 
@@ -558,25 +558,25 @@ test('full flow', async () => {
 </test_utilities>
 
 <checklist>
-## Testing Checklist
+## 测试清单
 
-Automated Tests:
-- [ ] "Can Agent Do It?" tests for each UI action
-- [ ] Location awareness tests ("write to my feed")
-- [ ] Parity tests (tool exists, documented in prompt)
-- [ ] Context parity tests (agent sees what UI shows)
-- [ ] End-to-end flow tests
-- [ ] Failure recovery tests
+自动化测试：
+- [ ] 针对每个 UI 操作的 "Agent 能做到吗？" 测试
+- [ ] 位置感知测试（"写入我的信息流"）
+- [ ] 平等性测试（工具存在，在 prompt 中有文档）
+- [ ] 上下文平等性测试（Agent 看到 UI 显示的内容）
+- [ ] 端到端流程测试
+- [ ] 失败恢复测试
 
-Manual Tests:
-- [ ] Natural language variation (multiple phrasings work)
-- [ ] Edge case prompts (open-ended requests)
-- [ ] Confusion test (agent knows app vocabulary)
-- [ ] Surprise test (agent can be creative)
+手动测试：
+- [ ] 自然语言变体（多个表述方式有效）
+- [ ] 边界情况提示（开放式请求）
+- [ ] 混淆测试（Agent 知道应用术语）
+- [ ] 惊喜测试（Agent 可以创意思考）
 
-CI Integration:
-- [ ] Parity tests run on every PR
-- [ ] Capability tests run with API key
-- [ ] System prompt completeness check
-- [ ] Capability map drift detection
+CI 集成：
+- [ ] 平等性测试在每个 PR 上运行
+- [ ] 能力测试使用 API 密钥运行
+- [ ] System prompt 完整性检查
+- [ ] 能力映射漂移检测
 </checklist>

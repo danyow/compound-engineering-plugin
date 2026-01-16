@@ -1,45 +1,45 @@
 <overview>
-Mobile is a first-class platform for agent-native apps. It has unique constraints and opportunities. This guide covers why mobile matters, iOS storage architecture, checkpoint/resume patterns, and cost-aware design.
+Mobile是Agent原生应用的第一类平台。它有独特的约束和机会。本指南涵盖为什么mobile重要、iOS存储架构、checkpoint/resume模式和成本感知设计。
 </overview>
 
 <why_mobile>
-## Why Mobile Matters
+## 为什么Mobile重要
 
-Mobile devices offer unique advantages for agent-native apps:
+Mobile设备为Agent原生应用提供了独特的优势：
 
-### A File System
-Agents can work with files naturally, using the same primitives that work everywhere else. The filesystem is the universal interface.
+### 文件系统
+Agent可以自然地使用文件，使用在其他地方工作的相同原始操作。文件系统是通用界面。
 
-### Rich Context
-A walled garden you get access to. Health data, location, photos, calendars—context that doesn't exist on desktop or web. This enables deeply personalized agent experiences.
+### 丰富的Context
+一个你可以访问的围墙花园。健康数据、位置、照片、日历——在桌面或网络上不存在的context。这使得深度个性化的Agent体验成为可能。
 
-### Local Apps
-Everyone has their own copy of the app. This opens opportunities that aren't fully realized yet: apps that modify themselves, fork themselves, evolve per-user. App Store policies constrain some of this today, but the foundation is there.
+### 本地应用
+每个人都有自己的应用副本。这为尚未完全实现的机会打开了大门：应用可以修改自己、分叉自己、按用户演变。App Store政策目前限制了其中一些，但基础在那里。
 
-### Cross-Device Sync
-If you use the file system with iCloud, all devices share the same file system. The agent's work on one device appears on all devices—without you having to build a server.
+### 跨设备同步
+如果你与iCloud一起使用文件系统，所有设备共享相同的文件系统。Agent在一个设备上的工作会出现在所有设备上——无需你构建服务器。
 
-### The Challenge
+### 挑战
 
-**Agents are long-running. Mobile apps are not.**
+**Agent是长期运行的。Mobile应用不是。**
 
-An agent might need 30 seconds, 5 minutes, or an hour to complete a task. But iOS will background your app after seconds of inactivity, and may kill it entirely to reclaim memory. The user might switch apps, take a call, or lock their phone mid-task.
+Agent可能需要30秒、5分钟或一小时来完成一项任务。但iOS会在不活动数秒后将你的应用置于后台，并可能完全关闭它以回收内存。用户可能在任务中途切换应用、接听电话或锁定手机。
 
-This means mobile agent apps need:
-- **Checkpointing** — Saving state so work isn't lost
-- **Resuming** — Picking up where you left off after interruption
-- **Background execution** — Using the limited time iOS gives you wisely
-- **On-device vs. cloud decisions** — What runs locally vs. what needs a server
+这意味着mobile Agent应用需要：
+- **Checkpointing** — 保存状态以免工作丢失
+- **恢复** — 在中断后从离开的地方继续
+- **后台执行** — 明智地使用iOS给你的有限时间
+- **设备上 vs. 云决定** — 什么在本地运行 vs. 什么需要服务器
 </why_mobile>
 
 <ios_storage>
-## iOS Storage Architecture
+## iOS存储架构
 
-> **Needs validation:** This is an approach that works well, but better solutions may exist.
+> **需要验证：** 这是一个行之有效的方法，但可能存在更好的解决方案。
 
-For agent-native iOS apps, use iCloud Drive's Documents folder for your shared workspace. This gives you **free, automatic multi-device sync** without building a sync layer or running a server.
+对于Agent原生iOS应用，使用iCloud Drive的Documents文件夹作为你的共享工作区。这给你**免费、自动的多设备同步**，而无需构建同步层或运行服务器。
 
-### Why iCloud Documents?
+### 为什么选择iCloud Documents？
 
 | Approach | Cost | Complexity | Offline | Multi-Device |
 |----------|------|------------|---------|--------------|
@@ -47,32 +47,32 @@ For agent-native iOS apps, use iCloud Drive's Documents folder for your shared w
 | CloudKit database | Free tier limits | Medium | Manual | Yes |
 | **iCloud Documents** | Free (user's storage) | Low | Automatic | Automatic |
 
-iCloud Documents:
-- Uses user's existing iCloud storage (free 5GB, most users have more)
-- Automatic sync across all user's devices
-- Works offline, syncs when online
-- Files visible in Files.app for transparency
-- No server costs, no sync code to maintain
+iCloud Documents：
+- 使用用户现有的iCloud存储（免费5GB，大多数用户有更多）
+- 在用户所有设备间自动同步
+- 离线工作，在线时同步
+- 文件在Files.app中可见以确保透明性
+- 无服务器成本，无同步代码需要维护
 
-### Implementation: iCloud-First with Local Fallback
+### 实现：iCloud优先，具有本地回退
 
 ```swift
-// Get the iCloud Documents container
+// 获取iCloud Documents容器
 func iCloudDocumentsURL() -> URL? {
     FileManager.default.url(forUbiquityContainerIdentifier: nil)?
         .appendingPathComponent("Documents")
 }
 
-// Your shared workspace lives in iCloud
+// 你的共享工作区位于iCloud
 class SharedWorkspace {
     let rootURL: URL
 
     init() {
-        // Use iCloud if available, fall back to local
+        // 如果可用使用iCloud，否则回退到本地
         if let iCloudURL = iCloudDocumentsURL() {
             self.rootURL = iCloudURL
         } else {
-            // Fallback to local Documents (user not signed into iCloud)
+            // 回退到本地Documents（用户未登录iCloud）
             self.rootURL = FileManager.default.urls(
                 for: .documentDirectory,
                 in: .userDomainMask
@@ -80,7 +80,7 @@ class SharedWorkspace {
         }
     }
 
-    // All file operations go through this root
+    // 所有文件操作都通过这个根进行
     func researchPath(for bookId: String) -> URL {
         rootURL.appendingPathComponent("Research/\(bookId)")
     }
@@ -91,7 +91,7 @@ class SharedWorkspace {
 }
 ```
 
-### Directory Structure in iCloud
+### iCloud中的目录结构
 
 ```
 iCloud Drive/
@@ -99,9 +99,9 @@ iCloud Drive/
     └── Documents/                    # Visible in Files.app
         ├── Journal/
         │   ├── user/
-        │   │   └── 2025-01-15.md     # Syncs across devices
+        │   │   └── 2025-01-15.md     # 在设备间同步
         │   └── agent/
-        │       └── 2025-01-15.md     # Agent observations sync too
+        │       └── 2025-01-15.md     # Agent观察也同步
         ├── Research/
         │   └── {bookId}/
         │       ├── full_text.txt
@@ -111,15 +111,15 @@ iCloud Drive/
         └── context.md                # Agent's accumulated knowledge
 ```
 
-### Handling iCloud File States
+### 处理iCloud文件状态
 
-iCloud files may not be downloaded locally. Handle this:
+iCloud文件可能未在本地下载。处理方法：
 
 ```swift
 func readFile(at url: URL) throws -> String {
-    // iCloud may create .icloud placeholder files
+    // iCloud可能会创建.icloud占位符文件
     if url.pathExtension == "icloud" {
-        // Trigger download
+        // 触发下载
         try FileManager.default.startDownloadingUbiquitousItem(at: url)
         throw FileNotYetAvailableError()
     }
@@ -127,7 +127,7 @@ func readFile(at url: URL) throws -> String {
     return try String(contentsOf: url, encoding: .utf8)
 }
 
-// For writes, use coordinated file access
+// 对于写入，使用协调的文件访问
 func writeFile(_ content: String, to url: URL) throws {
     let coordinator = NSFileCoordinator()
     var error: NSError?
@@ -144,16 +144,16 @@ func writeFile(_ content: String, to url: URL) throws {
 }
 ```
 
-### What iCloud Enables
+### iCloud支持的功能
 
-1. **User starts experiment on iPhone** → Agent creates config file
-2. **User opens app on iPad** → Same experiment visible, no sync code needed
-3. **Agent logs observation on iPhone** → Syncs to iPad automatically
-4. **User edits journal on iPad** → iPhone sees the edit
+1. **用户在iPhone上开始实验** → Agent创建配置文件
+2. **用户在iPad上打开应用** → 相同的实验可见，无需同步代码
+3. **Agent在iPhone上记录观察** → 自动同步到iPad
+4. **用户在iPad上编辑日记** → iPhone看到编辑
 
-### Entitlements Required
+### 所需权利
 
-Add to your app's entitlements:
+添加到你的应用权利：
 
 ```xml
 <key>com.apple.developer.icloud-container-identifiers</key>
@@ -170,44 +170,44 @@ Add to your app's entitlements:
 </array>
 ```
 
-### When NOT to Use iCloud Documents
+### 何时不使用iCloud Documents
 
-- **Sensitive data** - Use Keychain or encrypted local storage instead
-- **High-frequency writes** - iCloud sync has latency; use local + periodic sync
-- **Large media files** - Consider CloudKit Assets or on-demand resources
-- **Shared between users** - iCloud Documents is single-user; use CloudKit for sharing
+- **敏感数据** - 使用Keychain或加密的本地存储
+- **高频写入** - iCloud同步有延迟；使用本地+定期同步
+- **大型媒体文件** - 考虑CloudKit Assets或按需资源
+- **用户间共享** - iCloud Documents是单用户的；使用CloudKit进行共享
 </ios_storage>
 
 <background_execution>
-## Background Execution & Resumption
+## 后台执行与恢复
 
-> **Needs validation:** These patterns work but better solutions may exist.
+> **需要验证：** 这些模式有效，但可能存在更好的解决方案。
 
-Mobile apps can be suspended or terminated at any time. Agents must handle this gracefully.
+Mobile应用可以随时挂起或终止。Agent必须优雅地处理这个问题。
 
-### The Challenge
+### 挑战
 
 ```
-User starts research agent
+用户启动研究Agent
      ↓
-Agent begins web search
+Agent开始网络搜索
      ↓
-User switches to another app
+用户切换到另一个应用
      ↓
-iOS suspends your app
+iOS挂起你的应用
      ↓
-Agent is mid-execution... what happens?
+Agent正在执行中...会发生什么？
 ```
 
-### Checkpoint/Resume Pattern
+### Checkpoint/恢复模式
 
-Save agent state before backgrounding, restore on foreground:
+在后台前保存Agent状态，在前台恢复：
 
 ```swift
 class AgentOrchestrator: ObservableObject {
     @Published var activeSessions: [AgentSession] = []
 
-    // Called when app is about to background
+    // 当应用即将进入后台时调用
     func handleAppWillBackground() {
         for session in activeSessions {
             saveCheckpoint(session)
@@ -215,7 +215,7 @@ class AgentOrchestrator: ObservableObject {
         }
     }
 
-    // Called when app returns to foreground
+    // 当应用返回前台时调用
     func handleAppDidForeground() {
         for session in activeSessions where session.state == .backgrounded {
             if let checkpoint = loadCheckpoint(session.id) {
@@ -248,16 +248,16 @@ class AgentOrchestrator: ObservableObject {
 }
 ```
 
-### State Machine for Agent Lifecycle
+### Agent生命周期的状态机
 
 ```swift
 enum AgentState {
-    case idle           // Not running
-    case running        // Actively executing
-    case waitingForUser // Paused, waiting for user input
-    case backgrounded   // App backgrounded, state saved
-    case completed      // Finished successfully
-    case failed(Error)  // Finished with error
+    case idle           // 未运行
+    case running        // 主动执行
+    case waitingForUser // 暂停，等待用户输入
+    case backgrounded   // 应用进入后台，状态已保存
+    case completed      // 成功完成
+    case failed(Error)  // 因错误而完成
 }
 
 class AgentSession: ObservableObject {
@@ -281,21 +281,21 @@ class AgentSession: ObservableObject {
 }
 ```
 
-### Background Task Extension (iOS)
+### 后台任务扩展(iOS)
 
-Request extra time when backgrounded during critical operations:
+在关键操作期间进入后台时请求额外时间：
 
 ```swift
 class AgentOrchestrator {
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
     func handleAppWillBackground() {
-        // Request extra time for saving state
+        // 请求额外时间以保存状态
         backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
             self?.endBackgroundTask()
         }
 
-        // Save all checkpoints
+        // 保存所有检查点
         Task {
             for session in activeSessions {
                 await saveCheckpoint(session)
@@ -313,9 +313,9 @@ class AgentOrchestrator {
 }
 ```
 
-### User Communication
+### 用户通信
 
-Let users know what's happening:
+让用户知道发生了什么：
 
 ```swift
 struct AgentStatusView: View {
@@ -324,13 +324,13 @@ struct AgentStatusView: View {
     var body: some View {
         switch session.state {
         case .backgrounded:
-            Label("Paused (app in background)", systemImage: "pause.circle")
+            Label("已暂停（应用在后台）", systemImage: "pause.circle")
                 .foregroundColor(.orange)
         case .running:
-            Label("Working...", systemImage: "ellipsis.circle")
+            Label("正在工作...", systemImage: "ellipsis.circle")
                 .foregroundColor(.blue)
         case .waitingForUser:
-            Label("Waiting for your input", systemImage: "person.circle")
+            Label("等待你的输入", systemImage: "person.circle")
                 .foregroundColor(.green)
         // ...
         }
@@ -340,23 +340,23 @@ struct AgentStatusView: View {
 </background_execution>
 
 <permissions>
-## Permission Handling
+## 权限处理
 
-Mobile agents may need access to system resources. Handle permission requests gracefully.
+Mobile Agent可能需要访问系统资源。优雅地处理权限请求。
 
-### Common Permissions
+### 常见权限
 
-| Resource | iOS Permission | Use Case |
+| 资源 | iOS权限 | 用例 |
 |----------|---------------|----------|
-| Photo Library | PHPhotoLibrary | Profile generation from photos |
-| Files | Document picker | Reading user documents |
-| Camera | AVCaptureDevice | Scanning book covers |
-| Location | CLLocationManager | Location-aware recommendations |
-| Network | (automatic) | Web search, API calls |
+| 照片库 | PHPhotoLibrary | 从照片生成配置 |
+| 文件 | 文档选择器 | 读取用户文档 |
+| 相机 | AVCaptureDevice | 扫描书籍封面 |
+| 位置 | CLLocationManager | 位置感知建议 |
+| 网络 | （自动） | 网络搜索、API调用 |
 
-### Permission-Aware Tools
+### 权限感知工具
 
-Check permissions before executing:
+执行前检查权限：
 
 ```swift
 struct PhotoTools {
@@ -369,12 +369,12 @@ struct PhotoTools {
                 "dateRange": .string("Date range filter").optional()
             ],
             execute: { params, context in
-                // Check permission first
+                // 首先检查权限
                 let status = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
 
                 switch status {
                 case .authorized, .limited:
-                    // Proceed with reading photos
+                    // 继续读取照片
                     let photos = await fetchPhotos(params)
                     return ToolResult(text: "Found \(photos.count) photos", images: photos)
 
@@ -399,9 +399,9 @@ struct PhotoTools {
 }
 ```
 
-### Graceful Degradation
+### 优雅降级
 
-When permissions aren't granted, offer alternatives:
+当未授予权限时，提供替代方案：
 
 ```swift
 func readPhotos() async -> ToolResult {
@@ -409,38 +409,38 @@ func readPhotos() async -> ToolResult {
 
     switch status {
     case .denied, .restricted:
-        // Suggest alternative
+        // 建议替代方案
         return ToolResult(
             text: """
-            I don't have access to your photos. You can either:
-            1. Grant access in Settings → Privacy → Photos
-            2. Share specific photos directly in our chat
+            我无法访问你的照片。你可以选择：
+            1. 在设置中授予访问权限 → 隐私 → 照片
+            2. 直接在我们的聊天中分享特定照片
 
-            Would you like me to help with something else instead?
+            你想让我帮助其他事情吗？
             """,
-            isError: false  // Not a hard error, just a limitation
+            isError: false  // 不是硬错误，只是限制
         )
     // ...
     }
 }
 ```
 
-### Permission Request Timing
+### 权限请求时间
 
-Don't request permissions until needed:
+直到需要时才请求权限：
 
 ```swift
-// BAD: Request all permissions at launch
+// 不好：在启动时请求所有权限
 func applicationDidFinishLaunching() {
-    requestPhotoAccess()
-    requestCameraAccess()
-    requestLocationAccess()
-    // User is overwhelmed with permission dialogs
+    requestPhotoAccess()  // 请求照片访问
+    requestCameraAccess()  // 请求相机访问
+    requestLocationAccess()  // 请求位置访问
+    // 用户被权限对话框淹没
 }
 
-// GOOD: Request when the feature is used
+// 好的：当使用该功能时请求
 tool("analyze_book_cover", async ({ image }) => {
-    // Only request camera access when user tries to scan a cover
+    // 仅当用户尝试扫描封面时请求相机访问
     let status = await AVCaptureDevice.requestAccess(for: .video)
     if status {
         return await scanCover(image)
@@ -452,19 +452,19 @@ tool("analyze_book_cover", async ({ image }) => {
 </permissions>
 
 <cost_awareness>
-## Cost-Aware Design
+## 成本感知设计
 
-Mobile users may be on cellular data or concerned about API costs. Design agents to be efficient.
+Mobile用户可能使用蜂窝数据或关心API成本。设计高效的Agent。
 
-### Model Tier Selection
+### 模型等级选择
 
-Use the cheapest model that achieves the outcome:
+使用实现结果的最便宜的模型：
 
 ```swift
 enum ModelTier {
-    case fast      // claude-3-haiku: ~$0.25/1M tokens
-    case balanced  // claude-3-sonnet: ~$3/1M tokens
-    case powerful  // claude-3-opus: ~$15/1M tokens
+    case fast      // claude-3-haiku：~$0.25/1M tokens
+    case balanced  // claude-3-sonnet：~$3/1M tokens
+    case powerful  // claude-3-opus：~$15/1M tokens
 
     var modelId: String {
         switch self {
@@ -475,19 +475,19 @@ enum ModelTier {
     }
 }
 
-// Match model to task complexity
+// 将模型与任务复杂性匹配
 let agentConfigs: [AgentType: ModelTier] = [
-    .quickLookup: .fast,        // "What's in my library?"
-    .chatAssistant: .balanced,  // General conversation
-    .researchAgent: .balanced,  // Web search + synthesis
-    .profileGenerator: .powerful, // Complex photo analysis
+    .quickLookup: .fast,        // "我的库中有什么？"
+    .chatAssistant: .balanced,  // 常规对话
+    .researchAgent: .balanced,  // 网络搜索+合成
+    .profileGenerator: .powerful, // 复杂照片分析
     .introductionWriter: .balanced,
 ]
 ```
 
-### Token Budgets
+### Token预算
 
-Limit tokens per agent session:
+限制每个Agent会话的token：
 
 ```swift
 struct AgentConfig {
@@ -524,14 +524,14 @@ class AgentSession {
 }
 ```
 
-### Network-Aware Execution
+### 网络感知执行
 
-Defer heavy operations to WiFi:
+将繁重操作推迟到WiFi：
 
 ```swift
 class NetworkMonitor: ObservableObject {
     @Published var isOnWiFi: Bool = false
-    @Published var isExpensive: Bool = false  // Cellular or hotspot
+    @Published var isExpensive: Bool = false  // 蜂窝或热点
 
     private let monitor = NWPathMonitor()
 
@@ -551,10 +551,10 @@ class AgentOrchestrator {
 
     func startResearchAgent(for book: Book) async {
         if network.isExpensive {
-            // Warn user or defer
+            // 警告用户或推迟
             let proceed = await showAlert(
-                "Research uses data",
-                message: "This will use approximately 1-2 MB of cellular data. Continue?"
+                "研究使用数据",
+                message: "这将使用大约1-2 MB的蜂窝数据。继续？"
             )
             if !proceed { return }
         }
@@ -565,24 +565,24 @@ class AgentOrchestrator {
 }
 ```
 
-### Batch API Calls
+### 批量API调用
 
-Combine multiple small requests:
+组合多个小请求：
 
 ```swift
-// BAD: Many small API calls
+// 不好：许多小的API调用
 for book in books {
-    await agent.chat("Summarize \(book.title)")
+    await agent.chat("摘要 \(book.title)")
 }
 
-// GOOD: Batch into one request
+// 好的：批量为一个请求
 let bookList = books.map { $0.title }.joined(separator: ", ")
-await agent.chat("Summarize each of these books briefly: \(bookList)")
+await agent.chat("简要摘要每本书：\(bookList)")
 ```
 
-### Caching
+### 缓存
 
-Cache expensive operations:
+缓存昂贵的操作：
 
 ```swift
 class ResearchCache {
@@ -591,7 +591,7 @@ class ResearchCache {
     func getCachedResearch(for bookId: String) -> CachedResearch? {
         guard let cached = cache[bookId] else { return nil }
 
-        // Expire after 24 hours
+        // 24小时后过期
         if Date().timeIntervalSince(cached.timestamp) > 86400 {
             cache.removeValue(forKey: bookId)
             return nil
@@ -608,23 +608,23 @@ class ResearchCache {
     }
 }
 
-// In research tool
+// 在研究工具中
 tool("web_search", async ({ query, bookId }) => {
-    // Check cache first
+    // 首先检查缓存
     if let cached = cache.getCachedResearch(for: bookId) {
         return ToolResult(text: cached.research.summary, cached: true)
     }
 
-    // Otherwise, perform search
+    // 否则，执行搜索
     let results = await webSearch(query)
     cache.cacheResearch(results, for: bookId)
     return ToolResult(text: results.summary)
 })
 ```
 
-### Cost Visibility
+### 成本可见性
 
-Show users what they're spending:
+显示用户花费的内容：
 
 ```swift
 struct AgentCostView: View {
@@ -632,17 +632,17 @@ struct AgentCostView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Session Stats")
+            Text("会话统计")
                 .font(.headline)
 
             HStack {
-                Label("\(session.turnCount) turns", systemImage: "arrow.2.squarepath")
+                Label("\(session.turnCount)轮", systemImage: "arrow.2.squarepath")
                 Spacer()
                 Label(formatTokens(session.totalTokensUsed), systemImage: "text.word.spacing")
             }
 
             if let estimatedCost = session.estimatedCost {
-                Text("Est. cost: \(estimatedCost, format: .currency(code: "USD"))")
+                Text("估计成本：\(estimatedCost, format: .currency(code: "USD"))")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -653,28 +653,28 @@ struct AgentCostView: View {
 </cost_awareness>
 
 <offline_handling>
-## Offline Graceful Degradation
+## 离线优雅降级
 
-Handle offline scenarios gracefully:
+优雅地处理离线场景：
 
 ```swift
 class ConnectivityAwareAgent {
     @ObservedObject var network = NetworkMonitor()
 
     func executeToolCall(_ toolCall: ToolCall) async -> ToolResult {
-        // Check if tool requires network
+        // 检查工具是否需要网络
         let requiresNetwork = ["web_search", "web_fetch", "call_api"]
             .contains(toolCall.name)
 
         if requiresNetwork && !network.isConnected {
             return ToolResult(
                 text: """
-                I can't access the internet right now. Here's what I can do offline:
-                - Read your library and existing research
-                - Answer questions from cached data
-                - Write notes and drafts for later
+                我现在无法访问互联网。以下是我可以离线做的事情：
+                - 阅读你的库和现有研究
+                - 回答来自缓存数据的问题
+                - 为以后写笔记和草稿
 
-                Would you like me to try something that works offline?
+                你想让我尝试离线工作的东西吗？
                 """,
                 isError: false
             )
@@ -685,17 +685,17 @@ class ConnectivityAwareAgent {
 }
 ```
 
-### Offline-First Tools
+### 离线优先工具
 
-Some tools should work entirely offline:
+某些工具应该完全离线工作：
 
 ```swift
 let offlineTools: Set<String> = [
     "read_file",
     "write_file",
     "list_files",
-    "read_library",  // Local database
-    "search_local",  // Local search
+    "read_library",  // 本地数据库
+    "search_local",  // 本地搜索
 ]
 
 let onlineTools: Set<String> = [
@@ -705,13 +705,13 @@ let onlineTools: Set<String> = [
 ]
 
 let hybridTools: Set<String> = [
-    "publish_to_feed",  // Works offline, syncs later
+    "publish_to_feed",  // 离线工作，稍后同步
 ]
 ```
 
-### Queued Actions
+### 排队的操作
 
-Queue actions that require connectivity:
+排队需要连接的操作：
 
 ```swift
 class OfflineQueue: ObservableObject {
@@ -743,9 +743,9 @@ class OfflineQueue: ObservableObject {
 </offline_handling>
 
 <battery_awareness>
-## Battery-Aware Execution
+## 电池感知执行
 
-Respect device battery state:
+尊重设备电池状态：
 
 ```swift
 class BatteryMonitor: ObservableObject {
@@ -784,13 +784,13 @@ class AgentOrchestrator {
     func startAgent(_ config: AgentConfig) async {
         if battery.shouldDeferHeavyWork && config.isHeavy {
             let proceed = await showAlert(
-                "Low Battery",
-                message: "This task uses significant battery. Continue or defer until charging?"
+                "低电量",
+                message: "此任务使用大量电池。继续还是推迟到充电？"
             )
             if !proceed { return }
         }
 
-        // Adjust model tier based on battery
+        // 根据电池调整模型等级
         let adjustedConfig = battery.isLowPowerMode
             ? config.withModelTier(.fast)
             : config
@@ -802,70 +802,70 @@ class AgentOrchestrator {
 </battery_awareness>
 
 <on_device_vs_cloud>
-## On-Device vs. Cloud
+## 设备上 vs. 云
 
-Understanding what runs where in a mobile agent-native app:
+理解在mobile Agent原生应用中哪里运行什么：
 
-| Component | On-Device | Cloud |
+| 组件 | 设备上 | 云 |
 |-----------|-----------|-------|
-| Orchestration | ✅ | |
-| Tool execution | ✅ (file ops, photo access, HealthKit) | |
-| LLM calls | | ✅ (Anthropic API) |
-| Checkpoints | ✅ (local files) | Optional via iCloud |
-| Long-running agents | Limited by iOS | Possible with server |
+| 编排 | ✅ | |
+| 工具执行 | ✅ (文件操作、照片访问、HealthKit) | |
+| LLM调用 | | ✅ (Anthropic API) |
+| 检查点 | ✅ (本地文件) | 可选通过iCloud |
+| 长期运行的Agent | 受iOS限制 | 可能需要服务器 |
 
-### Implications
+### 影响
 
-**Network required for reasoning:**
-- The app needs network connectivity for LLM calls
-- Design tools to degrade gracefully when network is unavailable
-- Consider offline caching for common queries
+**推理需要网络：**
+- 应用需要网络连接以进行LLM调用
+- 设计工具在网络不可用时优雅降级
+- 考虑为常见查询进行离线缓存
 
-**Data stays local:**
-- File operations happen on device
-- Sensitive data never leaves the device unless explicitly synced
-- Privacy is preserved by default
+**数据保留在本地：**
+- 文件操作在设备上进行
+- 敏感数据永远不会离开设备，除非明确同步
+- 默认情况下保留隐私
 
-**Long-running agents:**
-For truly long-running agents (hours), consider a server-side orchestrator that can run indefinitely, with the mobile app as a viewer and input mechanism.
+**长期运行的Agent：**
+对于真正的长期运行Agent（数小时），考虑一个可以无限期运行的服务器端编排器，mobile应用作为查看器和输入机制。
 </on_device_vs_cloud>
 
 <checklist>
-## Mobile Agent-Native Checklist
+## Mobile Agent原生检查清单
 
-**iOS Storage:**
-- [ ] iCloud Documents as primary storage (or conscious alternative)
-- [ ] Local Documents fallback when iCloud unavailable
-- [ ] Handle `.icloud` placeholder files (trigger download)
-- [ ] Use NSFileCoordinator for conflict-safe writes
+**iOS存储：**
+- [ ] iCloud Documents作为主存储（或有意识的替代方案）
+- [ ] 当iCloud不可用时本地Documents回退
+- [ ] 处理`.icloud`占位符文件（触发下载）
+- [ ] 对冲突安全写入使用NSFileCoordinator
 
-**Background Execution:**
-- [ ] Checkpoint/resume implemented for all agent sessions
-- [ ] State machine for agent lifecycle (idle, running, backgrounded, etc.)
-- [ ] Background task extension for critical saves (30 second window)
-- [ ] User-visible status for backgrounded agents
+**后台执行：**
+- [ ] 为所有Agent会话实现了Checkpoint/恢复
+- [ ] Agent生命周期的状态机（idle、running、backgrounded等）
+- [ ] 关键保存的后台任务扩展（30秒窗口）
+- [ ] 后台Agent的用户可见状态
 
-**Permissions:**
-- [ ] Permissions requested only when needed, not at launch
-- [ ] Graceful degradation when permissions denied
-- [ ] Clear error messages with Settings deep links
-- [ ] Alternative paths when permissions unavailable
+**权限：**
+- [ ] 仅在需要时请求权限，而不是在启动时
+- [ ] 权限被拒绝时优雅降级
+- [ ] 带有Settings深层链接的清晰错误消息
+- [ ] 权限不可用时的替代路径
 
-**Cost Awareness:**
-- [ ] Model tier matched to task complexity
-- [ ] Token budgets per session
-- [ ] Network-aware (defer heavy work to WiFi)
-- [ ] Caching for expensive operations
-- [ ] Cost visibility to users
+**成本感知：**
+- [ ] 模型等级与任务复杂性相匹配
+- [ ] 每个会话的Token预算
+- [ ] 网络感知（将繁重工作推迟到WiFi）
+- [ ] 昂贵操作的缓存
+- [ ] 对用户的成本可见性
 
-**Offline Handling:**
-- [ ] Offline-capable tools identified
-- [ ] Graceful degradation for online-only features
-- [ ] Action queue for sync when online
-- [ ] Clear user communication about offline state
+**离线处理：**
+- [ ] 识别离线能力的工具
+- [ ] 仅在线功能的优雅降级
+- [ ] 在线时同步的操作队列
+- [ ] 关于离线状态的清晰用户通信
 
-**Battery Awareness:**
-- [ ] Battery monitoring for heavy operations
-- [ ] Low power mode detection
-- [ ] Defer or downgrade based on battery state
+**电池感知：**
+- [ ] 繁重操作的电池监测
+- [ ] 低电源模式检测
+- [ ] 根据电池状态推迟或降级
 </checklist>
